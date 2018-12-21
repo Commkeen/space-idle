@@ -1,0 +1,23 @@
+<div *ngIf="showBuildList">
+    <mat-button-toggle-group #group="matButtonToggleGroup" value="all">
+      <mat-button-toggle value="all">All</mat-button-toggle>
+      <mat-button-toggle value="gather">Gather</mat-button-toggle>
+      <mat-button-toggle value="refine">Refine</mat-button-toggle>
+      <mat-button-toggle value="power">Power</mat-button-toggle>
+      <mat-button-toggle value="misc">Misc</mat-button-toggle>
+    </mat-button-toggle-group>
+    <div class="gridContainer">
+      <mat-grid-list cols="3" rowHeight="70px">
+        <mat-grid-tile *ngFor="let buildItem of getFilteredBuildingList(group.value)" colspan="1" rowspan="1">
+          <button mat-raised-button class="item-button" (click)="onBuildItemClicked(buildItem.name)" [disabled]="!buildItem.canBuild">
+            {{buildItem.name}} <span *ngIf="buildItem.currentNumber > 0">({{buildItem.currentNumber}})</span>
+            <div class="costs">
+              <div class="costItem" *ngFor="let cost of buildItem.costs">
+                {{cost.resource}}: {{cost.amount}}
+              </div>
+            </div>
+          </button>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </div>
+  </div>

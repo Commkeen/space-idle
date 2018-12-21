@@ -1,0 +1,17 @@
+<h1>{{title}}</h1>
+<div fxLayout="row" class="layout-container">
+    <div fxFlex="20" fxLayout="column" class="layout-column-left">
+        <app-system-overview fxFlex="50"></app-system-overview>
+        <mat-card fxFlex="50">Messages</mat-card>
+    </div>
+    <div fxFlex="60" fxLayout="column" class="layout-column-center">
+        <app-planet-interaction fxFlex="100" [hidden]="showResearchScreen"></app-planet-interaction>
+        <app-ship-interaction fxFlex="100" [hidden]="!showResearchScreen"></app-ship-interaction>
+    </div>
+    <div fxFlex="20" fxLayout="column" class="layout-column-right">
+        <app-resource-overview fxFlex="60"></app-resource-overview>
+        <app-ship-overview fxFlex="40" (researchButtonClicked)="onResearchButtonClicked()"></app-ship-overview>
+    </div>
+</div>
+<div>{{currentTime}}</div>
+<button mat-button (click)="onResetButtonClicked()">Reset</button>

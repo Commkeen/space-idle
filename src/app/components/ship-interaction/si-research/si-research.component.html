@@ -1,0 +1,10 @@
+<div>
+  <h1>Research</h1>
+  <ul>
+    <li *ngFor="let item of researchList" (click)="onClickResearchItem(item)">
+      <button mat-button>
+        <span [ngClass]="{'research-item-complete': item.researched}">{{item.name}}</span>
+      </button>
+    </li>
+  </ul>
+</div>

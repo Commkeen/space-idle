@@ -1,0 +1,22 @@
+.feature-list{
+  list-style-type: none;
+  column-count: 2;
+  column-gap: 20px;
+}
+
+.detail-card{
+  margin-top: 50px;
+}
+
+.feature-list-item{
+  cursor: pointer;
+  user-select: none;
+}
+
+.unselected{
+  color: black;
+}
+
+.selected{
+  color: red;
+}

@@ -1,0 +1,5 @@
+<ul>
+  <li *ngFor="let item of upgradeList" (click)="onClickUpgradeItem(item)">
+    <button mat-button>{{item.name}}</button>
+  </li>
+</ul>

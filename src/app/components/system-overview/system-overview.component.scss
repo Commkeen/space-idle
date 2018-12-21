@@ -1,0 +1,12 @@
+.selected{
+    color: red;
+}
+
+.planet-list{
+  display: inline-flex;
+  flex-direction: column;
+}
+
+.planet-list-item{
+  padding-bottom: 8px;
+}

@@ -1,0 +1,40 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Planet Survey</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+  <div fxLayout="row" class="layout-container">
+    <div fxFlex="60" class="layout-column-left">
+      <mat-tab-group>
+        <mat-tab label="Summary">
+          Summary tab
+        </mat-tab>
+        <mat-tab label="Terrain">
+          <ul class="feature-list">
+            <li *ngFor="let feature of featureList">
+              <span class="feature-list-item" (click)="selectFeature(feature.id)"
+                    [ngClass]="{'selected': selectedFeatureId === feature.id}">{{feature.name}}</span>
+            </li>
+          </ul>
+        </mat-tab>
+        <mat-tab label="Anomalies">
+          Anomaly list
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+    <div fxFlex="40" class="layout-column-right">
+      <mat-card class="detail-card">
+        <mat-card-header>
+          <mat-card-title>{{featureDetails.name}}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          {{featureDetails.description}}
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button *ngIf="featureDetails.canBuyExploit" (click)="buyExploit()">{{featureDetails.buyExploitText}}</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+  </mat-card-content>
+</mat-card>

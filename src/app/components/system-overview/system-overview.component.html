@@ -1,0 +1,13 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>System Overview</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+  <mat-radio-group class="planet-list" [(ngModel)]="selectedPlanet" (ngModelChange)="onSelectionChange($event)">
+      <mat-radio-button class="planet-list-item" *ngFor="let planet of planets"
+        [value]="planet">
+        {{planet.name}}
+      </mat-radio-button>
+  </mat-radio-group>
+</mat-card-content>
+</mat-card>
