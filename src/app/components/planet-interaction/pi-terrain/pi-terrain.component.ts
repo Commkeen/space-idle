@@ -32,8 +32,17 @@ export class PiTerrainComponent implements OnInit {
     this.updateFeatureDetails(id);
   }
 
-  buyExploit(id: number) {
-    this.planetService.buyExploit(this.planetService.getSelectedPlanet().instanceId, this.selectedFeatureId);
+  buySurvey() {
+    const id = this.selectedFeatureId;
+    this.planetService.surveyFeature(this.getSelectedPlanet().instanceId, id);
+    this.updateFeatureList();
+    this.selectFeature(id);
+  }
+
+  buyExploit() {
+    const id = this.selectedFeatureId;
+    this.planetService.exploitFeature(this.getSelectedPlanet().instanceId, id);
+    this.selectFeature(id);
   }
 
   updateFeatureList() {
@@ -41,13 +50,14 @@ export class PiTerrainComponent implements OnInit {
     if (isNullOrUndefined(this.getSelectedPlanet())) { return; }
 
     const features = this.getSelectedPlanet().features;
+    const featureInteractions = this.planetService.getPlanetInteractionModel(this.getSelectedPlanet().instanceId).features;
     features.forEach(element => {
-      this.planetService.getFeatureDefinition(element.name);
       const featureItem = new FeatureListItem();
-      featureItem.name = element.name;
       featureItem.id = element.instanceId;
-      featureItem.exploited = false;
-      featureItem.hidden = false;
+      featureItem.name = featureInteractions.isSurveyed(element.instanceId) ? element.specificName : element.genericName;
+      featureItem.discovered = featureInteractions.isDiscovered(element.instanceId);
+      featureItem.surveyed = featureInteractions.isSurveyed(element.instanceId);
+      featureItem.exploited = featureInteractions.isExploited(element.instanceId);
       this.featureList.push(featureItem);
     });
 
@@ -59,15 +69,34 @@ export class PiTerrainComponent implements OnInit {
     if (isNullOrUndefined(instanceId) || instanceId === 0) { return; }
 
     const feature = this.getSelectedPlanet().features.find(x => x.instanceId === instanceId);
-    const featureDef = this.planetService.getFeatureDefinition(feature.name);
-    const exploit = this.planetService.getExploitDefinitionForFeature(feature.name);
-    this.featureDetails.name = feature.name;
-    this.featureDetails.description = featureDef.description;
-    this.featureDetails.exploited = false;
-    this.featureDetails.canBuyExploit = true;
-    this.featureDetails.buyExploitText = 'EXPLOIT';
-    exploit.cost.resources.forEach(element => {
+    const featureInteractions = this.planetService.getPlanetInteractionModel().features;
+    const exploitDef = this.planetService.getExploitDefinitionForFeature(feature.specificName);
+    const unsurveyedFeatureDef = this.planetService.getUnsurveyedFeatureDefinition(feature.genericName);
+    const surveyedFeatureDef = this.planetService.getSurveyedFeatureDefinition(feature.specificName);
+
+    this.featureDetails.surveyed = featureInteractions.isSurveyed(instanceId);
+    this.featureDetails.exploited = featureInteractions.isExploited(instanceId);
+    this.featureDetails.surveyButtonText = 'SURVEY';
+    this.featureDetails.exploitButtonText = 'EXPLOIT';
+    this.featureDetails.surveyCost = 10;
+    exploitDef.cost.resources.forEach(element => {
       this.featureDetails.exploitCost.add(element.resource, element.amount);
+
+    // TODO: canBuyExploit and canSurvey should be based on tech and resources
+    this.featureDetails.canSurvey = !this.featureDetails.surveyed;
+    this.featureDetails.canBuyExploit = this.featureDetails.surveyed && !this.featureDetails.exploited;
+
+    if (!this.featureDetails.surveyed) {
+      this.featureDetails.name = unsurveyedFeatureDef.name;
+      this.featureDetails.description = unsurveyedFeatureDef.description;
+    } else if (!this.featureDetails.exploited) {
+      this.featureDetails.name = surveyedFeatureDef.name;
+      this.featureDetails.description = surveyedFeatureDef.description;
+    } else if (this.featureDetails.exploited) {
+      this.featureDetails.name = surveyedFeatureDef.name;
+      this.featureDetails.description = 'Already exploited';
+    }
+
     });
   }
 }
@@ -75,15 +104,20 @@ export class PiTerrainComponent implements OnInit {
 export class FeatureListItem {
   public name: string;
   public id: number;
-  public hidden: boolean;
+  public discovered: boolean;
+  public surveyed: boolean;
   public exploited: boolean;
 }
 
 export class FeatureDetailsViewModel {
   public name = '';
   public description = '';
+  public surveyed = false;
   public exploited = false;
+  public canSurvey = false;
   public canBuyExploit = false;
-  public buyExploitText = '';
+  public surveyButtonText = '';
+  public exploitButtonText = '';
+  public surveyCost: number;
   public exploitCost: ResourceCollection = new ResourceCollection();
 }

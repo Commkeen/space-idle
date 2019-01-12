@@ -5,7 +5,8 @@ import {MOCK_SYSTEM} from '../models/planet';
 import { STRUCTURE_LIBRARY, StructureDefinition } from '../staticData/structureDefinitions';
 import { ResourceCollection } from '../models/resource';
 import { Subject } from 'rxjs';
-import { FeatureDefinition, FEATURE_LIBRARY } from '../staticData/featureDefinitions';
+// tslint:disable-next-line:max-line-length
+import { FeatureDefinition, FEATURE_LIBRARY, UNSURVEYED_FEATURE_LIBRARY, UnsurveyedFeatureDefinition } from '../staticData/featureDefinitions';
 import { EXPLOIT_LIBRARY, ExploitDefinition } from '../staticData/exploitDefinitions';
 
 @Injectable({
@@ -40,6 +41,11 @@ export class PlanetService implements OnInit {
         const structure = {name: structureDef.name, amount: 0, canBuild: false};
         interactionModel.structures.push(structure);
       });
+      element.features.forEach(feature => {
+        if (!feature.hiddenBehindSurvey) {
+          interactionModel.features.discover(feature.instanceId);
+        }
+      });
       this.updateInteractionModel(interactionModel);
       this._currentSystemInteractionModels.push(interactionModel);
     });
@@ -66,7 +72,10 @@ export class PlanetService implements OnInit {
     return this._currentSystem.find(x => x.instanceId === planetInstanceId);
   }
 
-  getPlanetInteractionModel(planetInstanceId: number): PlanetInteractionModel {
+  getPlanetInteractionModel(planetInstanceId?: number): PlanetInteractionModel {
+    if (!planetInstanceId) {
+      planetInstanceId = this.getSelectedPlanet().instanceId;
+    }
     const model = this._currentSystemInteractionModels.find(x => x.planetInstanceId === planetInstanceId);
     // this.updateInteractionModel(model);
     return model;
@@ -76,12 +85,16 @@ export class PlanetService implements OnInit {
     return this._selectedPlanet.features.find(x => x.instanceId === featureInstanceId);
   }
 
-  getFeatureDefinition(name: string): FeatureDefinition {
+  getUnsurveyedFeatureDefinition(name: string): UnsurveyedFeatureDefinition {
+    return UNSURVEYED_FEATURE_LIBRARY.find(def => def.name === name);
+  }
+
+  getSurveyedFeatureDefinition(name: string): FeatureDefinition {
     return FEATURE_LIBRARY.find(def => def.name === name);
   }
 
   getExploitDefinitionForFeature(feature: string): ExploitDefinition {
-    const featureDef = this.getFeatureDefinition(feature);
+    const featureDef = this.getSurveyedFeatureDefinition(feature);
     return EXPLOIT_LIBRARY.find(def => def.name === featureDef.exploitName);
   }
 
@@ -106,11 +119,28 @@ export class PlanetService implements OnInit {
     this.updateInteractionModel(interactionModel);
   }
 
-  buyExploit(planetId: number, featureId: number): void {
-
+  discoverFeature(planetId: number, featureId: number): void {
+    const interactionModel = this.getPlanetInteractionModel(planetId);
+    interactionModel.features.discover(featureId);
   }
 
-  updateInteractionModel(interactionModel: PlanetInteractionModel) {
+  surveyFeature(planetId: number, featureId: number): void {
+    const planet = this.getPlanet(planetId);
+    const interactionModel = this.getPlanetInteractionModel(planetId);
+    interactionModel.features.survey(featureId);
+    planet.features.forEach(feature => {
+      if (feature.hiddenBehindSurvey === featureId) {
+        interactionModel.features.discover(feature.instanceId);
+      }
+    });
+  }
+
+  exploitFeature(planetId: number, featureId: number): void {
+    const interactionModel = this.getPlanetInteractionModel(planetId);
+    interactionModel.features.exploit(featureId);
+  }
+
+  updateInteractionModel(interactionModel: PlanetInteractionModel): void {
     interactionModel.structures.forEach(element => {
       element.canBuild = element.amount < 5;
     });

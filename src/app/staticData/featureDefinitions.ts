@@ -1,3 +1,10 @@
+export class UnsurveyedFeatureDefinition {
+  constructor (
+    public name: string,
+    public description: string,
+  ) {}
+}
+
 export class FeatureDefinition {
   constructor (
     public name: string,
@@ -5,6 +12,14 @@ export class FeatureDefinition {
     public exploitName: string,
   ) {}
 }
+
+export const UNSURVEYED_FEATURE_LIBRARY: UnsurveyedFeatureDefinition[] = [
+  new UnsurveyedFeatureDefinition('hills', 'description for hills'),
+  new UnsurveyedFeatureDefinition('forest', 'description for forest'),
+  new UnsurveyedFeatureDefinition('mountain', 'description for mountain'),
+  new UnsurveyedFeatureDefinition('desert', 'description for desert'),
+  new UnsurveyedFeatureDefinition('ocean', 'description for ocean')
+];
 
 export const FEATURE_LIBRARY: FeatureDefinition[] = [
  new FeatureDefinition('iron deposit', 'placeholder for iron', 'iron mineshaft'),

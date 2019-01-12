@@ -1,11 +1,15 @@
 export class BonusEffect {
-  canStack: boolean;
-  isGlobal: boolean;
+  public canStack = true;
+  public isGlobal = false;
 }
 
 export class ResourceBonusEffect extends BonusEffect {
-  resource: string;
-  additiveMultiplier: number;
+  constructor(
+    public resource: string,
+    public additiveMultiplier: number,
+  ) {
+    super();
+  }
 }
 
 export class StructureCostBonusEffect extends BonusEffect {
