@@ -8,7 +8,6 @@ import { AppComponent } from './app.component';
 import { MaterialModule } from './shared/material.module';
 import { SystemOverviewComponent } from './components/system-overview/system-overview.component';
 import { PlanetInteractionComponent } from './components/planet-interaction/planet-interaction.component';
-import { PlanetSurveyComponent } from './components/planet-survey/planet-survey.component';
 import { ResourceOverviewComponent } from './components/resource-overview/resource-overview.component';
 import { ShipOverviewComponent } from './components/ship-overview/ship-overview.component';
 import { ShipInteractionComponent } from './components/ship-interaction/ship-interaction.component';
@@ -23,7 +22,6 @@ import { SiSystemsComponent } from './components/ship-interaction/si-systems/si-
     AppComponent,
     SystemOverviewComponent,
     PlanetInteractionComponent,
-    PlanetSurveyComponent,
     ResourceOverviewComponent,
     ShipOverviewComponent,
     ShipInteractionComponent,
