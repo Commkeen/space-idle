@@ -6,6 +6,7 @@ export class PlanetInteractionModel {
     structures: Structure[];
     features: FeatureInteractionCollection = new FeatureInteractionCollection();
     localResources: ResourceCollection;
+    drones: DroneCollection = new DroneCollection();
 }
 
 export class Structure {
@@ -57,4 +58,52 @@ export class FeatureInteractionCollection {
     }
     return feature;
   }
+}
+
+export class DroneCollection {
+  public droneCapacity = 0;
+  private idleDrones = 0;
+  private tasks: Map<string, number> = new Map();
+
+  get(task: string): number {
+    if (this.tasks.has(task)) {
+      return this.tasks.get(task);
+    }
+    return 0;
+  }
+
+  getIdle(): number {
+    return this.idleDrones;
+  }
+
+  getTotal(): number {
+    let total = this.idleDrones;
+    for (const value of Array.from(this.tasks.values())) {
+      total += value;
+    }
+    return total;
+  }
+
+  createDrone(): void {
+    this.idleDrones += 1;
+  }
+
+  assign(task: string): void {
+    if (this.idleDrones <= 0) {
+      return;
+    }
+    if (!this.tasks.has(task)) {
+      this.tasks.set(task, 0);
+    }
+    this.tasks.set(task, this.get(task) + 1);
+    this.idleDrones -= 1;
+  }
+
+  unassign(task: string): void {
+    if (this.get(task) > 0) {
+      this.tasks.set(task, this.get(task) - 1);
+      this.idleDrones += 1;
+    }
+  }
+
 }

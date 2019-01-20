@@ -16,6 +16,7 @@ import { PiTerrainComponent } from './components/planet-interaction/pi-terrain/p
 import { SiResearchComponent } from './components/ship-interaction/si-research/si-research.component';
 import { SiUpgradesComponent } from './components/ship-interaction/si-upgrades/si-upgrades.component';
 import { SiSystemsComponent } from './components/ship-interaction/si-systems/si-systems.component';
+import { PiCommandComponent } from './components/planet-interaction/pi-command/pi-command.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { SiSystemsComponent } from './components/ship-interaction/si-systems/si-
     PiTerrainComponent,
     SiResearchComponent,
     SiUpgradesComponent,
-    SiSystemsComponent
+    SiSystemsComponent,
+    PiCommandComponent
   ],
   imports: [
     BrowserModule,

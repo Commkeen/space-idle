@@ -1,0 +1,31 @@
+<div fxLayout="row">
+  <div fxLayout="column" fxFlex="50" class="command-column-left">
+    <div fxFlex="50" class="planet-summary">
+      <div>Forest Planet</div>
+      <div>Orbit: Medium</div>
+      <div>Climate: Temperate</div>
+      <div>Atmosphere: Oxygen</div>
+    </div>
+    <br />
+    <div fxFlex="50" class="outpost-panel">
+      <div>Outpost Level 1</div>
+      <button mat-button>Upgrade Outpost</button>
+    </div>
+  </div>
+  <div fxLayout="column" fxFlex="50" class="command-column-right">
+    <div fxFlex="100" class="drone-panel">
+      <div>Drones: {{currentDrones}}/{{maxDrones}} (Idle: {{idleDrones}})</div>
+      <button mat-button (click)="onBuildDrone()">Build Drone</button>
+      <div class="drone-assignment">
+        <div fxLayout="row" *ngFor="let task of droneTasks">
+          <div fxFlex="50">{{task.name}}</div>
+          <div fxFlex="50">
+            <button (click)="onUnassignDrone(task.name)">-</button>
+            {{task.assigned}}
+            <button (click)="onAssignDrone(task.name)">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

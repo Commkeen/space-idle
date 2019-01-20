@@ -4,17 +4,8 @@
   </mat-card-header>
   <mat-card-content>
     <mat-tab-group>
-      <mat-tab label="Summary">
-        <div *ngIf="outpostBuildItem as buildItem">
-          <button mat-raised-button [disabled]="!buildItem.canBuild">
-            {{buildItem.name}} <span *ngIf="buildItem.currentNumber > 0">({{buildItem.currentNumber}})</span>
-            <div class="costs">
-              <div class="costItem" *ngFor="let cost of buildItem.costs">
-                {{cost.resource}}: {{cost.amount}}
-              </div>
-            </div>
-          </button>
-        </div>
+      <mat-tab label="Command">
+        <app-pi-command></app-pi-command>
       </mat-tab>
       <mat-tab label="Structures">
         <app-pi-structures></app-pi-structures>

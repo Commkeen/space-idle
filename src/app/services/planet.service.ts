@@ -37,6 +37,8 @@ export class PlanetService implements OnInit {
       interactionModel.planetInstanceId = element.instanceId;
       interactionModel.structures = [];
       interactionModel.localResources = new ResourceCollection();
+      interactionModel.drones.droneCapacity = 3;
+      interactionModel.drones.createDrone();
       STRUCTURE_LIBRARY.forEach(structureDef => {
         const structure = {name: structureDef.name, amount: 0, canBuild: false};
         interactionModel.structures.push(structure);
