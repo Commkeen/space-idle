@@ -10,7 +10,4 @@ export class ResourceService {
 
   constructor() { }
 
-  addResource(resource: Resource){
-  }
-
 }

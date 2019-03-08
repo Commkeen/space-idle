@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PlanetService } from './services/planet.service';
 import { TimeService } from './services/time.service';
 import { SimulationService } from './services/simulation.service';
+import { FlagsService } from './services/flags.service';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +10,7 @@ import { SimulationService } from './services/simulation.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  
+
   currentTime:number = 0;
   showResearchScreen:boolean = false;
   title = 'space-idle';
@@ -17,10 +18,12 @@ export class AppComponent implements OnInit {
 
   constructor(private planetService:PlanetService,
               private timeService:TimeService,
-              private simulationService:SimulationService){}
+              private simulationService:SimulationService,
+              private flagsService:FlagsService){}
 
   ngOnInit(): void {
     this.timeService.startGame();
+    this.flagsService.init();
     this.planetService.initializeSystem();
     this.timeService.tick.subscribe(x => this.currentTime = x);
     this.simulationService.init();

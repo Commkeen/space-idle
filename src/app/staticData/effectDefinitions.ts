@@ -3,10 +3,19 @@ export class BonusEffect {
   public isGlobal = false;
 }
 
-export class ResourceBonusEffect extends BonusEffect {
+export class ResourceMultiplierBonusEffect extends BonusEffect {
   constructor(
     public resource: string,
     public additiveMultiplier: number,
+  ) {
+    super();
+  }
+}
+
+export class ResourceGenerationBonusEffect extends BonusEffect {
+  constructor(
+    public resource: string,
+    public amount: number,
   ) {
     super();
   }

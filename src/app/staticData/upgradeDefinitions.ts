@@ -18,5 +18,9 @@ export class UpgradeDefinition {
 
 export const UPGRADE_LIBRARY: UpgradeDefinition[] = [
   new UpgradeDefinition('Improved Furnace', 'desc', 'Alloys').addCost('duranium', 10),
-
+  new UpgradeDefinition('mountainSurveyUpgrade', 'desc', ''),
+  new UpgradeDefinition('oceanSurveyUpgrade', 'desc', ''),
+  new UpgradeDefinition('desertSurveyUpgrade', 'desc', ''),
+  new UpgradeDefinition('arcticSurveyUpgrade', 'desc', ''),
+  new UpgradeDefinition('underseaSurveyUpgrade', 'desc', '')
 ];

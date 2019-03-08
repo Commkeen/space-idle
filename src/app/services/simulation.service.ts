@@ -5,6 +5,10 @@ import { PlanetService } from './planet.service';
 import { STRUCTURE_LIBRARY } from '../staticData/structureDefinitions';
 import { Structure, PlanetInteractionModel } from '../models/planetInteractionModel';
 import { ResourceCollection } from '../models/resource';
+import { Feature } from '../models/planet';
+import { EXPLOIT_LIBRARY } from '../staticData/exploitDefinitions';
+import { FEATURE_LIBRARY } from '../staticData/featureDefinitions';
+import { ResourceGenerationBonusEffect } from '../staticData/effectDefinitions';
 
 @Injectable({
   providedIn: 'root'
@@ -45,8 +49,26 @@ export class SimulationService {
   private updateLocalPlanetProductionRates(instanceId: number) {
     const interactionModel = this._planetService.getPlanetInteractionModel(instanceId);
     interactionModel.localResources.resetRates();
+    interactionModel.features.features.forEach(feature => {
+      if (feature.exploited) {
+        const featureInstance = this._planetService.getFeature(feature.featureInstanceId, instanceId);
+        this.updateFeatureProductionRate(featureInstance, interactionModel.localResources);
+      }
+    });
     interactionModel.structures.forEach(structure => {
       this.updateStructureProductionRate(structure, interactionModel.localResources);
+    });
+  }
+
+  private updateFeatureProductionRate(feature: Feature, resources: ResourceCollection) {
+
+    const featureDef = FEATURE_LIBRARY.find(x => x.name === feature.specificName);
+    const exploitDef = EXPLOIT_LIBRARY.find(x => x.name === featureDef.exploitName);
+    exploitDef.effects.forEach(element => {
+      if (element instanceof ResourceGenerationBonusEffect) {
+        const resourceGen = (element as ResourceGenerationBonusEffect);
+        resources.addProductionRate(resourceGen.resource, resourceGen.amount);
+      }
     });
   }
 

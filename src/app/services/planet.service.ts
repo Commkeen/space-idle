@@ -12,9 +12,10 @@ import { EXPLOIT_LIBRARY, ExploitDefinition } from '../staticData/exploitDefinit
 @Injectable({
   providedIn: 'root'
 })
-export class PlanetService implements OnInit {
+export class PlanetService {
 
   selectedPlanetChanged: Subject<number> = new Subject();
+  onFeatureSurveyed: Subject<Feature> = new Subject();
 
   private _currentSystem: Planet[] = null;
   private _currentSystemInteractionModels: PlanetInteractionModel[] = null;
@@ -22,10 +23,6 @@ export class PlanetService implements OnInit {
   private _selectedPlanetInteractionModel: PlanetInteractionModel = null;
 
   constructor() { }
-
-  ngOnInit() {
-    this.initializeSystem();
-  }
 
   initializeSystem(): void {
     this._currentSystem = MOCK_SYSTEM;
@@ -83,8 +80,11 @@ export class PlanetService implements OnInit {
     return model;
   }
 
-  getFeature(featureInstanceId: number): Feature {
-    return this._selectedPlanet.features.find(x => x.instanceId === featureInstanceId);
+  getFeature(featureInstanceId: number, planetInstanceId?: number): Feature {
+    if (!planetInstanceId) {
+      planetInstanceId = this.getSelectedPlanet().instanceId;
+    }
+    return this.getPlanet(planetInstanceId).features.find(x => x.instanceId === featureInstanceId);
   }
 
   getUnsurveyedFeatureDefinition(name: string): UnsurveyedFeatureDefinition {
@@ -130,6 +130,7 @@ export class PlanetService implements OnInit {
     const planet = this.getPlanet(planetId);
     const interactionModel = this.getPlanetInteractionModel(planetId);
     interactionModel.features.survey(featureId);
+    this.onFeatureSurveyed.next(planet.features.find(x => x.instanceId === featureId));
     planet.features.forEach(feature => {
       if (feature.hiddenBehindSurvey === featureId) {
         interactionModel.features.discover(feature.instanceId);
