@@ -1,4 +1,6 @@
-:content {
-  height: 800px;
-  background: #000000;
+:host {
+  display: block;
+  flex-grow: 1;
+  background: #EEEEEE;
+  padding: 20px;
 }

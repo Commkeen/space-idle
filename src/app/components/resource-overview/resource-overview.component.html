@@ -1,16 +1,19 @@
-<mat-card>
-    <mat-card-title>Resource Overview</mat-card-title>
-    <mat-card-content>
-        <mat-button-toggle-group #localRateToggleGroup="matButtonToggleGroup" value="localRates">
-            <mat-button-toggle value="localRates">Local Rates</mat-button-toggle>
-            <mat-button-toggle value="globalRates">Global Rates</mat-button-toggle>
-        </mat-button-toggle-group>
-    <ul>
-    <li>Power: {{getPower().consumption}}/{{getPower().production}}</li>
+<div class="spaceidle-section">
+  <h1>Resource Overview</h1>
+  <mat-button-toggle-group
+    #localRateToggleGroup="matButtonToggleGroup"
+    value="localRates"
+  >
+    <mat-button-toggle value="localRates">Local Rates</mat-button-toggle>
+    <mat-button-toggle value="globalRates">Global Rates</mat-button-toggle>
+  </mat-button-toggle-group>
+  <ul>
+    <li>Power: {{ getPower().consumption }}/{{ getPower().production }}</li>
     <br />
     <li *ngFor="let resource of getResourceList(localRateToggleGroup.value)">
-        {{resource.name}}   {{resource.amount}}/{{resource.maxAmount}} ({{resource.rate}}/sec)
+      {{ resource.name }} {{ resource.amount }}/{{ resource.maxAmount }} ({{
+        resource.rate
+      }}/sec)
     </li>
-    </ul>
-  </mat-card-content>
-  </mat-card>
+  </ul>
+</div>
