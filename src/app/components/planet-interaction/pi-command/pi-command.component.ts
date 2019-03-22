@@ -3,6 +3,7 @@ import { PlanetService } from 'src/app/services/planet.service';
 import { Planet } from 'src/app/models/planet';
 import { PlanetInteractionModel } from 'src/app/models/planetInteractionModel';
 import { FlagsService } from 'src/app/services/flags.service';
+import { isNullOrUndefined } from 'util';
 
 @Component({
   selector: 'app-pi-command',
@@ -16,6 +17,12 @@ export class PiCommandComponent implements OnInit {
   idleDrones: number;
   droneTasks: DroneTaskItem[] = [];
 
+  outpostLevel: number;
+  outpostName: string;
+  outpostUpgradeVisible: boolean;
+  outpostUpgradeEnabled: boolean;
+  outpostUpgradeText: string;
+
   constructor(private planetService: PlanetService, private flagsService: FlagsService) {
     this.droneTasks.push(new DroneTaskItem('Survey'));
     this.droneTasks.push(new DroneTaskItem('Mining'));
@@ -24,6 +31,7 @@ export class PiCommandComponent implements OnInit {
     this.revealDroneTask('Survey');
 
     this.planetService.selectedPlanetChanged.subscribe(x => this.updateDrones());
+    this.planetService.selectedPlanetChanged.subscribe(x => this.updateOutpost());
   }
 
   ngOnInit() {
@@ -37,6 +45,37 @@ export class PiCommandComponent implements OnInit {
   getSelectedPlanetInteractionModel(): PlanetInteractionModel {
     return this.planetService.getSelectedPlanetInteractionModel();
   }
+
+  updateOutpost(): void {
+    const outpostDef = this.planetService.getOutpostTypeForPlanet();
+    this.outpostLevel = this.getSelectedPlanetInteractionModel().outpostLevel;
+    if (this.outpostLevel === 0) {
+      this.outpostName = '';
+      this.outpostUpgradeText = 'Build Outpost';
+      this.outpostUpgradeVisible = true;
+      this.outpostUpgradeEnabled = true;
+      return;
+    }
+
+    const outpostLevelDef = outpostDef.levels.find(x => x.level === this.outpostLevel);
+    const outpostNextLevelDef = outpostDef.levels.find(x => x.level === this.outpostLevel + 1);
+    this.outpostName = outpostLevelDef.name;
+    if (isNullOrUndefined(outpostNextLevelDef)) {
+      this.outpostUpgradeVisible = false;
+      this.outpostUpgradeEnabled = false;
+      return;
+    }
+
+    this.outpostUpgradeText = 'Upgrade Outpost';
+    this.outpostUpgradeVisible = true;
+    this.outpostUpgradeEnabled = true;
+  }
+
+  onUpgradeOutpost(): void {
+    this.getSelectedPlanetInteractionModel().outpostLevel += 1;
+    this.updateOutpost();
+  }
+
 
   updateDrones(): void {
     const drones = this.getSelectedPlanetInteractionModel().drones;

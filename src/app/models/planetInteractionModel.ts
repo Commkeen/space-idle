@@ -3,6 +3,7 @@ import { isNullOrUndefined } from 'util';
 
 export class PlanetInteractionModel {
     planetInstanceId: number;
+    outpostLevel: 0;
     structures: Structure[];
     features: FeatureInteractionCollection = new FeatureInteractionCollection();
     localResources: ResourceCollection;

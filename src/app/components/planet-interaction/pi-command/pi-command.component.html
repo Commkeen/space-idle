@@ -8,10 +8,10 @@
     </div>
     <br />
     <div fxFlex="50" class="outpost-panel">
-      <div>Outpost Level 1</div>
-      <button mat-button>Upgrade Outpost</button>
+      <div>{{outpostName}}</div>
+      <button mat-button *ngIf="outpostUpgradeVisible"  (click)="onUpgradeOutpost()">{{outpostUpgradeText}}</button>
     </div>
-    <div fxLayout="column" fxFlex="50" class="starship-panel">
+    <div fxLayout="column" fxFlex="50" class="starship-panel" *ngIf="outpostLevel === 3">
       <button mat-button>Superstructure</button>
       <button mat-button>Stardrive Module</button>
       <button mat-button>Navigation Computer</button>

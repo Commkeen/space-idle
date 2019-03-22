@@ -14,6 +14,7 @@ export class UpgradeDefinition {
     this.cost.add(resource, amount);
     return this;
   }
+
 }
 
 export const UPGRADE_LIBRARY: UpgradeDefinition[] = [

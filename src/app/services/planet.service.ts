@@ -8,6 +8,7 @@ import { Subject } from 'rxjs';
 // tslint:disable-next-line:max-line-length
 import { FeatureDefinition, FEATURE_LIBRARY, UNSURVEYED_FEATURE_LIBRARY, UnsurveyedFeatureDefinition } from '../staticData/featureDefinitions';
 import { EXPLOIT_LIBRARY, ExploitDefinition } from '../staticData/exploitDefinitions';
+import { OutpostDefinition, OUTPOST_LIBRARY } from '../staticData/outpostDefinitions';
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +33,7 @@ export class PlanetService {
     this._currentSystem.forEach(element => {
       const interactionModel = new PlanetInteractionModel();
       interactionModel.planetInstanceId = element.instanceId;
+      interactionModel.outpostLevel = 0;
       interactionModel.structures = [];
       interactionModel.localResources = new ResourceCollection();
       interactionModel.drones.droneCapacity = 3;
@@ -104,8 +106,8 @@ export class PlanetService {
     return STRUCTURE_LIBRARY.find(def => def.name === name);
   }
 
-  getOutpostForPlanet(planetInstanceId: number): StructureDefinition {
-    return STRUCTURE_LIBRARY.find(def => def.slotType === 'outpost');
+  getOutpostTypeForPlanet(planetInstanceId?: number): OutpostDefinition {
+    return OUTPOST_LIBRARY.find(def => def.planetType === 'temperate');
   }
 
   selectPlanet(instanceId: number): void {
