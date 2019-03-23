@@ -2,26 +2,43 @@
   <div fxFlex="60" class="layout-column-left">
     <ul class="feature-list">
       <li *ngFor="let feature of featureList">
-        <fa-icon icon="compass" *ngIf="feature.discovered && !feature.surveyed"></fa-icon>
-        <fa-icon icon="cog" *ngIf="feature.surveyed && !feature.exploited"></fa-icon>
+        <fa-icon
+          icon="compass"
+          *ngIf="feature.discovered && !feature.surveyed"
+        ></fa-icon>
+        <fa-icon
+          icon="cog"
+          *ngIf="feature.surveyed && !feature.exploited"
+        ></fa-icon>
         <fa-icon icon="check" *ngIf="feature.exploited"></fa-icon>
-        <span class="feature-list-item" *ngIf="feature.discovered"
-              (click)="selectFeature(feature.id)" [ngClass]="{'selected': selectedFeatureId === feature.id}">{{feature.name}}</span>
+        <span
+          class="feature-list-item"
+          *ngIf="feature.discovered"
+          (click)="selectFeature(feature.id)"
+          [ngClass]="{ selected: selectedFeatureId === feature.id }"
+          >{{ feature.name }}</span
+        >
       </li>
     </ul>
   </div>
   <div fxFlex="40" class="layout-column-right">
-    <mat-card class="detail-card">
-      <mat-card-header>
-        <mat-card-title>{{featureDetails.name}}</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        {{featureDetails.description}}
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-button *ngIf="featureDetails.canSurvey" (click)="buySurvey()">{{featureDetails.surveyButtonText}}</button>
-        <button mat-button *ngIf="featureDetails.canBuyExploit" (click)="buyExploit()">{{featureDetails.exploitButtonText}}</button>
-      </mat-card-actions>
-    </mat-card>
+    <div class="detail-card">
+      <div>{{ featureDetails.name }}</div>
+      <br />
+      <div>{{ featureDetails.description }}</div>
+      <br />
+      <div *ngIf="featureDetails.needSurveyTech">You don't have the technology to survey this terrain.</div>
+      <div *ngIf="featureDetails.needExploitTech">You don't have the technology to exploit this resource.</div>
+      <button mat-button *ngIf="featureDetails.canSurvey" (click)="buySurvey()">
+        {{ featureDetails.surveyButtonText }}
+      </button>
+      <button
+        mat-button
+        *ngIf="featureDetails.canBuyExploit"
+        (click)="buyExploit()"
+      >
+        {{ featureDetails.exploitButtonText }}
+      </button>
+    </div>
   </div>
 </div>

@@ -32,12 +32,12 @@ export const FEATURE_LIBRARY: FeatureDefinition[] = [
     'The power core is mostly spent, but with the right equipment it could still prove useful.', 'energy recombiner'),
   new FeatureDefinition('iron deposit', 'placeholder for iron', 'iron mineshaft'),
   new FeatureDefinition('copper deposit', 'placeholder for copper', 'copper mineshaft'),
-  new FeatureDefinition('silver vein', 'placeholder for silver', 'silver mineshaft'),
-  new FeatureDefinition('gold vein', 'placeholder for gold', 'gold mineshaft'),
-  new FeatureDefinition('', '', ''),
-  new FeatureDefinition('methane vent', 'placeholder for methane', 'methane extractor'),
-  new FeatureDefinition('glittersand spout', 'placeholder for glittersand', 'glittersand crawler'),
-  new FeatureDefinition('helium clathrates', 'placeholder for helium', 'helium extractor'),
+  new FeatureDefinition('silver vein', 'placeholder for silver', 'mineshaft'),
+  new FeatureDefinition('gold vein', 'placeholder for gold', 'mineshaft'),
+  new FeatureDefinition('hydrogen vent', 'placeholder for hydrogen', 'extractor'),
+  new FeatureDefinition('methane vent', 'placeholder for methane', 'extractor'),
+  new FeatureDefinition('glittersand spout', 'placeholder for glittersand', 'crawler'),
+  new FeatureDefinition('helium clathrates', 'placeholder for helium', 'extractor'),
   new FeatureDefinition('charybdin crystals', 'placeholder for charybdin', 'charybdin drill'),
   new FeatureDefinition('synaptite cluster', 'placeholder for synaptite', 'synaptite scoop')
 ];

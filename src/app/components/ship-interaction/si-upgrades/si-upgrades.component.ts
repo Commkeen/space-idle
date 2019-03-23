@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ResearchService } from '../../../services/research.service';
+import { ResourceCollection } from 'src/app/models/resource';
 
 @Component({
   selector: 'app-si-upgrades',
@@ -21,22 +22,22 @@ export class SiUpgradesComponent implements OnInit {
     while (this.upgradesAvailable.length > 0) { this.upgradesAvailable.pop(); }
     while (this.upgradesComplete.length > 0) { this.upgradesComplete.pop(); }
 
-    this._researchService.getCompletedResearch().forEach(x => {
-      const researchDef = this._researchService.getResearchDefinition(x);
+    this._researchService.getCompletedUpgrades().forEach(x => {
+      const upgradeDef = this._researchService.getUpgradeDefinition(x);
       const item: UpgradeListItem = {
         name: x,
         researched: true,
-        cost: researchDef.cost
+        cost: upgradeDef.cost
       };
       this.upgradesComplete.push(item);
     });
 
-    this._researchService.getAvailableResearch().forEach(x => {
-      const researchDef = this._researchService.getResearchDefinition(x);
+    this._researchService.getAvailableUpgrades().forEach(x => {
+      const upgradeDef = this._researchService.getUpgradeDefinition(x);
       const item: UpgradeListItem = {
         name: x,
         researched: false,
-        cost: researchDef.cost
+        cost: upgradeDef.cost
       };
       this.upgradesAvailable.push(item);
     });
@@ -44,7 +45,7 @@ export class SiUpgradesComponent implements OnInit {
 
   onClickUpgradeItem(item: UpgradeListItem) {
     if (item.researched) { return; }
-    this._researchService.buyResearch(item.name);
+    this._researchService.buyUpgrade(item.name);
     this.updateUpgradeList();
   }
 }
@@ -52,5 +53,5 @@ export class SiUpgradesComponent implements OnInit {
 class UpgradeListItem {
   public name: string;
   public researched: boolean;
-  public cost: number;
+  public cost: ResourceCollection;
 }

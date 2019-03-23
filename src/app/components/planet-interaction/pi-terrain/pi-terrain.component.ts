@@ -3,6 +3,7 @@ import { PlanetService } from '../../../services/planet.service';
 import { Planet } from '../../../models/planet';
 import { isNullOrUndefined } from 'util';
 import { ResourceCollection } from '../../../models/resource';
+import { ResearchService } from 'src/app/services/research.service';
 
 @Component({
   selector: 'app-pi-terrain',
@@ -15,8 +16,9 @@ export class PiTerrainComponent implements OnInit {
   featureList: FeatureListItem[] = [];
   featureDetails: FeatureDetailsViewModel = new FeatureDetailsViewModel();
 
-  constructor(private planetService: PlanetService) {
+  constructor(private planetService: PlanetService, private researchService: ResearchService) {
     this.planetService.selectedPlanetChanged.subscribe(x => this.updateFeatureList());
+    this.researchService.onResearchUpdated.subscribe(x => this.updateFeatureDetails(this.selectedFeatureId));
   }
 
   ngOnInit() {
@@ -83,8 +85,12 @@ export class PiTerrainComponent implements OnInit {
     exploitDef.cost.resources.forEach(element => {
       this.featureDetails.exploitCost.add(element.resource, element.amount);
 
-    // TODO: canBuyExploit and canSurvey should be based on tech and resources
-    this.featureDetails.canSurvey = !this.featureDetails.surveyed;
+    // TODO: canBuyExploit and canSurvey should be based on research, not upgrades
+    this.featureDetails.needSurveyTech =
+          unsurveyedFeatureDef.surveyTech !== '' && !this.researchService.isUpgradeCompleted(unsurveyedFeatureDef.surveyTech);
+
+
+    this.featureDetails.canSurvey = !this.featureDetails.surveyed && !this.featureDetails.needSurveyTech;
     this.featureDetails.canBuyExploit = this.featureDetails.surveyed && !this.featureDetails.exploited;
 
     if (!this.featureDetails.surveyed) {
@@ -117,6 +123,8 @@ export class FeatureDetailsViewModel {
   public exploited = false;
   public canSurvey = false;
   public canBuyExploit = false;
+  public needSurveyTech = false;
+  public needExploitTech = false;
   public surveyButtonText = '';
   public exploitButtonText = '';
   public surveyCost: number;
