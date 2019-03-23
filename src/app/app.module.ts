@@ -18,6 +18,14 @@ import { SiUpgradesComponent } from './components/ship-interaction/si-upgrades/s
 import { SiSystemsComponent } from './components/ship-interaction/si-systems/si-systems.component';
 import { PiCommandComponent } from './components/planet-interaction/pi-command/pi-command.component';
 
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faCog, faCompass, faCheck } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faCog);
+library.add(faCompass);
+library.add(faCheck);
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -38,7 +46,8 @@ import { PiCommandComponent } from './components/planet-interaction/pi-command/p
     BrowserAnimationsModule,
     MaterialModule,
     FlexLayoutModule,
-    FormsModule
+    FormsModule,
+    FontAwesomeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

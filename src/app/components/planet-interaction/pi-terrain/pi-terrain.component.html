@@ -2,6 +2,9 @@
   <div fxFlex="60" class="layout-column-left">
     <ul class="feature-list">
       <li *ngFor="let feature of featureList">
+        <fa-icon icon="compass" *ngIf="feature.discovered && !feature.surveyed"></fa-icon>
+        <fa-icon icon="cog" *ngIf="feature.surveyed && !feature.exploited"></fa-icon>
+        <fa-icon icon="check" *ngIf="feature.exploited"></fa-icon>
         <span class="feature-list-item" *ngIf="feature.discovered"
               (click)="selectFeature(feature.id)" [ngClass]="{'selected': selectedFeatureId === feature.id}">{{feature.name}}</span>
       </li>

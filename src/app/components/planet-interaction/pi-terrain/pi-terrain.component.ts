@@ -42,6 +42,7 @@ export class PiTerrainComponent implements OnInit {
   buyExploit() {
     const id = this.selectedFeatureId;
     this.planetService.exploitFeature(this.getSelectedPlanet().instanceId, id);
+    this.updateFeatureList();
     this.selectFeature(id);
   }
 
