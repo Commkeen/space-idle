@@ -8,7 +8,8 @@ import { ResearchService } from '../../../services/research.service';
 })
 export class SiUpgradesComponent implements OnInit {
 
-  upgradeList: UpgradeListItem[] = [];
+  upgradesAvailable: UpgradeListItem[] = [];
+  upgradesComplete: UpgradeListItem[] = [];
 
   constructor(private _researchService: ResearchService) { }
 
@@ -17,7 +18,8 @@ export class SiUpgradesComponent implements OnInit {
   }
 
   updateUpgradeList() {
-    while (this.upgradeList.length > 0) { this.upgradeList.pop(); }
+    while (this.upgradesAvailable.length > 0) { this.upgradesAvailable.pop(); }
+    while (this.upgradesComplete.length > 0) { this.upgradesComplete.pop(); }
 
     this._researchService.getCompletedResearch().forEach(x => {
       const researchDef = this._researchService.getResearchDefinition(x);
@@ -26,7 +28,7 @@ export class SiUpgradesComponent implements OnInit {
         researched: true,
         cost: researchDef.cost
       };
-      this.upgradeList.push(item);
+      this.upgradesComplete.push(item);
     });
 
     this._researchService.getAvailableResearch().forEach(x => {
@@ -36,7 +38,7 @@ export class SiUpgradesComponent implements OnInit {
         researched: false,
         cost: researchDef.cost
       };
-      this.upgradeList.push(item);
+      this.upgradesAvailable.push(item);
     });
   }
 
