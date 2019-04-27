@@ -1,9 +1,9 @@
 import { Resource, ResourceCollection } from '../models/resource';
-import { BonusEffect } from './effectDefinitions';
+import { Effect } from './effectDefinitions';
 
 export class UpgradeDefinition {
   public cost: ResourceCollection = new ResourceCollection();
-  public effects: BonusEffect[] = [];
+  public effects: Effect[] = [];
   constructor(
     public name: string,
     public description: string,

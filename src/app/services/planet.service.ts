@@ -39,7 +39,7 @@ export class PlanetService {
       interactionModel.drones.droneCapacity = 3;
       interactionModel.drones.createDrone();
       STRUCTURE_LIBRARY.forEach(structureDef => {
-        const structure = {name: structureDef.name, amount: 0, canBuild: false};
+        const structure = {name: structureDef.name, amount: 0, active: 0, canBuild: false};
         interactionModel.structures.push(structure);
       });
       element.features.forEach(feature => {
@@ -120,6 +120,14 @@ export class PlanetService {
     const interactionModel = this.getPlanetInteractionModel(planetId);
     const structure = interactionModel.structures.find(x => x.name === structureName);
     structure.amount += 1;
+    structure.active += 1;
+    this.updateInteractionModel(interactionModel);
+  }
+
+  setStructureActiveAmount(planetId: number, structureName: string, amount: number): void {
+    const interactionModel = this.getPlanetInteractionModel(planetId);
+    const structure = interactionModel.structures.find(x => x.name === structureName);
+    structure.active = Math.min(amount, structure.amount);
     this.updateInteractionModel(interactionModel);
   }
 
@@ -147,7 +155,7 @@ export class PlanetService {
 
   updateInteractionModel(interactionModel: PlanetInteractionModel): void {
     interactionModel.structures.forEach(element => {
-      element.canBuild = element.amount < 5;
+      element.canBuild = true;
     });
   }
 }

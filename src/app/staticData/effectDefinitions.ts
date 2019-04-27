@@ -1,28 +1,40 @@
-export class BonusEffect {
+export class Effect {
   public canStack = true;
   public isGlobal = false;
 }
 
-export class ResourceMultiplierBonusEffect extends BonusEffect {
+export class BaseProductionEffect extends Effect {
   constructor(
     public resource: string,
-    public additiveMultiplier: number,
+    public amount: number
+    ) {
+      super();
+    }
+}
+
+export class BaseConsumptionEffect extends Effect {
+  constructor(
+    public resource: string,
+    public amount: number
   ) {
     super();
   }
 }
 
-export class ResourceGenerationBonusEffect extends BonusEffect {
+export class ProductionMultiplierEffect extends Effect {
   constructor(
     public resource: string,
-    public amount: number,
+    public multiplier: number
   ) {
     super();
   }
 }
 
-export class StructureCostBonusEffect extends BonusEffect {
-  structure: string;
-  resource: string;
-  costReduction: number;
+export class FlatProductionEffect extends Effect {
+  constructor(
+    public resource: string,
+    public amount: number
+  ) {
+    super();
+  }
 }

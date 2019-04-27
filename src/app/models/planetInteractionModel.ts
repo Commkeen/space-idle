@@ -13,6 +13,7 @@ export class PlanetInteractionModel {
 export class Structure {
     name: string;
     amount: number;
+    active: number;
     canBuild: boolean;
 }
 

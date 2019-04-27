@@ -1,76 +1,57 @@
-import {Resource} from '../models/resource';
+import {Resource, ResourceCollection} from '../models/resource';
+import { Effect, BaseProductionEffect, BaseConsumptionEffect } from './effectDefinitions';
 
 export class StructureDefinition {
-    name: string;
-    slotType: string;
-    sortCategory: string;
-    baseBuildCost: Resource[];
-    consumption: Resource[];
-    production: Resource[];
+    baseBuildCost: ResourceCollection = new ResourceCollection();
+    effects: Effect[] = [];
+
+    constructor(public name: string, public sortCategory: string) {
+
+    }
+
+    public addCost(resource: string, amount: number): StructureDefinition {
+      this.baseBuildCost.add(resource, amount);
+      return this;
+    }
+
+    public addEffect(bonusEffect: Effect): StructureDefinition {
+      this.effects.push(bonusEffect);
+      return this;
+    }
+
+    public addProduction(resource: string, amount: number): StructureDefinition {
+      const bonusEffect = new BaseProductionEffect(resource, amount);
+      this.effects.push(bonusEffect);
+      return this;
+    }
+
+    public addConsumption(resource: string, amount: number): StructureDefinition {
+      const effect = new BaseConsumptionEffect(resource, amount);
+      this.effects.push(effect);
+      return this;
+    }
+
+
 }
 
 export const STRUCTURE_LIBRARY: StructureDefinition[] = [
     // Gathering
-    {
-        name: 'Metal Mine',
-        slotType: 'metal',
-        sortCategory: 'gather',
-        baseBuildCost: [new Resource('metal', 10)],
-        consumption: [new Resource('power', 10)],
-        production: [new Resource('metal', 1)]
-    },
-    {
-        name: 'Rare Metal Mine',
-        slotType: 'rareMetal',
-        sortCategory: 'gather',
-        baseBuildCost: [new Resource('metal', 100)],
-        consumption: [new Resource('power', 2)],
-        production: [new Resource('rareMetal', 0.2)]
-    },
-    {
-        name: 'Silicate Quarry',
-        slotType: 'silicate',
-        sortCategory: 'gather',
-        baseBuildCost: [new Resource('metal', 100)],
-        consumption: [new Resource('power', 2)],
-        production: [new Resource('silicate', 0.2)]
-    },
-    {
-        name: 'Coal Mine',
-        slotType: 'coal',
-        sortCategory: 'gather',
-        baseBuildCost: [new Resource('metal', 100)],
-        consumption: [new Resource('power', 2)],
-        production: [new Resource('hydrocarbon', 1.2)]
-    },
+    new StructureDefinition('Mining Complex', 'gather').addCost('metal', 10).addConsumption('power', 10).addProduction('metal', 1),
+    new StructureDefinition('Scanner Array', 'gather').addCost('metal', 100).addConsumption('power', 2).addProduction('survey', 0.2),
 
     // Refinement
-    {
-        name: 'Duranium Smelter',
-        slotType: 'empty',
-        sortCategory: 'refine',
-        baseBuildCost: [new Resource('metal', 100)],
-        consumption: [new Resource('power', 2), new Resource('metal', 2), new Resource('silicate', 3)],
-        production: [new Resource('duranium', 0.2)]
-    },
+    new StructureDefinition('Smelter', 'refine').addCost('metal', 100)
+            .addConsumption('power', 2).addConsumption('metal', 2).addConsumption('silicate', 3)
+            .addProduction('duranium', 0.2),
 
     // Power
-    {
-        name: 'Combustion Power Plant',
-        slotType: 'empty',
-        sortCategory: 'power',
-        baseBuildCost: [new Resource('metal', 100)],
-        consumption: [new Resource('hydrocarbon', 1.5)],
-        production: [new Resource('power', 10)]
-    },
+    new StructureDefinition('Combustion Reactor', 'power').addCost('metal', 100)
+            .addConsumption('hydrocarbon', 1.5)
+            .addProduction('power', 10),
+    new StructureDefinition('Solar Plant', 'power').addCost('metal', 100)
+            .addProduction('power', 10),
 
     // Outpost
-    {
-        name: 'Temperate Outpost',
-        slotType: 'outpost',
-        sortCategory: 'outpost',
-        baseBuildCost: [new Resource('metal', 100)],
-        consumption: [],
-        production: [new Resource('power', 5)]
-    }
+    new StructureDefinition('Temperate Outpost', 'outpost').addCost('metal', 100)
+            .addProduction('power', 5)
 ];

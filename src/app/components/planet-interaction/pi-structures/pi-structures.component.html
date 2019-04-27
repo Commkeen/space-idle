@@ -7,16 +7,19 @@
       <mat-button-toggle value="misc">Misc</mat-button-toggle>
     </mat-button-toggle-group>
     <div class="gridContainer">
-      <mat-grid-list cols="3" rowHeight="70px">
+      <mat-grid-list cols="3" rowHeight="100px">
         <mat-grid-tile *ngFor="let buildItem of getFilteredBuildingList(group.value)" colspan="1" rowspan="1">
-          <button mat-raised-button class="item-button" (click)="onBuildItemClicked(buildItem.name)" [disabled]="!buildItem.canBuild">
-            {{buildItem.name}} <span *ngIf="buildItem.currentNumber > 0">({{buildItem.currentNumber}})</span>
-            <div class="costs">
-              <div class="costItem" *ngFor="let cost of buildItem.costs">
-                {{cost.resource}}: {{cost.amount}}
+          <div class="structure-item">
+              {{buildItem.name}} <span *ngIf="buildItem.builtNumber > 0">({{buildItem.activeNumber}}/{{buildItem.builtNumber}})</span>
+              <div class="costs">
+                <div class="costItem" *ngFor="let cost of buildItem.costs.resources">
+                  {{cost.resource}}: {{cost.amount}}
+                </div>
               </div>
-            </div>
-          </button>
+              <button mat-raised-button class="item-build-btn" (click)="onBuildItemClicked(buildItem.name)" [disabled]="!buildItem.canBuild">Build</button>
+              <button mat-raised-button class="item-deactivate-btn" (click)="onDeactivateItemClicked(buildItem.name)" [disabled]="buildItem.activeNumber <= 0">-</button>
+              <button mat-raised-button class="item-activate-btn" (click)="onActivateItemClicked(buildItem.name)" [disabled]="!buildItem.canActivate">+</button>
+          </div>
         </mat-grid-tile>
       </mat-grid-list>
     </div>

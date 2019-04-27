@@ -4,7 +4,7 @@ import { Planet } from '../../../models/planet';
 import { PlanetInteractionModel } from '../../../models/planetInteractionModel';
 import { STRUCTURE_LIBRARY } from '../../../staticData/structureDefinitions';
 import { isNullOrUndefined } from 'util';
-import { Resource } from '../../../models/resource';
+import { Resource, ResourceCollection } from '../../../models/resource';
 
 @Component({
   selector: 'app-pi-structures',
@@ -54,18 +54,21 @@ export class PiStructuresComponent implements OnInit {
       let listItem = this.buildingList.find(x => x.name === element.name);
       if (!isNullOrUndefined(listItem)) {
         listItem.canBuild = element.canBuild;
-        listItem.currentNumber = element.amount;
-      } else if (structureDef.slotType !== 'outpost') {
+        listItem.canActivate = element.active < element.amount;
+        listItem.builtNumber = element.amount;
+        listItem.activeNumber = element.active;
+      } else if (structureDef.sortCategory !== 'outpost') {
         dirtyList = true;
       }
-      if (structureDef.slotType !== 'outpost') {
+      if (structureDef.sortCategory !== 'outpost') {
         listItem = {
           name: element.name,
           sortCategory: structureDef.sortCategory,
-          slotType: structureDef.slotType,
           costs: structureDef.baseBuildCost,
-          currentNumber: element.amount,
-          canBuild: element.canBuild
+          builtNumber: element.amount,
+          activeNumber: element.active,
+          canBuild: element.canBuild,
+          canActivate: element.active < element.amount
         };
         newBuildingList.push(listItem);
       }
@@ -82,11 +85,25 @@ export class PiStructuresComponent implements OnInit {
     this.updateBuildingList();
   }
 
+  onActivateItemClicked(buildItemName: string) {
+    const building = this.buildingList.find(x => x.name === buildItemName);
+    this.planetService.setStructureActiveAmount(
+      this.planetService.getSelectedPlanet().instanceId, buildItemName, building.activeNumber + 1);
+    this.updateBuildingList();
+  }
+
+  onDeactivateItemClicked(buildItemName: string) {
+    const building = this.buildingList.find(x => x.name === buildItemName);
+    this.planetService.setStructureActiveAmount(
+      this.planetService.getSelectedPlanet().instanceId, buildItemName, building.activeNumber - 1);
+    this.updateBuildingList();
+  }
+
   private hasOutpost(interactionModel: PlanetInteractionModel): boolean {
     // TODO: Could this work just by seeing if any structures are present?
     return interactionModel.structures.some(structure =>
       structure.amount > 0 &&
-      this.planetService.getStructureDefinition(structure.name).slotType === 'outpost'
+      this.planetService.getStructureDefinition(structure.name).sortCategory === 'outpost'
     );
   }
 
@@ -95,8 +112,9 @@ export class PiStructuresComponent implements OnInit {
 class BuildingListItem {
   public name: string;
   public sortCategory: string;
-  public slotType: string;
-  public costs: Resource[];
-  public currentNumber: number;
+  public costs: ResourceCollection;
+  public builtNumber: number;
+  public activeNumber: number;
+  public canActivate: boolean;
   public canBuild: boolean;
 }

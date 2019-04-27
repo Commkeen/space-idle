@@ -8,7 +8,7 @@ import { ResourceCollection } from '../models/resource';
 import { Feature } from '../models/planet';
 import { EXPLOIT_LIBRARY } from '../staticData/exploitDefinitions';
 import { FEATURE_LIBRARY } from '../staticData/featureDefinitions';
-import { ResourceGenerationBonusEffect } from '../staticData/effectDefinitions';
+import { BaseProductionEffect } from '../staticData/effectDefinitions';
 
 @Injectable({
   providedIn: 'root'
@@ -65,8 +65,8 @@ export class SimulationService {
     const featureDef = FEATURE_LIBRARY.find(x => x.name === feature.specificName);
     const exploitDef = EXPLOIT_LIBRARY.find(x => x.name === featureDef.exploitName);
     exploitDef.effects.forEach(element => {
-      if (element instanceof ResourceGenerationBonusEffect) {
-        const resourceGen = (element as ResourceGenerationBonusEffect);
+      if (element instanceof BaseProductionEffect) {
+        const resourceGen = (element as BaseProductionEffect);
         resources.addProductionRate(resourceGen.resource, resourceGen.amount);
       }
     });
@@ -74,8 +74,11 @@ export class SimulationService {
 
   private updateStructureProductionRate(structure: Structure, resources: ResourceCollection) {
     const structureDef = STRUCTURE_LIBRARY.find(x => x.name === structure.name);
-    structureDef.production.forEach(resource => {
-      resources.addProductionRate(resource.resource, resource.amount * structure.amount);
+    structureDef.effects.forEach(element => {
+      if (element instanceof BaseProductionEffect) {
+        const resourceGen = (element as BaseProductionEffect);
+        resources.addProductionRate(resourceGen.resource, resourceGen.amount * structure.active);
+      }
     });
   }
 
@@ -91,13 +94,6 @@ export class SimulationService {
     interactionModel.localResources.resources.forEach(resource => {
       if (resource.resource === 'power') {return; }
       this._resourceService.globalResources.add(resource.resource, resource.productionRate * (dT / 1000));
-    });
-  }
-
-  private runStructureConsumptionAndProduction(dT: number, structure: Structure) {
-    const structureDef = STRUCTURE_LIBRARY.find(x => x.name === structure.name);
-    structureDef.production.forEach(resource => {
-      this._resourceService.globalResources.add(resource.resource, resource.amount * structure.amount * (dT / 1000));
     });
   }
 }

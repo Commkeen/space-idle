@@ -1,12 +1,28 @@
 .gridContainer{
   overflow-y: auto;
-  height: 200px;
+  height: 100%;
 }
 
 .costItem{
   line-height: 20px;
 }
 
-.item-button{
+.structure-item{
   width: 90%;
+  border: 1px solid black;
+}
+
+.item-build-btn{
+  min-width: 50px;
+  line-height: 30px;
+}
+
+.item-deactivate-btn{
+  min-width: 20px;
+  line-height: 30px;
+}
+
+.item-activate-btn{
+  min-width: 20px;
+  line-height: 30px;
 }
