@@ -1,10 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Planet } from '../../models/planet';
-import { PlanetInteractionModel } from '../../models/planetInteractionModel';
-import { PlanetService } from '../../services/planet.service';
-import { Resource } from '../../models/resource';
-import { STRUCTURE_LIBRARY } from '../../staticData/structureDefinitions';
-import { isNullOrUndefined } from 'util';
+import { FlagsService } from '../../services/flags.service';
 
 @Component({
   selector: 'app-planet-interaction',
@@ -13,15 +8,19 @@ import { isNullOrUndefined } from 'util';
 })
 export class PlanetInteractionComponent implements OnInit {
 
-  constructor(private planetService: PlanetService) { }
+  public showStructures = false;
+  public showTerrain = false;
+  public showUpgrades = false;
 
-  ngOnInit() { }
+  constructor(private flagsService: FlagsService) { }
 
-  getSelectedPlanet(): Planet {
-    return this.planetService.getSelectedPlanet();
+  ngOnInit() {
+    this.flagsService.onFlagsUpdated.subscribe(() => this.updateTabVisibility());
   }
 
-  getSelectedPlanetInteractionModel(): PlanetInteractionModel {
-    return this.planetService.getSelectedPlanetInteractionModel();
+  updateTabVisibility() {
+    this.showStructures = this.flagsService.showStructures;
+    this.showTerrain = this.flagsService.showTerrain;
+    this.showUpgrades = this.flagsService.showUpgrades;
   }
 }

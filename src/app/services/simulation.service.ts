@@ -3,11 +3,12 @@ import { ResourceService } from './resource.service';
 import { TimeService } from './time.service';
 import { PlanetService } from './planet.service';
 import { STRUCTURE_LIBRARY } from '../staticData/structureDefinitions';
-import { Structure, PlanetInteractionModel } from '../models/planetInteractionModel';
+import { Structure, PlanetInteractionModel, DroneCollection } from '../models/planetInteractionModel';
 import { ResourceCollection } from '../models/resource';
 import { Feature } from '../models/planet';
 import { EXPLOIT_LIBRARY } from '../staticData/exploitDefinitions';
 import { FEATURE_LIBRARY } from '../staticData/featureDefinitions';
+import { TASK_LIBRARY } from '../staticData/taskDefinitions';
 import { BaseProductionEffect } from '../staticData/effectDefinitions';
 
 @Injectable({
@@ -49,6 +50,7 @@ export class SimulationService {
   private updateLocalPlanetProductionRates(instanceId: number) {
     const interactionModel = this._planetService.getPlanetInteractionModel(instanceId);
     interactionModel.localResources.resetRates();
+    this.updateDroneProductionRate(interactionModel.drones, interactionModel.localResources);
     interactionModel.features.features.forEach(feature => {
       if (feature.exploited) {
         const featureInstance = this._planetService.getFeature(feature.featureInstanceId, instanceId);
@@ -79,6 +81,14 @@ export class SimulationService {
         const resourceGen = (element as BaseProductionEffect);
         resources.addProductionRate(resourceGen.resource, resourceGen.amount * structure.active);
       }
+    });
+  }
+
+  private updateDroneProductionRate(drones: DroneCollection, resources: ResourceCollection) {
+    TASK_LIBRARY.forEach(task => {
+      task.baseProduction.resources.forEach(resource => {
+        resources.addProductionRate(resource.resource, resource.amount * drones.get(task.name));
+      });
     });
   }
 

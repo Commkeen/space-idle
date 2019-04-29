@@ -21,6 +21,16 @@ export class BaseConsumptionEffect extends Effect {
   }
 }
 
+export class TaskProductionEffect extends Effect {
+  constructor(
+    public task: string,
+    public resource: string,
+    public amount: number
+  ) {
+    super();
+  }
+}
+
 export class ProductionMultiplierEffect extends Effect {
   constructor(
     public resource: string,

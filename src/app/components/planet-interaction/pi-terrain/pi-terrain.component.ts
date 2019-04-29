@@ -22,7 +22,7 @@ export class PiTerrainComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    this.updateFeatureList();
   }
 
   getSelectedPlanet(): Planet {

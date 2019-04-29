@@ -4,6 +4,7 @@ import { Effect, BaseProductionEffect, BaseConsumptionEffect } from './effectDef
 export class StructureDefinition {
     baseBuildCost: ResourceCollection = new ResourceCollection();
     effects: Effect[] = [];
+    prereqs: string[] = [];
 
     constructor(public name: string, public sortCategory: string) {
 
@@ -28,6 +29,11 @@ export class StructureDefinition {
     public addConsumption(resource: string, amount: number): StructureDefinition {
       const effect = new BaseConsumptionEffect(resource, amount);
       this.effects.push(effect);
+      return this;
+    }
+
+    public addPrereq(upgrade: string): StructureDefinition {
+      this.prereqs.push(upgrade);
       return this;
     }
 

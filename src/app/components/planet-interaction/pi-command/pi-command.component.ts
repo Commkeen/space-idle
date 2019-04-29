@@ -72,7 +72,7 @@ export class PiCommandComponent implements OnInit {
   }
 
   onUpgradeOutpost(): void {
-    this.getSelectedPlanetInteractionModel().outpostLevel += 1;
+    this.planetService.upgradeOutpost();
     this.updateOutpost();
   }
 

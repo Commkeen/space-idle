@@ -42,6 +42,7 @@ export class ResourceOverviewComponent implements OnInit {
 
     globalResources.resources.forEach(element => {
       if (element.resource === 'power') {return; }
+      if (!this.resourceService.isDiscovered(element.resource)) {return; }
       let rate: number = element.getNetProductionRate();
       if (rateSource === 'localRates' && !isNullOrUndefined(localResources)) {
         rate = 0;

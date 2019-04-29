@@ -9,6 +9,7 @@ import { Subject } from 'rxjs';
 import { FeatureDefinition, FEATURE_LIBRARY, UNSURVEYED_FEATURE_LIBRARY, UnsurveyedFeatureDefinition } from '../staticData/featureDefinitions';
 import { EXPLOIT_LIBRARY, ExploitDefinition } from '../staticData/exploitDefinitions';
 import { OutpostDefinition, OUTPOST_LIBRARY } from '../staticData/outpostDefinitions';
+import { ResourceService } from './resource.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,13 +18,14 @@ export class PlanetService {
 
   selectedPlanetChanged: Subject<number> = new Subject();
   onFeatureSurveyed: Subject<Feature> = new Subject();
+  onOutpostUpgraded: Subject<PlanetInteractionModel> = new Subject();
 
   private _currentSystem: Planet[] = null;
   private _currentSystemInteractionModels: PlanetInteractionModel[] = null;
   private _selectedPlanet: Planet = null;
   private _selectedPlanetInteractionModel: PlanetInteractionModel = null;
 
-  constructor() { }
+  constructor(private _resourceService: ResourceService) { }
 
   initializeSystem(): void {
     this._currentSystem = MOCK_SYSTEM;
@@ -131,6 +133,15 @@ export class PlanetService {
     this.updateInteractionModel(interactionModel);
   }
 
+  upgradeOutpost(planetInstanceId?: number): void {
+    if (!planetInstanceId) {
+      planetInstanceId = this.getSelectedPlanet().instanceId;
+    }
+    const interactionModel = this.getPlanetInteractionModel(planetInstanceId);
+    interactionModel.outpostLevel += 1;
+    this.onOutpostUpgraded.next(interactionModel);
+  }
+
   discoverFeature(planetId: number, featureId: number): void {
     const interactionModel = this.getPlanetInteractionModel(planetId);
     interactionModel.features.discover(featureId);
@@ -140,7 +151,9 @@ export class PlanetService {
     const planet = this.getPlanet(planetId);
     const interactionModel = this.getPlanetInteractionModel(planetId);
     interactionModel.features.survey(featureId);
-    this.onFeatureSurveyed.next(planet.features.find(x => x.instanceId === featureId));
+    const surveyedFeature = planet.features.find(x => x.instanceId === featureId);
+    this._resourceService.globalResources.addCollection(surveyedFeature.resourcesOnSurvey);
+    this.onFeatureSurveyed.next(surveyedFeature);
     planet.features.forEach(feature => {
       if (feature.hiddenBehindSurvey === featureId) {
         interactionModel.features.discover(feature.instanceId);

@@ -4,13 +4,13 @@
     <mat-tab label="Command">
       <app-pi-command></app-pi-command>
     </mat-tab>
-    <mat-tab label="Structures">
+    <mat-tab label="Structures" *ngIf="showStructures">
       <app-pi-structures></app-pi-structures>
     </mat-tab>
-    <mat-tab label="Terrain">
+    <mat-tab label="Terrain" *ngIf="showTerrain">
       <app-pi-terrain></app-pi-terrain>
     </mat-tab>
-    <mat-tab label="Upgrades">
+    <mat-tab label="Upgrades" *ngIf="showUpgrades">
       <app-si-upgrades></app-si-upgrades>
     </mat-tab>
   </mat-tab-group>

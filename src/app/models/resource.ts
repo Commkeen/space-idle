@@ -33,6 +33,12 @@ export class ResourceCollection {
         }
     }
 
+    addCollection(other: ResourceCollection) {
+      other.resources.forEach(element => {
+        this.add(element.resource, element.amount);
+      });
+    }
+
     remove(resource: string, amount: number) {
         const resourceItem = this.resources.find(x => x.resource === resource);
         if (isNullOrUndefined(resourceItem)) {return; }
@@ -94,7 +100,8 @@ export class ResourceCollection {
         this.resources.forEach(resource => {resource.productionRate = 0; resource.consumptionRate = 0; });
     }
 
-    has(resource: string, amount: number): boolean {
+    has(resource: string, amount?: number): boolean {
+        if (!amount) { amount = 1; }
         const resourceItem = this.resources.find(x => x.resource === resource);
         if (isNullOrUndefined(resourceItem)) {return false; }
         return resourceItem.amount >= amount;
