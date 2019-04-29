@@ -1,13 +1,7 @@
 <div fxLayout="row">
   <div fxLayout="column" fxFlex="50" class="command-column-left">
-    <div fxFlex="50" class="planet-summary">
-      <div>Forest Planet</div>
-      <div>Orbit: Medium</div>
-      <div>Climate: Temperate</div>
-      <div>Atmosphere: Oxygen</div>
-    </div>
     <br />
-    <div fxFlex="50" class="outpost-panel">
+    <div fxFlex="50" *ngIf="showOutpostPanel" class="outpost-panel">
       <div>{{outpostName}}</div>
       <button mat-button *ngIf="outpostUpgradeVisible"  (click)="onUpgradeOutpost()">{{outpostUpgradeText}}</button>
     </div>
@@ -22,7 +16,7 @@
   <div fxLayout="column" fxFlex="50" class="command-column-right">
     <div fxFlex="100" class="drone-panel">
       <div>Drones: {{currentDrones}}/{{maxDrones}} (Idle: {{idleDrones}})</div>
-      <button mat-button (click)="onBuildDrone()">Build Drone</button>
+      <button mat-button *ngIf="showBuildDrone" (click)="onBuildDrone()">Build Drone</button>
       <div class="drone-assignment">
         <div fxLayout="row" *ngFor="let task of droneTasks">
           <ng-container *ngIf="task.visible">

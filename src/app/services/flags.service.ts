@@ -14,9 +14,11 @@ export class FlagsService {
   public showDroneMine = false;
   public showDroneHarvest = false;
   public showDroneSift = false;
+  public showOutpostPanel = false;
   public showTerrain = false;
   public showStructures = false;
   public showUpgrades = false;
+  public showPower = false;
 
   public onFlagsUpdated: Subject<void> = new Subject();
 
@@ -38,6 +40,7 @@ export class FlagsService {
 
   update(dT: number) {
     if (!this.showTerrain) { this.checkForTerrainTabUnlock(); }
+    if (!this.showOutpostPanel) { this.checkForOutpostPanelUnlock(); }
   }
 
   onFeatureSurveyed(feature: Feature): void {
@@ -72,6 +75,13 @@ export class FlagsService {
   checkForTerrainTabUnlock(): void {
     if (this._resourceService.globalResources.has('survey', 5)) {
       this.showTerrain = true;
+      this.onFlagsUpdated.next();
+    }
+  }
+
+  checkForOutpostPanelUnlock(): void {
+    if (this._resourceService.globalResources.has('metal')) {
+      this.showOutpostPanel = true;
       this.onFlagsUpdated.next();
     }
   }

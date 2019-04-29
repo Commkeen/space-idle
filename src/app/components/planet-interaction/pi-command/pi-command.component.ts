@@ -17,6 +17,9 @@ export class PiCommandComponent implements OnInit {
   idleDrones: number;
   droneTasks: DroneTaskItem[] = [];
 
+  showBuildDrone: boolean;
+  showOutpostPanel: boolean;
+
   outpostLevel: number;
   outpostName: string;
   outpostUpgradeVisible: boolean;
@@ -35,7 +38,7 @@ export class PiCommandComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.flagsService.onFlagsUpdated.subscribe(() => this.updateDroneVisibility());
+    this.flagsService.onFlagsUpdated.subscribe(() => this.onFlagsUpdated());
   }
 
   getSelectedPlanet(): Planet {
@@ -87,7 +90,9 @@ export class PiCommandComponent implements OnInit {
     });
   }
 
-  updateDroneVisibility(): void {
+  onFlagsUpdated(): void {
+    if (this.flagsService.showOutpostPanel) {this.showOutpostPanel = true; }
+    if (this.flagsService.showDroneBuild) {this.showBuildDrone = true; }
     if (this.flagsService.showDroneHarvest) { this.revealDroneTask('Logging'); }
     if (this.flagsService.showDroneMine) { this.revealDroneTask('Mining'); }
     if (this.flagsService.showDroneSift) { this.revealDroneTask('Sifting'); }
