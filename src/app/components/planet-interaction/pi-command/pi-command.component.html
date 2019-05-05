@@ -3,7 +3,8 @@
     <br />
     <div fxFlex="50" *ngIf="showOutpostPanel" class="outpost-panel">
       <div>{{outpostName}}</div>
-      <button mat-button *ngIf="outpostUpgradeVisible"  (click)="onUpgradeOutpost()">{{outpostUpgradeText}}</button>
+      <button mat-button *ngIf="outpostUpgradeVisible" (click)="onUpgradeOutpost()">{{outpostUpgradeText}}</button>
+      <div *ngFor="let cost of outpostUpgradeCosts">{{cost.resource}}: {{cost.amount}}</div>
     </div>
     <div fxLayout="column" fxFlex="50" class="starship-panel" *ngIf="outpostLevel === 3">
       <button mat-button *ngIf="!superstructureBuilt" (click)="onBuildShipComponent(1)">Superstructure</button>

@@ -4,6 +4,7 @@ import { Planet } from 'src/app/models/planet';
 import { PlanetInteractionModel } from 'src/app/models/planetInteractionModel';
 import { FlagsService } from 'src/app/services/flags.service';
 import { isNullOrUndefined } from 'util';
+import { Resource } from 'src/app/models/resource';
 
 @Component({
   selector: 'app-pi-command',
@@ -25,6 +26,7 @@ export class PiCommandComponent implements OnInit {
   outpostUpgradeVisible: boolean;
   outpostUpgradeEnabled: boolean;
   outpostUpgradeText: string;
+  outpostUpgradeCosts: Resource[];
 
   superstructureBuilt: boolean;
   stardriveBuilt: boolean;
@@ -64,6 +66,7 @@ export class PiCommandComponent implements OnInit {
       this.outpostUpgradeText = 'Build Outpost';
       this.outpostUpgradeVisible = true;
       this.outpostUpgradeEnabled = true;
+      this.outpostUpgradeCosts = outpostDef.levels.find(x => x.level === 1).cost;
       return;
     }
 
@@ -73,12 +76,14 @@ export class PiCommandComponent implements OnInit {
     if (isNullOrUndefined(outpostNextLevelDef)) {
       this.outpostUpgradeVisible = false;
       this.outpostUpgradeEnabled = false;
+      this.outpostUpgradeCosts = [];
       return;
     }
 
     this.outpostUpgradeText = 'Upgrade Outpost';
     this.outpostUpgradeVisible = true;
     this.outpostUpgradeEnabled = true;
+    this.outpostUpgradeCosts = outpostNextLevelDef.cost;
   }
 
   onUpgradeOutpost(): void {
