@@ -26,6 +26,13 @@ export class PiCommandComponent implements OnInit {
   outpostUpgradeEnabled: boolean;
   outpostUpgradeText: string;
 
+  superstructureBuilt: boolean;
+  stardriveBuilt: boolean;
+  computerBuilt: boolean;
+  gravplatingBuilt: boolean;
+  showLaunchBtn: boolean;
+  shipLaunched: boolean;
+
   constructor(private planetService: PlanetService, private flagsService: FlagsService) {
     this.droneTasks.push(new DroneTaskItem('Survey'));
     this.droneTasks.push(new DroneTaskItem('Mining'));
@@ -117,6 +124,22 @@ export class PiCommandComponent implements OnInit {
   onUnassignDrone(task: string): void {
     this.getSelectedPlanetInteractionModel().drones.unassign(task);
     this.updateDrones();
+  }
+
+  onBuildShipComponent(num: number): void {
+    if (num === 1) { this.superstructureBuilt = true; }
+    if (num === 2) { this.stardriveBuilt = true; }
+    if (num === 3) { this.computerBuilt = true; }
+    if (num === 4) { this.gravplatingBuilt = true; }
+    if (this.superstructureBuilt && this.stardriveBuilt && this.computerBuilt && this.gravplatingBuilt)
+    {
+      this.showLaunchBtn = true;
+    }
+  }
+
+  onLaunchShip(): void {
+    this.shipLaunched = true;
+    this.showLaunchBtn = false;
   }
 
 }

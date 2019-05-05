@@ -6,11 +6,12 @@
       <button mat-button *ngIf="outpostUpgradeVisible"  (click)="onUpgradeOutpost()">{{outpostUpgradeText}}</button>
     </div>
     <div fxLayout="column" fxFlex="50" class="starship-panel" *ngIf="outpostLevel === 3">
-      <button mat-button>Superstructure</button>
-      <button mat-button>Stardrive Module</button>
-      <button mat-button>Navigation Computer</button>
-      <button mat-button>Gravity Plating</button>
-      <button mat-button>Launch Starship</button>
+      <button mat-button *ngIf="!superstructureBuilt" (click)="onBuildShipComponent(1)">Superstructure</button>
+      <button mat-button *ngIf="!stardriveBuilt" (click)="onBuildShipComponent(2)">Stardrive Module</button>
+      <button mat-button *ngIf="!computerBuilt" (click)="onBuildShipComponent(3)">Navigation Computer</button>
+      <button mat-button *ngIf="!gravplatingBuilt" (click)="onBuildShipComponent(4)">Gravity Plating</button>
+      <button mat-button *ngIf="showLaunchBtn" (click)="onLaunchShip()">Launch Starship</button>
+      <div *ngIf="shipLaunched">Congratulations, you have reached the end of the Space Idle prototype!</div>
     </div>
   </div>
   <div fxLayout="column" fxFlex="50" class="command-column-right">

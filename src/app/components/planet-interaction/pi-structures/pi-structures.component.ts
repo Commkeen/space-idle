@@ -22,6 +22,7 @@ export class PiStructuresComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.updateBuildingList();
   }
 
   getSelectedPlanet(): Planet {

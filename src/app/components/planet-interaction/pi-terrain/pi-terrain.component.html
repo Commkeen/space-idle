@@ -29,16 +29,22 @@
       <br />
       <div *ngIf="featureDetails.needSurveyTech">You don't have the technology to survey this terrain.</div>
       <div *ngIf="featureDetails.needExploitTech">You don't have the technology to exploit this resource.</div>
-      <button mat-button *ngIf="featureDetails.canSurvey" (click)="buySurvey()">
+      <button mat-raised-button *ngIf="featureDetails.canSurvey" (click)="buySurvey()">
         {{ featureDetails.surveyButtonText }}
       </button>
       <button
-        mat-button
+        mat-raised-button
         *ngIf="featureDetails.canBuyExploit"
         (click)="buyExploit()"
       >
         {{ featureDetails.exploitButtonText }}
       </button>
+      <span *ngIf="featureDetails.canSurvey">Cost: {{featureDetails.surveyCost}} Survey</span>
+      <div *ngIf="featureDetails.canBuyExploit">
+        <div *ngFor="let resource of featureDetails.exploitCost.resources">
+          {{resource.resource}}: {{resource.amount}}
+        </div>
+      </div>
     </div>
   </div>
 </div>
