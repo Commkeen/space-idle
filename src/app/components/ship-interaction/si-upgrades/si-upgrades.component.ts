@@ -26,6 +26,7 @@ export class SiUpgradesComponent implements OnInit {
       const upgradeDef = this._researchService.getUpgradeDefinition(x);
       const item: UpgradeListItem = {
         name: x,
+        description: upgradeDef.description,
         researched: true,
         cost: upgradeDef.cost
       };
@@ -36,6 +37,7 @@ export class SiUpgradesComponent implements OnInit {
       const upgradeDef = this._researchService.getUpgradeDefinition(x);
       const item: UpgradeListItem = {
         name: x,
+        description: upgradeDef.description,
         researched: false,
         cost: upgradeDef.cost
       };
@@ -52,6 +54,7 @@ export class SiUpgradesComponent implements OnInit {
 
 class UpgradeListItem {
   public name: string;
+  public description: string;
   public researched: boolean;
   public cost: ResourceCollection;
 }

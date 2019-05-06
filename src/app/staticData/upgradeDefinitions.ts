@@ -18,7 +18,7 @@ export class UpgradeDefinition {
 }
 
 export const UPGRADE_LIBRARY: UpgradeDefinition[] = [
-  new UpgradeDefinition('Construction', 'Large scale construction projects.', '').addCost('metal', 25),
+  new UpgradeDefinition('Construction', 'Large scale construction projects.', '').addCost('metal', 25).addCost('duranium', 10),
   new UpgradeDefinition('Improved Furnace', 'desc', 'Alloys').addCost('duranium', 10),
   new UpgradeDefinition('mountainSurveyUpgrade', 'desc', ''),
   new UpgradeDefinition('oceanSurveyUpgrade', 'desc', ''),
