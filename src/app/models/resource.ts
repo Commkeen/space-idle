@@ -39,13 +39,25 @@ export class ResourceCollection {
       });
     }
 
-    remove(resource: string, amount: number) {
+    remove(resource: string, amount: number): boolean {
+        let couldAfford = true;
         const resourceItem = this.resources.find(x => x.resource === resource);
-        if (isNullOrUndefined(resourceItem)) {return; }
+        if (isNullOrUndefined(resourceItem)) {return false; }
         resourceItem.amount -= amount;
         if (resourceItem.amount < 0) {
             resourceItem.amount = 0;
+            couldAfford = false;
         }
+        return couldAfford;
+    }
+
+    removeCollection(other: ResourceCollection): boolean {
+      let couldAfford = true;
+      other.resources.forEach(element => {
+        const removeResult = this.remove(element.resource, element.amount);
+        if (!removeResult) {couldAfford = false;}
+      });
+      return couldAfford;
     }
 
     setMax(resource: string, max: number) {

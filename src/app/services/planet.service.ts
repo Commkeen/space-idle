@@ -53,9 +53,6 @@ export class PlanetService {
       this._currentSystemInteractionModels.push(interactionModel);
     });
 
-    // Init starting outpost
-    this.buildStructure(1, 'Temperate Outpost');
-
     this.selectPlanet(1);
   }
 

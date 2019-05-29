@@ -46,9 +46,45 @@ export const STRUCTURE_LIBRARY: StructureDefinition[] = [
     new StructureDefinition('Scanner Array', 'gather').addCost('metal', 100).addConsumption('power', 2).addProduction('survey', 0.2),
 
     // Refinement
-    new StructureDefinition('Smelter', 'refine').addCost('metal', 100)
+    new StructureDefinition('Smelter', 'refine').addPrereq('Construction').addCost('metal', 100)
             .addConsumption('power', 2).addConsumption('metal', 2).addConsumption('silicate', 3)
             .addProduction('duranium', 0.2),
+    new StructureDefinition('Electronics Lab', 'refine').addPrereq('Construction')
+            .addCost('', 100)
+            .addConsumption('', 1)
+            .addProduction('nanochips', 1),
+    new StructureDefinition('Cryodistillery', 'refine').addPrereq('arcticSurveyUpgrade')
+            .addCost('', 100)
+            .addConsumption('', 1)
+            .addProduction('cryofluid', 1),
+    new StructureDefinition('Nanofiber Loom', 'refine').addPrereq('Tensile Polymers')
+            .addCost('', 100)
+            .addConsumption('', 1)
+            .addProduction('nanofiber', 1),
+    new StructureDefinition('Optics Workshop', 'refine').addPrereq('Photon Processing')
+            .addCost('', 100)
+            .addConsumption('', 1)
+            .addProduction('optronics', 1),
+    new StructureDefinition('High-Energy Lab', 'refine').addPrereq('Electrodynamics')
+            .addCost('', 100)
+            .addConsumption('', 1)
+            .addProduction('ultraconductors', 1),
+    new StructureDefinition('Dimensional Forge', 'refine').addPrereq('Extradimensional Synthesis')
+            .addCost('', 100)
+            .addConsumption('', 1)
+            .addProduction('hyperlattice', 1),
+    new StructureDefinition('Silksteel Foundry', 'refine').addPrereq('Unbreakable Materials')
+            .addCost('', 100)
+            .addConsumption('', 1)
+            .addProduction('silksteel', 1),
+    new StructureDefinition('Neurocomputing Lab', 'refine').addPrereq('Synthetic Thought')
+            .addCost('', 100)
+            .addConsumption('', 1)
+            .addProduction('cogitex', 1),
+    new StructureDefinition('Gravitics Lab', 'refine').addPrereq('Artificial Gravity')
+            .addCost('', 100)
+            .addConsumption('', 1)
+            .addProduction('gravalloy', 1),
 
     // Power
     new StructureDefinition('Combustion Reactor', 'power').addCost('metal', 100)
@@ -56,8 +92,4 @@ export const STRUCTURE_LIBRARY: StructureDefinition[] = [
             .addProduction('power', 10),
     new StructureDefinition('Solar Plant', 'power').addCost('metal', 100)
             .addProduction('power', 10),
-
-    // Outpost
-    new StructureDefinition('Temperate Outpost', 'outpost').addCost('metal', 100)
-            .addProduction('power', 5)
 ];

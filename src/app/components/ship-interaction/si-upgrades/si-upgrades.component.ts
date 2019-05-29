@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ResearchService } from '../../../services/research.service';
 import { ResourceCollection } from 'src/app/models/resource';
+import { ResourceService } from 'src/app/services/resource.service';
 
 @Component({
   selector: 'app-si-upgrades',
@@ -12,7 +13,7 @@ export class SiUpgradesComponent implements OnInit {
   upgradesAvailable: UpgradeListItem[] = [];
   upgradesComplete: UpgradeListItem[] = [];
 
-  constructor(private _researchService: ResearchService) { }
+  constructor(private _researchService: ResearchService, private _resourceService: ResourceService) { }
 
   ngOnInit() {
     this.updateUpgradeList();
@@ -43,6 +44,11 @@ export class SiUpgradesComponent implements OnInit {
       };
       this.upgradesAvailable.push(item);
     });
+  }
+
+  canAffordUpgrade(item: UpgradeListItem): boolean {
+    const canAfford = this._resourceService.canAfford(item.cost);
+    return canAfford;
   }
 
   onClickUpgradeItem(item: UpgradeListItem) {

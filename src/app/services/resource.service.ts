@@ -24,6 +24,24 @@ export class ResourceService {
     });
   }
 
+  canAfford(resources: ResourceCollection): boolean {
+    let result = true;
+    resources.resources.forEach(element => {
+      if (!this.globalResources.has(element.resource, element.amount))
+      {
+        result = false;
+      }
+    });
+    return result;
+  }
+
+  spend(resources: ResourceCollection): boolean {
+    let couldAfford = true;
+    if (!this.canAfford(resources)) {return false;}
+    couldAfford = this.globalResources.removeCollection(resources);
+    return couldAfford;
+  }
+
   isDiscovered(resource: string): boolean {
     return this.discoveredResources.includes(resource);
   }

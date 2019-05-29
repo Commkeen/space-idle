@@ -5,6 +5,7 @@ import { PlanetInteractionModel } from '../../../models/planetInteractionModel';
 import { STRUCTURE_LIBRARY } from '../../../staticData/structureDefinitions';
 import { isNullOrUndefined } from 'util';
 import { Resource, ResourceCollection } from '../../../models/resource';
+import { ResearchService } from 'src/app/services/research.service';
 
 @Component({
   selector: 'app-pi-structures',
@@ -13,11 +14,11 @@ import { Resource, ResourceCollection } from '../../../models/resource';
 })
 export class PiStructuresComponent implements OnInit {
 
-  showBuildList = false;
+  showBuildList = true;
   outpostBuildItem: BuildingListItem = new BuildingListItem();
   buildingList: BuildingListItem[] = [];
 
-  constructor(private planetService: PlanetService) {
+  constructor(private planetService: PlanetService, private researchService: ResearchService) {
     this.planetService.selectedPlanetChanged.subscribe(x => this.updateBuildingList());
   }
 
@@ -47,21 +48,22 @@ export class PiStructuresComponent implements OnInit {
       return;
     }
 
-    this.showBuildList = this.hasOutpost(interactionModel);
-
     let dirtyList = false;
     interactionModel.structures.forEach(element => {
       const structureDef = STRUCTURE_LIBRARY.find(x => x.name === element.name);
+      const visible = this.researchService.areUpgradesCompleted(structureDef.prereqs);
       let listItem = this.buildingList.find(x => x.name === element.name);
+
       if (!isNullOrUndefined(listItem)) {
         listItem.canBuild = element.canBuild;
         listItem.canActivate = element.active < element.amount;
         listItem.builtNumber = element.amount;
         listItem.activeNumber = element.active;
-      } else if (structureDef.sortCategory !== 'outpost') {
+        listItem.visible = visible;
+      } else if (visible) {
         dirtyList = true;
       }
-      if (structureDef.sortCategory !== 'outpost') {
+      if (true) {
         listItem = {
           name: element.name,
           sortCategory: structureDef.sortCategory,
@@ -69,9 +71,12 @@ export class PiStructuresComponent implements OnInit {
           builtNumber: element.amount,
           activeNumber: element.active,
           canBuild: element.canBuild,
-          canActivate: element.active < element.amount
+          canActivate: element.active < element.amount,
+          visible: visible
         };
-        newBuildingList.push(listItem);
+        if (listItem.visible) {
+          newBuildingList.push(listItem);
+        }
       }
     });
 
@@ -118,4 +123,5 @@ class BuildingListItem {
   public activeNumber: number;
   public canActivate: boolean;
   public canBuild: boolean;
+  public visible: boolean;
 }
