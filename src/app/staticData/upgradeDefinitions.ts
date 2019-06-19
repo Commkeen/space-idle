@@ -30,15 +30,15 @@ export const UPGRADE_LIBRARY: UpgradeDefinition[] = [
   new UpgradeDefinition('Improved Furnace', 'desc', 'Construction').addCost('duranium', 10),
   new UpgradeDefinition('Tensile Polymers', 'desc', 'Construction').addCost('duranium', 10).addCost('silicate', 10), // Nanofiber
   new UpgradeDefinition('Clathrate Extraction', 'desc', 'Tensile Polymers').addCost('nanochips', 10).addCost('nanofiber', 10), // Noble gas
-  new UpgradeDefinition('arcticSurveyUpgrade', 'desc', 'Construction').addCost('duranium', 50), // Cryofluid
+  new UpgradeDefinition('oceanSurveyUpgrade', 'desc', 'Construction').addCost('duranium', 50),
   new UpgradeDefinition('mountainSurveyUpgrade', 'desc', 'Tensile Polymers').addCost('nanofiber', 10),
-  new UpgradeDefinition('desertSurveyUpgrade', 'desc', 'arcticSurveyUpgrade').addCost('gas', 10),
+  new UpgradeDefinition('desertSurveyUpgrade', 'desc', 'oceanSurveyUpgrade').addCost('hydrocarbon', 10),
   new UpgradeDefinition('Glittersand Extraction', 'desc', 'desertSurveyUpgrade').addCost('cryofluid', 20), // Glittersand
   new UpgradeDefinition('Photon Processing', 'desc', 'Glittersand Extraction').addCost('glittersand', 10), // Optronics
   new UpgradeDefinition('Unbreakable Materials', 'desc', 'Photon Processing').addCost('optronics', 10), // Silksteel
-  new UpgradeDefinition('Electrodynamics', 'desc', 'arcticSurveyUpgrade')
+  new UpgradeDefinition('arcticSurveyUpgrade', 'desc', 'Photon Processing').addCost('optronics', 20), // Cryofluid
+  new UpgradeDefinition('Electrodynamics', 'desc', 'oceanSurveyUpgrade')
                         .addCost('cryofluid', 10).addCost('nanochips', 20), // Ultraconductors
-  new UpgradeDefinition('oceanSurveyUpgrade', 'desc', 'Photon Processing').addCost('optronics', 20),
   new UpgradeDefinition('underseaSurveyUpgrade', 'desc', 'oceanSurveyUpgrade').addCost('ultraconductors', 10), // Charybdin
   new UpgradeDefinition('Extradimensional Synthesis', 'desc', 'underseaSurveyUpgrade').addCost('charybdin', 10), // Hyperlattice
   new UpgradeDefinition('Synthetic Thought', 'desc', 'Photon Processing')

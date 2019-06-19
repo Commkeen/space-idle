@@ -46,44 +46,54 @@ export const STRUCTURE_LIBRARY: StructureDefinition[] = [
     new StructureDefinition('Scanner Array', 'gather').addCost('metal', 100).addConsumption('power', 2).addProduction('survey', 0.2),
 
     // Refinement
-    new StructureDefinition('Smelter', 'refine').addPrereq('Construction').addCost('metal', 100)
-            .addConsumption('power', 2).addConsumption('metal', 2).addConsumption('silicate', 3)
+    new StructureDefinition('Smelter', 'refine').addPrereq('Construction')
+            .addCost('metal', 100)
+            .addConsumption('power', 1).addConsumption('metal', 2)
+            .addConsumption('hydrocarbon', 3)
             .addProduction('duranium', 0.2),
     new StructureDefinition('Electronics Lab', 'refine').addPrereq('Construction')
-            .addCost('', 100)
-            .addConsumption('', 1)
+            .addCost('duranium', 10)
+            .addConsumption('power', 1).addConsumption('silicate', 1)
+            .addConsumption('rareMetal', 1)
             .addProduction('nanochips', 1),
     new StructureDefinition('Cryodistillery', 'refine').addPrereq('arcticSurveyUpgrade')
-            .addCost('', 100)
-            .addConsumption('', 1)
+            .addCost('duranium', 30)
+            .addConsumption('power', 1).addConsumption('gas', 1)
             .addProduction('cryofluid', 1),
     new StructureDefinition('Nanofiber Loom', 'refine').addPrereq('Tensile Polymers')
-            .addCost('', 100)
-            .addConsumption('', 1)
+            .addCost('duranium', 40).addCost('nanochips', 20)
+            .addConsumption('power', 1).addConsumption('hydrocarbon', 1)
+            .addConsumption('silicate', 1)
             .addProduction('nanofiber', 1),
-    new StructureDefinition('Optics Workshop', 'refine').addPrereq('Photon Processing')
-            .addCost('', 100)
-            .addConsumption('', 1)
+    new StructureDefinition('Optronics Workshop', 'refine').addPrereq('Photon Processing')
+            .addCost('duranium', 100).addCost('nanochips', 50)
+            .addConsumption('power', 1).addConsumption('glittersand', 1)
+            .addConsumption('nanochips', 1).addConsumption('gas', 1)
             .addProduction('optronics', 1),
     new StructureDefinition('High-Energy Lab', 'refine').addPrereq('Electrodynamics')
-            .addCost('', 100)
-            .addConsumption('', 1)
+            .addCost('duranium', 100).addCost('nanofiber', 20)
+            .addConsumption('power', 1).addConsumption('rareMetal', 1)
+            .addConsumption('cryofluid', 1)
             .addProduction('ultraconductors', 1),
     new StructureDefinition('Dimensional Forge', 'refine').addPrereq('Extradimensional Synthesis')
-            .addCost('', 100)
-            .addConsumption('', 1)
+            .addCost('nanofiber', 50).addCost('optronics', 25)
+            .addConsumption('power', 1).addConsumption('charybdin', 1)
+            .addConsumption('nanofiber', 1).addConsumption('glittersand', 1)
             .addProduction('hyperlattice', 1),
     new StructureDefinition('Silksteel Foundry', 'refine').addPrereq('Unbreakable Materials')
-            .addCost('', 100)
-            .addConsumption('', 1)
+            .addCost('duranium', 100).addCost('nanofiber', 20).addCost('optronics', 20)
+            .addConsumption('power', 1).addConsumption('duranium', 1)
+            .addConsumption('nanofiber', 1).addConsumption('cryofluid', 1)
             .addProduction('silksteel', 1),
     new StructureDefinition('Neurocomputing Lab', 'refine').addPrereq('Synthetic Thought')
-            .addCost('', 100)
-            .addConsumption('', 1)
+            .addCost('silksteel', 30).addCost('optronics', 50)
+            .addConsumption('power', 1).addConsumption('synaptite', 1)
+            .addConsumption('optronics', 1).addConsumption('ultraconductors', 1)
             .addProduction('cogitex', 1),
     new StructureDefinition('Gravitics Lab', 'refine').addPrereq('Artificial Gravity')
-            .addCost('', 100)
-            .addConsumption('', 1)
+            .addCost('silksteel', 50).addConsumption('optronics', 50)
+            .addConsumption('power', 1).addConsumption('dyene', 1)
+            .addConsumption('ultraconductors', 1)
             .addProduction('gravalloy', 1),
 
     // Power
