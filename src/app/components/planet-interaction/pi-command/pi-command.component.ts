@@ -4,7 +4,7 @@ import { Planet } from 'src/app/models/planet';
 import { PlanetInteractionModel } from 'src/app/models/planetInteractionModel';
 import { FlagsService } from 'src/app/services/flags.service';
 import { isNullOrUndefined } from 'util';
-import { Resource } from 'src/app/models/resource';
+import { Resource, ResourceCollection } from 'src/app/models/resource';
 
 @Component({
   selector: 'app-pi-command',
@@ -17,6 +17,7 @@ export class PiCommandComponent implements OnInit {
   maxDrones: number;
   idleDrones: number;
   droneTasks: DroneTaskItem[] = [];
+  droneCost: ResourceCollection;
 
   showBuildDrone: boolean;
   showOutpostPanel: boolean;
@@ -70,8 +71,8 @@ export class PiCommandComponent implements OnInit {
       return;
     }
 
-    const outpostLevelDef = outpostDef.levels.find(x => x.level === this.outpostLevel);
-    const outpostNextLevelDef = outpostDef.levels.find(x => x.level === this.outpostLevel + 1);
+    const outpostLevelDef = outpostDef.getLevel(this.outpostLevel);
+    const outpostNextLevelDef = outpostDef.getLevel(this.outpostLevel + 1);
     this.outpostName = outpostLevelDef.name;
     if (isNullOrUndefined(outpostNextLevelDef)) {
       this.outpostUpgradeVisible = false;
@@ -89,11 +90,13 @@ export class PiCommandComponent implements OnInit {
   onUpgradeOutpost(): void {
     this.planetService.upgradeOutpost();
     this.updateOutpost();
+    this.updateDrones();
   }
 
 
   updateDrones(): void {
     const drones = this.getSelectedPlanetInteractionModel().drones;
+    this.droneCost = this.planetService.getNextDroneCost();
     this.maxDrones = drones.droneCapacity;
     this.currentDrones = drones.getTotal();
     this.idleDrones = drones.getIdle();

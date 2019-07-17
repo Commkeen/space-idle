@@ -32,7 +32,7 @@ export class Feature {
 
 export const MOCK_SYSTEM: Planet[] = [
     {instanceId: 1, name: 'forest planet', temperature: 'temperate', atmosphere: 'oxygen', features: [
-        new Feature(1, 'depleted power core', 'crash site', 40).gainOnSurvey('electronics', 5),
+        new Feature(1, 'depleted power core', 'crash site', 40).gainOnSurvey('nanochips', 5),
         new Feature(2, 'iron deposit', 'hills', 40).hideBehindSurvey(1).gainOnSurvey('metal', 12),
         new Feature(3, 'copper deposit', 'forest', 50).hideBehindSurvey(1),
         new Feature(4, 'methane vent', 'forest', 40).hideBehindSurvey(3),

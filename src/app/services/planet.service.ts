@@ -109,6 +109,21 @@ export class PlanetService {
     return OUTPOST_LIBRARY.find(def => def.planetType === 'temperate');
   }
 
+  getNextDroneCost(planetInstanceId?: number): ResourceCollection {
+    const resources = new ResourceCollection();
+    if (!planetInstanceId) {
+      planetInstanceId = this.getSelectedPlanet().instanceId;
+    }
+    const interactionModel = this.getPlanetInteractionModel(planetInstanceId);
+    const currentDrones = interactionModel.drones.getTotal();
+    if (currentDrones < 10) {
+      resources.add('nanochips', 5 * currentDrones);
+    } else {
+      resources.add('optronics', 3 * currentDrones);
+    }
+    return resources;
+  }
+
   selectPlanet(instanceId: number): void {
     this._selectedPlanet = this.getPlanet(instanceId);
     this._selectedPlanetInteractionModel = this.getPlanetInteractionModel(instanceId);
@@ -135,7 +150,13 @@ export class PlanetService {
       planetInstanceId = this.getSelectedPlanet().instanceId;
     }
     const interactionModel = this.getPlanetInteractionModel(planetInstanceId);
+    const outpostDef = this.getOutpostTypeForPlanet(planetInstanceId);
     interactionModel.outpostLevel += 1;
+    const newLevel = outpostDef.getLevel(interactionModel.outpostLevel);
+    const newDroneCap = newLevel.droneCapacity;
+    if (newDroneCap > interactionModel.drones.droneCapacity) {
+         interactionModel.drones.droneCapacity = newDroneCap;
+       }
     this.onOutpostUpgraded.next(interactionModel);
   }
 
