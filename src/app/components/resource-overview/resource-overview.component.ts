@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ResourceService } from '../../services/resource.service';
 import { PlanetService } from '../../services/planet.service';
 import { isNullOrUndefined } from 'util';
-import { isNull } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-resource-overview',
