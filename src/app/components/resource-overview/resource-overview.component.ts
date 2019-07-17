@@ -27,8 +27,8 @@ export class ResourceOverviewComponent implements OnInit {
     }
     const item = new ResourceListItem();
     if (!isNullOrUndefined(resource)) {
-      item.production = resource.productionRate.toFixed(0);
-      item.consumption = resource.consumptionRate.toFixed(0);
+      item.production = resource.productionRate;
+      item.consumption = resource.consumptionRate;
     }
     return item;
   }
@@ -50,16 +50,12 @@ export class ResourceOverviewComponent implements OnInit {
         if (!isNullOrUndefined(localResource)) {rate = localResource.getNetProductionRate(); }
       }
 
-      const formatAmount = element.amount.toFixed(0);
-      const formatMax = element.max.toFixed(0);
-      const formatRate = rate.toFixed(1);
-
       resourceList.push({ name: element.resource,
-                          amount: formatAmount,
-                          maxAmount: formatMax,
-                          rate: formatRate,
-                          production: '',
-                          consumption: ''});
+                          amount: element.amount,
+                          maxAmount: element.max,
+                          rate: rate,
+                          production: 0,
+                          consumption: 0});
     });
 
     return resourceList;
@@ -69,9 +65,9 @@ export class ResourceOverviewComponent implements OnInit {
 
 export class ResourceListItem {
   public name: string;
-  public amount: string;
-  public maxAmount: string;
-  public rate: string;
-  public production: string;
-  public consumption: string;
+  public amount: number;
+  public maxAmount: number;
+  public rate: number;
+  public production: number;
+  public consumption: number;
 }

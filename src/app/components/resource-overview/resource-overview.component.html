@@ -11,8 +11,8 @@
     <li>Power: {{ getPower().consumption }}/{{ getPower().production }}</li>
     <br />
     <li *ngFor="let resource of getResourceList(localRateToggleGroup.value)">
-      {{ resource.name }} {{ resource.amount }}/{{ resource.maxAmount }} ({{
-        resource.rate
+      {{ resource.name }} {{ resource.amount | displayNumber }}/{{ resource.maxAmount | displayNumber }} ({{
+        resource.rate | displayNumber
       }}/sec)
     </li>
   </ul>

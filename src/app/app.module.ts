@@ -21,6 +21,7 @@ import { PiCommandComponent } from './components/planet-interaction/pi-command/p
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCog, faCompass, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { DisplayNumberPipe } from './pipes/display-number.pipe';
 
 library.add(faCog);
 library.add(faCompass);
@@ -39,7 +40,8 @@ library.add(faCheck);
     SiResearchComponent,
     SiUpgradesComponent,
     SiSystemsComponent,
-    PiCommandComponent
+    PiCommandComponent,
+    DisplayNumberPipe
   ],
   imports: [
     BrowserModule,
