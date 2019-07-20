@@ -68,6 +68,8 @@ export class PiStructuresComponent implements OnInit {
           name: element.name,
           sortCategory: structureDef.sortCategory,
           costs: structureDef.baseBuildCost,
+          production: structureDef.getProductionRates(),
+          consumption: structureDef.getConsumptionRates(),
           builtNumber: element.amount,
           activeNumber: element.active,
           canBuild: element.canBuild,
@@ -119,6 +121,8 @@ class BuildingListItem {
   public name: string;
   public sortCategory: string;
   public costs: ResourceCollection;
+  public production: ResourceCollection;
+  public consumption: ResourceCollection;
   public builtNumber: number;
   public activeNumber: number;
   public canActivate: boolean;

@@ -7,10 +7,28 @@
       <mat-button-toggle value="misc">Misc</mat-button-toggle>
     </mat-button-toggle-group>
     <div class="gridContainer">
-      <mat-grid-list cols="3" rowHeight="100px">
+      <mat-grid-list cols="3" rowHeight="200px">
         <mat-grid-tile *ngFor="let buildItem of getFilteredBuildingList(group.value)" colspan="1" rowspan="1">
           <div class="structure-item">
               {{buildItem.name}} <span *ngIf="buildItem.builtNumber > 0">({{buildItem.activeNumber}}/{{buildItem.builtNumber}})</span>
+              <mat-divider></mat-divider>
+              <div fxLayout="row">
+                <div fxFlex="50" class="structure-item-production">
+                  Production
+                  <div class="productionItem" *ngFor="let prod of buildItem.production.resources">
+                      {{prod.resource}}: {{prod.amount}}<span *ngIf="prod.resource != 'power'">/s</span>
+                    </div>
+                </div>
+                <mat-divider [vertical]="true"></mat-divider>
+                <div fxFlex="50" class="structure-item-consumption">
+                  Consumption
+                  <div class="consumptionItem" *ngFor="let cons of buildItem.consumption.resources">
+                      {{cons.resource}}: {{cons.amount}}<span *ngIf="cons.resource != 'power'">/s</span>
+                    </div>
+                </div>
+              </div>
+              <mat-divider></mat-divider>
+              Build Cost:
               <div class="costs">
                 <div class="costItem" *ngFor="let cost of buildItem.costs.resources">
                   {{cost.resource}}: {{cost.amount}}

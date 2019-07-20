@@ -37,6 +37,29 @@ export class StructureDefinition {
       return this;
     }
 
+    // TODO: Move these into a proper service that can account for external bonuses and stuff
+    public getProductionRates(): ResourceCollection {
+      const production = new ResourceCollection();
+      this.effects.forEach(element => {
+        if (element instanceof BaseProductionEffect) {
+          const resourceGen = (element as BaseProductionEffect);
+          production.add(resourceGen.resource, resourceGen.amount);
+        }
+      });
+      return production;
+    }
+
+    public getConsumptionRates(): ResourceCollection {
+      const consumption = new ResourceCollection();
+      this.effects.forEach(element => {
+        if (element instanceof BaseConsumptionEffect) {
+          const resourceGen = (element as BaseConsumptionEffect);
+          consumption.add(resourceGen.resource, resourceGen.amount);
+        }
+      });
+      return consumption;
+    }
+
 
 }
 
