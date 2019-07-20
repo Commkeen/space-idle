@@ -7,10 +7,12 @@
       <div *ngFor="let cost of outpostUpgradeCosts">{{cost.resource}}: {{cost.amount}}</div>
     </div>
     <div fxLayout="column" fxFlex="50" class="starship-panel" *ngIf="outpostLevel === 3">
-      <button mat-button *ngIf="!superstructureBuilt" (click)="onBuildShipComponent(1)">Superstructure</button>
-      <button mat-button *ngIf="!stardriveBuilt" (click)="onBuildShipComponent(2)">Stardrive Module</button>
-      <button mat-button *ngIf="!computerBuilt" (click)="onBuildShipComponent(3)">Navigation Computer</button>
-      <button mat-button *ngIf="!gravplatingBuilt" (click)="onBuildShipComponent(4)">Gravity Plating</button>
+      <div *ngFor="let part of shipParts">
+          <button mat-button
+            *ngIf="!part.built"
+            (click)="onBuildShipComponent(part)"
+            [disabled]="!canAffordShipPart(part)">{{part.name}}: {{part.cost.resources[0].amount}} {{part.cost.resources[0].resource}}</button>
+      </div>
       <button mat-button *ngIf="showLaunchBtn" (click)="onLaunchShip()">Launch Starship</button>
       <div *ngIf="shipLaunched">Congratulations, you have reached the end of the Space Idle prototype!</div>
     </div>

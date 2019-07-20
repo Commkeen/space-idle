@@ -24,8 +24,11 @@ export class ResourceService {
     });
   }
 
-  canAfford(resources: ResourceCollection): boolean {
+  canAfford(resources: Resource | ResourceCollection): boolean {
     let result = true;
+    if (resources instanceof Resource) {
+      return this.globalResources.has(resources.resource, resources.amount);
+    }
     resources.resources.forEach(element => {
       if (!this.globalResources.has(element.resource, element.amount))
       {
@@ -35,9 +38,12 @@ export class ResourceService {
     return result;
   }
 
-  spend(resources: ResourceCollection): boolean {
+  spend(resources: Resource | ResourceCollection): boolean {
     let couldAfford = true;
-    if (!this.canAfford(resources)) {return false;}
+    if (resources instanceof Resource) {
+      return this.globalResources.remove(resources.resource, resources.amount);
+    }
+    if (!this.canAfford(resources)) { return false; }
     couldAfford = this.globalResources.removeCollection(resources);
     return couldAfford;
   }

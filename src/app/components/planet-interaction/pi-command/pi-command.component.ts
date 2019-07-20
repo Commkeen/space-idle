@@ -5,6 +5,7 @@ import { PlanetInteractionModel } from 'src/app/models/planetInteractionModel';
 import { FlagsService } from 'src/app/services/flags.service';
 import { isNullOrUndefined } from 'util';
 import { Resource, ResourceCollection } from 'src/app/models/resource';
+import { ResourceService } from 'src/app/services/resource.service';
 
 @Component({
   selector: 'app-pi-command',
@@ -29,14 +30,11 @@ export class PiCommandComponent implements OnInit {
   outpostUpgradeText: string;
   outpostUpgradeCosts: Resource[];
 
-  superstructureBuilt: boolean;
-  stardriveBuilt: boolean;
-  computerBuilt: boolean;
-  gravplatingBuilt: boolean;
+  shipParts: ShipPart[] = [];
   showLaunchBtn: boolean;
   shipLaunched: boolean;
 
-  constructor(private planetService: PlanetService, private flagsService: FlagsService) {
+  constructor(private planetService: PlanetService, private resourceService: ResourceService, private flagsService: FlagsService) {
     this.droneTasks.push(new DroneTaskItem('Survey'));
     this.droneTasks.push(new DroneTaskItem('Mining'));
     this.droneTasks.push(new DroneTaskItem('Logging'));
@@ -45,6 +43,15 @@ export class PiCommandComponent implements OnInit {
 
     this.planetService.selectedPlanetChanged.subscribe(x => this.updateDrones());
     this.planetService.selectedPlanetChanged.subscribe(x => this.updateOutpost());
+
+    this.initShip();
+  }
+
+  initShip() {
+    this.shipParts.push(new ShipPart('Superstructure', 'metal', 15));
+    this.shipParts.push(new ShipPart('Stardrive Module', 'hyperlattice', 5));
+    this.shipParts.push(new ShipPart('Navigation Computer', 'cogitex', 5));
+    this.shipParts.push(new ShipPart('Gravity Plating', 'gravalloy', 5));
   }
 
   ngOnInit() {
@@ -57,6 +64,10 @@ export class PiCommandComponent implements OnInit {
 
   getSelectedPlanetInteractionModel(): PlanetInteractionModel {
     return this.planetService.getSelectedPlanetInteractionModel();
+  }
+
+  canAffordShipPart(part: ShipPart): boolean {
+    return this.resourceService.canAfford(part.cost);
   }
 
   updateOutpost(): void {
@@ -92,7 +103,6 @@ export class PiCommandComponent implements OnInit {
     this.updateOutpost();
     this.updateDrones();
   }
-
 
   updateDrones(): void {
     const drones = this.getSelectedPlanetInteractionModel().drones;
@@ -134,13 +144,9 @@ export class PiCommandComponent implements OnInit {
     this.updateDrones();
   }
 
-  onBuildShipComponent(num: number): void {
-    if (num === 1) { this.superstructureBuilt = true; }
-    if (num === 2) { this.stardriveBuilt = true; }
-    if (num === 3) { this.computerBuilt = true; }
-    if (num === 4) { this.gravplatingBuilt = true; }
-    if (this.superstructureBuilt && this.stardriveBuilt && this.computerBuilt && this.gravplatingBuilt)
-    {
+  onBuildShipComponent(part: ShipPart): void {
+    part.built = this.resourceService.spend(part.cost);
+    if (this.shipParts.every(x => x.built)) {
       this.showLaunchBtn = true;
     }
   }
@@ -159,4 +165,14 @@ class DroneTaskItem {
   }
   public assigned: number;
   public visible: boolean;
+}
+
+class ShipPart {
+  constructor(public name: string, resource: string, amount: number) {
+    this.cost = new ResourceCollection();
+    this.cost.add(resource, amount);
+    this.built = false;
+  }
+  public cost: ResourceCollection;
+  public built: boolean;
 }
