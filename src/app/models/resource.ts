@@ -117,7 +117,7 @@ export class ResourceCollection {
     }
 
     has(resource: string, amount?: number): boolean {
-        if (!amount) { amount = 1; }
+        if (!amount) { amount = 0.01; }
         const resourceItem = this.resources.find(x => x.resource === resource);
         if (isNullOrUndefined(resourceItem)) {return false; }
         return resourceItem.amount >= amount;

@@ -3,8 +3,8 @@
     <br />
     <div fxFlex="50" *ngIf="showOutpostPanel" class="outpost-panel">
       <div>{{outpostName}}</div>
-      <button mat-button *ngIf="outpostUpgradeVisible" (click)="onUpgradeOutpost()">{{outpostUpgradeText}}</button>
-      <div *ngFor="let cost of outpostUpgradeCosts">{{cost.resource}}: {{cost.amount}}</div>
+      <button mat-button *ngIf="outpostUpgradeVisible" [disabled]="!canAffordOutpostUpgrade()" (click)="onUpgradeOutpost()">{{outpostUpgradeText}}</button>
+      <div *ngFor="let cost of outpostUpgradeCosts.resources">{{cost.resource}}: {{cost.amount}}</div>
     </div>
     <div fxLayout="column" fxFlex="50" class="starship-panel" *ngIf="outpostLevel === 3">
       <div *ngFor="let part of shipParts">
@@ -20,7 +20,7 @@
   <div fxLayout="column" fxFlex="50" class="command-column-right">
     <div fxFlex="100" class="drone-panel">
       <div>Drones: {{currentDrones}}/{{maxDrones}} (Idle: {{idleDrones}})</div>
-      <button mat-button *ngIf="showBuildDrone" (click)="onBuildDrone()">Build Drone</button>
+      <button mat-button *ngIf="showBuildDrone" [disabled]="!canAffordDrone()" (click)="onBuildDrone()">Build Drone</button>
       <div *ngIf="showBuildDrone">
         <div *ngFor="let resource of droneCost.resources">
           {{resource.resource}}: {{resource.amount}}

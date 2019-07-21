@@ -16,7 +16,7 @@ export class OutpostDefinition {
 
   public addCost(level: number, resource: string, amount: number): OutpostDefinition {
     const levelDef = this.getLevel(level);
-    levelDef.cost.push(new Resource(resource, amount));
+    levelDef.cost.add(resource, amount);
     return this;
   }
 
@@ -34,7 +34,7 @@ export class OutpostDefinition {
 }
 
 export class OutpostLevelDefinition {
-  public cost: Resource[] = [];
+  public cost: ResourceCollection = new ResourceCollection();
   public researchNeeded = '';
   public droneCapacity = 0;
 

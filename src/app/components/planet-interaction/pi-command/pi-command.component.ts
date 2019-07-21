@@ -28,7 +28,7 @@ export class PiCommandComponent implements OnInit {
   outpostUpgradeVisible: boolean;
   outpostUpgradeEnabled: boolean;
   outpostUpgradeText: string;
-  outpostUpgradeCosts: Resource[];
+  outpostUpgradeCosts: ResourceCollection;
 
   shipParts: ShipPart[] = [];
   showLaunchBtn: boolean;
@@ -70,6 +70,14 @@ export class PiCommandComponent implements OnInit {
     return this.resourceService.canAfford(part.cost);
   }
 
+  canAffordDrone(): boolean {
+    return this.resourceService.canAfford(this.droneCost);
+  }
+
+  canAffordOutpostUpgrade(): boolean {
+    return this.resourceService.canAfford(this.outpostUpgradeCosts);
+  }
+
   updateOutpost(): void {
     const outpostDef = this.planetService.getOutpostTypeForPlanet();
     this.outpostLevel = this.getSelectedPlanetInteractionModel().outpostLevel;
@@ -88,7 +96,7 @@ export class PiCommandComponent implements OnInit {
     if (isNullOrUndefined(outpostNextLevelDef)) {
       this.outpostUpgradeVisible = false;
       this.outpostUpgradeEnabled = false;
-      this.outpostUpgradeCosts = [];
+      this.outpostUpgradeCosts = new ResourceCollection();
       return;
     }
 
@@ -99,6 +107,7 @@ export class PiCommandComponent implements OnInit {
   }
 
   onUpgradeOutpost(): void {
+    if (!this.resourceService.spend(this.outpostUpgradeCosts)) { return; }
     this.planetService.upgradeOutpost();
     this.updateOutpost();
     this.updateDrones();
@@ -129,6 +138,7 @@ export class PiCommandComponent implements OnInit {
 
   onBuildDrone(): void {
     if (this.currentDrones < this.maxDrones) {
+      if (!this.resourceService.spend(this.droneCost)) { return; }
       this.getSelectedPlanetInteractionModel().drones.createDrone();
       this.updateDrones();
     }
