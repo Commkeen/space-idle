@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PlanetService } from '../../../services/planet.service';
 import { Planet } from '../../../models/planet';
 import { isNullOrUndefined } from 'util';
-import { ResourceCollection } from '../../../models/resource';
+import { Resource, ResourceCollection } from '../../../models/resource';
 import { ResearchService } from 'src/app/services/research.service';
 
 @Component({
@@ -82,6 +82,8 @@ export class PiTerrainComponent implements OnInit {
     this.featureDetails.surveyButtonText = 'SURVEY';
     this.featureDetails.exploitButtonText = 'EXPLOIT';
     this.featureDetails.surveyCost = 10;
+    this.featureDetails.exploitCost.addCollection(exploitDef.cost);
+    this.featureDetails.exploitProduction.addCollection(exploitDef.getProduction());
     exploitDef.cost.resources.forEach(element => {
       this.featureDetails.exploitCost.add(element.resource, element.amount);
 
@@ -129,4 +131,5 @@ export class FeatureDetailsViewModel {
   public exploitButtonText = '';
   public surveyCost: number;
   public exploitCost: ResourceCollection = new ResourceCollection();
+  public exploitProduction: ResourceCollection = new ResourceCollection();
 }

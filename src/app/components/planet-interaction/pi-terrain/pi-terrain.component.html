@@ -27,8 +27,22 @@
       <br />
       <div>{{ featureDetails.description }}</div>
       <br />
+      <mat-divider></mat-divider>
       <div *ngIf="featureDetails.needSurveyTech">You don't have the technology to survey this terrain.</div>
       <div *ngIf="featureDetails.needExploitTech">You don't have the technology to exploit this resource.</div>
+      <div *ngIf="featureDetails.canBuyExploit">
+        Exploiting this resource will produce:
+        <div class="productionItem" *ngFor="let prod of featureDetails.exploitProduction.resources">
+          {{prod.resource}}: {{prod.amount}}<span *ngIf="prod.resource != 'power'">/s</span>
+        </div>
+      </div>
+      <div *ngIf="featureDetails.exploited">
+        This exploited resource is producing:
+        <div class="productionItem" *ngFor="let prod of featureDetails.exploitProduction.resources">
+          {{prod.resource}}: {{prod.amount}}<span *ngIf="prod.resource != 'power'">/s</span>
+        </div>
+      </div>
+      <br />
       <button mat-raised-button *ngIf="featureDetails.canSurvey" (click)="buySurvey()">
         {{ featureDetails.surveyButtonText }}
       </button>
