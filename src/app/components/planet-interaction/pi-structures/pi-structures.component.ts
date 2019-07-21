@@ -6,6 +6,7 @@ import { STRUCTURE_LIBRARY } from '../../../staticData/structureDefinitions';
 import { isNullOrUndefined } from 'util';
 import { Resource, ResourceCollection } from '../../../models/resource';
 import { ResearchService } from 'src/app/services/research.service';
+import { ResourceService } from 'src/app/services/resource.service';
 
 @Component({
   selector: 'app-pi-structures',
@@ -18,7 +19,7 @@ export class PiStructuresComponent implements OnInit {
   outpostBuildItem: BuildingListItem = new BuildingListItem();
   buildingList: BuildingListItem[] = [];
 
-  constructor(private planetService: PlanetService, private researchService: ResearchService) {
+  constructor(private planetService: PlanetService, private researchService: ResearchService, private resourceService: ResourceService) {
     this.planetService.selectedPlanetChanged.subscribe(x => this.updateBuildingList());
   }
 
@@ -53,10 +54,12 @@ export class PiStructuresComponent implements OnInit {
       const structureDef = STRUCTURE_LIBRARY.find(x => x.name === element.name);
       const visible = this.researchService.areUpgradesCompleted(structureDef.prereqs);
       let listItem = this.buildingList.find(x => x.name === element.name);
+      const canBuild = this.planetService.canBuildStructure(element.name);
+      const canActivate = this.planetService.canActivateStructure(element.name);
 
       if (!isNullOrUndefined(listItem)) {
-        listItem.canBuild = element.canBuild;
-        listItem.canActivate = element.active < element.amount;
+        listItem.canBuild = canBuild;
+        listItem.canActivate = canActivate;
         listItem.builtNumber = element.amount;
         listItem.activeNumber = element.active;
         listItem.visible = visible;
@@ -73,8 +76,8 @@ export class PiStructuresComponent implements OnInit {
           builtNumber: element.amount,
           activeNumber: element.active,
           showActivateControls: structureDef.hasConsumption(),
-          canBuild: element.canBuild,
-          canActivate: element.active < element.amount,
+          canBuild: canBuild,
+          canActivate: canActivate,
           visible: visible
         };
         if (listItem.visible) {

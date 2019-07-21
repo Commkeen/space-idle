@@ -60,6 +60,10 @@ export class StructureDefinition {
       return consumption;
     }
 
+    public hasConsumption(): boolean {
+      return this.effects.some(element => element instanceof BaseConsumptionEffect);
+    }
+
 
 }
 
