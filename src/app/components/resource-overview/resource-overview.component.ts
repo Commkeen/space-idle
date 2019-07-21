@@ -15,7 +15,7 @@ export class ResourceOverviewComponent implements OnInit {
   ngOnInit() {
   }
 
-  getPower(rateSource: string): ResourceListItem {
+  getPower(rateSource: string = 'localRates'): ResourceListItem {
     const globalResources = this.resourceService.globalResources;
     let localResources = null;
     const localInteractionModel = this.planetService.getSelectedPlanetInteractionModel();

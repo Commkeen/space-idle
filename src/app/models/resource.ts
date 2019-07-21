@@ -59,7 +59,7 @@ export class ResourceCollection {
       let couldAfford = true;
       other.resources.forEach(element => {
         const removeResult = this.remove(element.resource, element.amount);
-        if (!removeResult) {couldAfford = false;}
+        if (!removeResult) { couldAfford = false; }
       });
       return couldAfford;
     }
@@ -121,6 +121,30 @@ export class ResourceCollection {
         const resourceItem = this.resources.find(x => x.resource === resource);
         if (isNullOrUndefined(resourceItem)) {return false; }
         return resourceItem.amount >= amount;
+    }
+
+    getAmount(resource: string): number {
+      const resourceItem = this.resources.find(x => x.resource === resource);
+        if (isNullOrUndefined(resourceItem)) {return 0; }
+        return resourceItem.amount;
+    }
+
+    getProduction(resource: string): number {
+      const resourceItem = this.resources.find(x => x.resource === resource);
+        if (isNullOrUndefined(resourceItem)) {return 0; }
+        return resourceItem.productionRate;
+    }
+
+    getConsumption(resource: string): number {
+      const resourceItem = this.resources.find(x => x.resource === resource);
+        if (isNullOrUndefined(resourceItem)) {return 0; }
+        return resourceItem.consumptionRate;
+    }
+
+    getNetProduction(resource: string): number {
+      const resourceItem = this.resources.find(x => x.resource === resource);
+        if (isNullOrUndefined(resourceItem)) {return 0; }
+        return resourceItem.productionRate - resourceItem.consumptionRate;
     }
 
     clear() {
