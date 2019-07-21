@@ -13,6 +13,10 @@ export class Resource {
         if (this.getNetProductionRate() >= 0) {return 1; }
         return this.productionRate / this.consumptionRate;
     }
+
+    isPower(): boolean {
+      return this.resource === 'power';
+    }
 }
 
 export class ResourceCollection {
