@@ -43,12 +43,13 @@
         </div>
       </div>
       <br />
-      <button mat-raised-button *ngIf="featureDetails.canSurvey" (click)="buySurvey()">
+      <button mat-raised-button *ngIf="featureDetails.canSurvey" [disabled]="!canAffordSurvey()" (click)="buySurvey()">
         {{ featureDetails.surveyButtonText }}
       </button>
       <button
         mat-raised-button
         *ngIf="featureDetails.canBuyExploit"
+        [disabled]="!canAffordExploit()"
         (click)="buyExploit()"
       >
         {{ featureDetails.exploitButtonText }}

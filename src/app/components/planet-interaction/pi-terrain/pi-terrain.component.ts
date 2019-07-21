@@ -4,6 +4,7 @@ import { Planet } from '../../../models/planet';
 import { isNullOrUndefined } from 'util';
 import { Resource, ResourceCollection } from '../../../models/resource';
 import { ResearchService } from 'src/app/services/research.service';
+import { ResourceService } from 'src/app/services/resource.service';
 
 @Component({
   selector: 'app-pi-terrain',
@@ -16,7 +17,7 @@ export class PiTerrainComponent implements OnInit {
   featureList: FeatureListItem[] = [];
   featureDetails: FeatureDetailsViewModel = new FeatureDetailsViewModel();
 
-  constructor(private planetService: PlanetService, private researchService: ResearchService) {
+  constructor(private planetService: PlanetService, private researchService: ResearchService, private resourceService: ResourceService) {
     this.planetService.selectedPlanetChanged.subscribe(x => this.updateFeatureList());
     this.researchService.onResearchUpdated.subscribe(x => this.updateFeatureDetails(this.selectedFeatureId));
   }
@@ -46,6 +47,16 @@ export class PiTerrainComponent implements OnInit {
     this.planetService.exploitFeature(this.getSelectedPlanet().instanceId, id);
     this.updateFeatureList();
     this.selectFeature(id);
+  }
+
+  canAffordSurvey(): boolean {
+    if (isNullOrUndefined(this.featureDetails)) { return false; }
+    return this.resourceService.canAfford(new Resource('survey', this.featureDetails.surveyCost));
+  }
+
+  canAffordExploit(): boolean {
+    if (isNullOrUndefined(this.featureDetails)) { return false; }
+    return this.resourceService.canAfford(this.featureDetails.exploitCost);
   }
 
   updateFeatureList() {
@@ -81,7 +92,7 @@ export class PiTerrainComponent implements OnInit {
     this.featureDetails.exploited = featureInteractions.isExploited(instanceId);
     this.featureDetails.surveyButtonText = 'SURVEY';
     this.featureDetails.exploitButtonText = 'EXPLOIT';
-    this.featureDetails.surveyCost = 10;
+    this.featureDetails.surveyCost = feature.surveyCost;
     this.featureDetails.exploitCost.addCollection(exploitDef.cost);
     this.featureDetails.exploitProduction.addCollection(exploitDef.getProduction());
     exploitDef.cost.resources.forEach(element => {

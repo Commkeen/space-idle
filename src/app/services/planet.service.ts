@@ -3,7 +3,7 @@ import {Planet, Feature} from '../models/planet';
 import {PlanetInteractionModel, Structure} from '../models/planetInteractionModel';
 import {MOCK_SYSTEM} from '../models/planet';
 import { STRUCTURE_LIBRARY, StructureDefinition } from '../staticData/structureDefinitions';
-import { ResourceCollection } from '../models/resource';
+import { ResourceCollection, Resource } from '../models/resource';
 import { Subject } from 'rxjs';
 // tslint:disable-next-line:max-line-length
 import { FeatureDefinition, FEATURE_LIBRARY, UNSURVEYED_FEATURE_LIBRARY, UnsurveyedFeatureDefinition } from '../staticData/featureDefinitions';
@@ -196,8 +196,11 @@ export class PlanetService {
   surveyFeature(planetId: number, featureId: number): void {
     const planet = this.getPlanet(planetId);
     const interactionModel = this.getPlanetInteractionModel(planetId);
-    interactionModel.features.survey(featureId);
     const surveyedFeature = planet.features.find(x => x.instanceId === featureId);
+
+    if (!this._resourceService.spend(new Resource('survey', surveyedFeature.surveyCost))) { return; }
+
+    interactionModel.features.survey(featureId);
     this._resourceService.globalResources.addCollection(surveyedFeature.resourcesOnSurvey);
     this.onFeatureSurveyed.next(surveyedFeature);
     planet.features.forEach(feature => {
@@ -208,7 +211,13 @@ export class PlanetService {
   }
 
   exploitFeature(planetId: number, featureId: number): void {
+    const planet = this.getPlanet(planetId);
     const interactionModel = this.getPlanetInteractionModel(planetId);
+    const exploitedFeature = planet.features.find(x => x.instanceId === featureId);
+    const exploitDefinition = this.getExploitDefinitionForFeature(exploitedFeature.specificName);
+
+    if (!this._resourceService.spend(exploitDefinition.cost)) { return; }
+
     interactionModel.features.exploit(featureId);
   }
 
