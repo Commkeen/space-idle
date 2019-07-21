@@ -10,7 +10,11 @@
       <mat-grid-list cols="3" rowHeight="200px">
         <mat-grid-tile *ngFor="let buildItem of getFilteredBuildingList(group.value)" colspan="1" rowspan="1">
           <div class="structure-item">
-              {{buildItem.name}} <span *ngIf="buildItem.builtNumber > 0">({{buildItem.activeNumber}}/{{buildItem.builtNumber}})</span>
+              {{buildItem.name}}
+              <span *ngIf="buildItem.builtNumber > 0">
+                <span *ngIf="buildItem.showActivateControls">({{buildItem.activeNumber}}/{{buildItem.builtNumber}})</span>
+                <span *ngIf="!buildItem.showActivateControls">({{buildItem.activeNumber}})</span>
+              </span>
               <mat-divider></mat-divider>
               <div fxLayout="row">
                 <div fxFlex="50" class="structure-item-production">
@@ -35,8 +39,14 @@
                 </div>
               </div>
               <button mat-raised-button class="item-build-btn" (click)="onBuildItemClicked(buildItem.name)" [disabled]="!buildItem.canBuild">Build</button>
-              <button mat-raised-button class="item-deactivate-btn" (click)="onDeactivateItemClicked(buildItem.name)" [disabled]="buildItem.activeNumber <= 0">-</button>
-              <button mat-raised-button class="item-activate-btn" (click)="onActivateItemClicked(buildItem.name)" [disabled]="!buildItem.canActivate">+</button>
+              <button mat-raised-button class="item-deactivate-btn"
+                *ngIf="buildItem.showActivateControls"
+                (click)="onDeactivateItemClicked(buildItem.name)"
+                [disabled]="buildItem.activeNumber <= 0">-</button>
+              <button mat-raised-button class="item-activate-btn"
+                *ngIf="buildItem.showActivateControls"
+                (click)="onActivateItemClicked(buildItem.name)"
+                [disabled]="!buildItem.canActivate">+</button>
           </div>
         </mat-grid-tile>
       </mat-grid-list>

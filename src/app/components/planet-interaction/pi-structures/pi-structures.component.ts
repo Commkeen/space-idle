@@ -72,6 +72,7 @@ export class PiStructuresComponent implements OnInit {
           consumption: structureDef.getConsumptionRates(),
           builtNumber: element.amount,
           activeNumber: element.active,
+          showActivateControls: structureDef.hasConsumption(),
           canBuild: element.canBuild,
           canActivate: element.active < element.amount,
           visible: visible
@@ -125,6 +126,7 @@ class BuildingListItem {
   public consumption: ResourceCollection;
   public builtNumber: number;
   public activeNumber: number;
+  public showActivateControls: boolean;
   public canActivate: boolean;
   public canBuild: boolean;
   public visible: boolean;
