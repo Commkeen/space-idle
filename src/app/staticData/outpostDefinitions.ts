@@ -44,7 +44,7 @@ export class OutpostLevelDefinition {
 export const OUTPOST_LIBRARY: OutpostDefinition[] = [
   new OutpostDefinition('temperate')
       .addLevel(1, 'Survival Outpost').addCost(1, 'metal', 10).setDroneCapacity(1, 10)
-      .addLevel(2, 'Command Hub').addCost(2, 'duranium', 20).addCost(2, 'silicate', 50)
+      .addLevel(2, 'Command Hub').addCost(2, 'optronics', 20).addCost(2, 'nanofiber', 50)
       .setDroneCapacity(2, 100)
-      .addLevel(3, 'Launch Complex').addCost(3, 'duranium', 100).setDroneCapacity(3, 500)
+      .addLevel(3, 'Launch Complex').addCost(3, 'silksteel', 100).setDroneCapacity(3, 500)
 ];

@@ -95,8 +95,6 @@ export class PiTerrainComponent implements OnInit {
     this.featureDetails.surveyCost = feature.surveyCost;
     this.featureDetails.exploitCost.addCollection(exploitDef.cost);
     this.featureDetails.exploitProduction.addCollection(exploitDef.getProduction());
-    exploitDef.cost.resources.forEach(element => {
-      this.featureDetails.exploitCost.add(element.resource, element.amount);
 
     // TODO: canBuyExploit and canSurvey should be based on research, not upgrades
     this.featureDetails.needSurveyTech =
@@ -116,8 +114,6 @@ export class PiTerrainComponent implements OnInit {
       this.featureDetails.name = surveyedFeatureDef.name;
       this.featureDetails.description = 'Already exploited';
     }
-
-    });
   }
 }
 

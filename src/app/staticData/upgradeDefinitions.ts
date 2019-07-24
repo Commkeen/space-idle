@@ -32,9 +32,8 @@ export const UPGRADE_LIBRARY: UpgradeDefinition[] = [
   new UpgradeDefinition('Clathrate Extraction', 'desc', 'Tensile Polymers').addCost('nanochips', 10).addCost('nanofiber', 10), // Noble gas
   new UpgradeDefinition('oceanSurveyUpgrade', 'desc', 'Construction').addCost('duranium', 50),
   new UpgradeDefinition('mountainSurveyUpgrade', 'desc', 'Tensile Polymers').addCost('nanofiber', 10),
-  new UpgradeDefinition('desertSurveyUpgrade', 'desc', 'oceanSurveyUpgrade').addCost('hydrocarbon', 10),
-  new UpgradeDefinition('Glittersand Extraction', 'desc', 'desertSurveyUpgrade').addCost('cryofluid', 20), // Glittersand
-  new UpgradeDefinition('Photon Processing', 'desc', 'Glittersand Extraction').addCost('glittersand', 10), // Optronics
+  new UpgradeDefinition('desertSurveyUpgrade', 'desc', 'oceanSurveyUpgrade').addCost('hydrocarbon', 10), // Glittersand
+  new UpgradeDefinition('Photon Processing', 'desc', 'desertSurveyUpgrade').addCost('glittersand', 10), // Optronics
   new UpgradeDefinition('Unbreakable Materials', 'desc', 'Photon Processing').addCost('optronics', 10), // Silksteel
   new UpgradeDefinition('arcticSurveyUpgrade', 'desc', 'Photon Processing').addCost('optronics', 20), // Cryofluid
   new UpgradeDefinition('Electrodynamics', 'desc', 'oceanSurveyUpgrade')

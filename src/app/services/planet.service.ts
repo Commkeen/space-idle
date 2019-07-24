@@ -159,6 +159,8 @@ export class PlanetService {
   buildStructure(planetId: number, structureName: string): void {
     const interactionModel = this.getPlanetInteractionModel(planetId);
     const structure = interactionModel.structures.find(x => x.name === structureName);
+    const structureDef = this.getStructureDefinition(structureName);
+    if (!this._resourceService.spend(structureDef.baseBuildCost)) { return; }
     structure.amount += 1;
     if (this.canActivateStructure(structureName)) {
       structure.active += 1;
