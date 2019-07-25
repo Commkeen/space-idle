@@ -119,7 +119,7 @@ export class PlanetService {
     if (currentDrones < 10) {
       resources.add('nanochips', 5 * currentDrones);
     } else {
-      resources.add('optronics', 3 * currentDrones);
+      resources.add('optronics', 3 * (currentDrones - 8));
     }
     return resources;
   }

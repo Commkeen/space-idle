@@ -7,7 +7,7 @@
       <mat-button-toggle value="misc">Misc</mat-button-toggle>
     </mat-button-toggle-group>
     <div class="gridContainer">
-      <mat-grid-list cols="3" rowHeight="200px">
+      <mat-grid-list cols="3" rowHeight="220px">
         <mat-grid-tile *ngFor="let buildItem of getFilteredBuildingList(group.value)" colspan="1" rowspan="1">
           <div class="structure-item">
               {{buildItem.name}}

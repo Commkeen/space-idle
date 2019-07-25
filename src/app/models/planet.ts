@@ -46,7 +46,7 @@ export const MOCK_SYSTEM: Planet[] = [
         new Feature(12, 'copper deposit', 'desert', 50).hideBehindSurvey(10),
         new Feature(13, 'glittersand spout', 'desert', 50).hideBehindSurvey(12),
         new Feature(14, 'gold vein', 'mountain', 50).hideBehindSurvey(11),
-        new Feature(15, 'synaptite cluster', 'mountain', 50).hideBehindSurvey(13),
+        new Feature(15, 'porphyritic synaptite', 'mountain', 50).hideBehindSurvey(13),
         new Feature(16, 'methane vent', 'ocean', 50).hideBehindSurvey(7),
         new Feature(17, 'oil field', 'ocean', 50).hideBehindSurvey(7),
         new Feature(18, 'methane vent', 'ocean', 50).hideBehindSurvey(7),

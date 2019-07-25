@@ -27,7 +27,7 @@ export const UNSURVEYED_FEATURE_LIBRARY: UnsurveyedFeatureDefinition[] = [
     'The ocean can hide a wealth of resources, and crossing them can lead to new lands.'),
   new UnsurveyedFeatureDefinition('coast', '', 'The coastline is rich in silicates, which can be used in electronics fabrication.'),
   new UnsurveyedFeatureDefinition('arctic', 'arcticSurveyUpgrade', 'The inhospitable cold of the arctic requires special drone upgrades.'),
-  new UnsurveyedFeatureDefinition('abyssal crater', 'deepSeaSurveyUpgrade',
+  new UnsurveyedFeatureDefinition('abyssal crater', 'underseaSurveyUpgrade',
     'The deepest reaches of the planet\'s oceans.  What could be lurking down here?')
 ];
 

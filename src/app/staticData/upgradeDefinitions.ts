@@ -27,9 +27,9 @@ export class UpgradeDefinition {
 
 export const UPGRADE_LIBRARY: UpgradeDefinition[] = [
   new UpgradeDefinition('Construction', 'Large scale construction projects.', '').addCost('metal', 25), // Smelter, nanochips
-  new UpgradeDefinition('Improved Furnace', 'desc', 'Construction').addCost('duranium', 10),
+  // new UpgradeDefinition('Improved Furnace', 'desc', 'Construction').addCost('duranium', 10),
   new UpgradeDefinition('Tensile Polymers', 'desc', 'Construction').addCost('duranium', 10).addCost('silicate', 10), // Nanofiber
-  new UpgradeDefinition('Clathrate Extraction', 'desc', 'Tensile Polymers').addCost('nanochips', 10).addCost('nanofiber', 10), // Noble gas
+  // new UpgradeDefinition('Clathrate Extraction', 'desc', 'Tensile Polymers').addCost('nanochips', 10).addCost('nanofiber', 10), // Noble gas
   new UpgradeDefinition('oceanSurveyUpgrade', 'desc', 'Construction').addCost('duranium', 50),
   new UpgradeDefinition('mountainSurveyUpgrade', 'desc', 'Tensile Polymers').addCost('nanofiber', 10),
   new UpgradeDefinition('desertSurveyUpgrade', 'desc', 'oceanSurveyUpgrade').addCost('hydrocarbon', 10), // Glittersand

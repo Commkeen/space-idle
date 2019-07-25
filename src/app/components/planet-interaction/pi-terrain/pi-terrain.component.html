@@ -33,13 +33,13 @@
       <div *ngIf="featureDetails.canBuyExploit">
         Exploiting this resource will produce:
         <div class="productionItem" *ngFor="let resource of featureDetails.exploitProduction.resources">
-          {{resource.resource}}: {{resource.amount}}<span *ngIf="!resource.isPower()">/s</span>
+          {{resource.resource}}: {{resource.amount | displayNumber}}<span *ngIf="!resource.isPower()">/s</span>
         </div>
       </div>
       <div *ngIf="featureDetails.exploited">
         This exploited resource is producing:
         <div class="productionItem" *ngFor="let resource of featureDetails.exploitProduction.resources">
-          {{resource.resource}}: {{resource.amount}}<span *ngIf="!resource.isPower()">/s</span>
+          {{resource.resource}}: {{resource.amount | displayNumber}}<span *ngIf="!resource.isPower()">/s</span>
         </div>
       </div>
       <br />
@@ -57,7 +57,7 @@
       <span *ngIf="featureDetails.canSurvey">Cost: {{featureDetails.surveyCost}} Survey</span>
       <div *ngIf="featureDetails.canBuyExploit">
         <div *ngFor="let resource of featureDetails.exploitCost.resources">
-          {{resource.resource}}: {{resource.amount}}
+          {{resource.resource}}: {{resource.amount | displayNumber}}
         </div>
       </div>
     </div>

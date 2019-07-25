@@ -48,10 +48,10 @@ export class PiCommandComponent implements OnInit {
   }
 
   initShip() {
-    this.shipParts.push(new ShipPart('Superstructure', 'metal', 15));
-    this.shipParts.push(new ShipPart('Stardrive Module', 'hyperlattice', 5));
-    this.shipParts.push(new ShipPart('Navigation Computer', 'cogitex', 5));
-    this.shipParts.push(new ShipPart('Gravity Plating', 'gravalloy', 5));
+    this.shipParts.push(new ShipPart('Superstructure', 'silksteel', 75));
+    this.shipParts.push(new ShipPart('Stardrive Module', 'hyperlattice', 50));
+    this.shipParts.push(new ShipPart('Navigation Computer', 'cogitex', 50));
+    this.shipParts.push(new ShipPart('Gravity Plating', 'gravalloy', 50));
   }
 
   ngOnInit() {
