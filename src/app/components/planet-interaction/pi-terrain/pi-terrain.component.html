@@ -1,64 +1,59 @@
 <div fxLayout="row" class="layout-container">
   <div fxFlex="60" class="layout-column-left">
-    <ul class="feature-list">
-      <li *ngFor="let feature of featureList">
-        <fa-icon
-          icon="compass"
-          *ngIf="feature.discovered && !feature.surveyed"
-        ></fa-icon>
-        <fa-icon
-          icon="cog"
-          *ngIf="feature.surveyed && !feature.exploited"
-        ></fa-icon>
-        <fa-icon icon="check" *ngIf="feature.exploited"></fa-icon>
-        <span
-          class="feature-list-item"
-          *ngIf="feature.discovered"
-          (click)="selectFeature(feature.id)"
-          [ngClass]="{ selected: selectedFeatureId === feature.id }"
-          >{{ feature.name }}</span
-        >
-      </li>
-    </ul>
+    <div class="region-list">
+      <div class="region">
+        <div fxLayout="row" class="region-header">
+          <div fxFlex="20">
+            <fa-icon icon="cog"></fa-icon>
+          </div>
+          <div fxFlex="40">
+            Plains
+          </div>
+          <div fxFlex="40">
+            <div>
+              Infrastructure: 0
+            </div>
+            <div>
+              <span>Drones: 0/2</span>
+              <button>-</button>
+              <button>+</button>
+            </div>
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="feature-list">
+          <div *ngFor="let feature of featureList">
+            <fa-icon icon="cog"></fa-icon>
+            <span>{{ feature.name }}</span>
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+      </div>
+    </div>
   </div>
+  <mat-divider [vertical]="true"></mat-divider>
   <div fxFlex="40" class="layout-column-right">
-    <div class="detail-card">
-      <div>{{ featureDetails.name }}</div>
-      <br />
-      <div>{{ featureDetails.description }}</div>
-      <br />
-      <mat-divider></mat-divider>
-      <div *ngIf="featureDetails.needSurveyTech">You don't have the technology to survey this terrain.</div>
-      <div *ngIf="featureDetails.needExploitTech">You don't have the technology to exploit this resource.</div>
-      <div *ngIf="featureDetails.canBuyExploit">
-        Exploiting this resource will produce:
-        <div class="productionItem" *ngFor="let resource of featureDetails.exploitProduction.resources">
-          {{resource.resource}}: {{resource.amount | displayNumber}}<span *ngIf="!resource.isPower()">/s</span>
+    <div class="region-detail">
+      <div>Plains</div>
+      <div>A wide open plain.</div>
+
+    </div>
+    <mat-divider></mat-divider>
+    <div class="feature-detail">
+      <div>Copper Deposit</div>
+      <div>Can be mined for metal.</div>
+      <div>
+        Adds to each drone's production:
+        <div class="productionItem">
+          metal: 0.35/s
         </div>
       </div>
-      <div *ngIf="featureDetails.exploited">
-        This exploited resource is producing:
-        <div class="productionItem" *ngFor="let resource of featureDetails.exploitProduction.resources">
-          {{resource.resource}}: {{resource.amount | displayNumber}}<span *ngIf="!resource.isPower()">/s</span>
+      <div>
+        Upgrade:
+        <div class="costItem">
+          metal: 15
         </div>
-      </div>
-      <br />
-      <button mat-raised-button *ngIf="featureDetails.canSurvey" [disabled]="!canAffordSurvey()" (click)="buySurvey()">
-        {{ featureDetails.surveyButtonText }}
-      </button>
-      <button
-        mat-raised-button
-        *ngIf="featureDetails.canBuyExploit"
-        [disabled]="!canAffordExploit()"
-        (click)="buyExploit()"
-      >
-        {{ featureDetails.exploitButtonText }}
-      </button>
-      <span *ngIf="featureDetails.canSurvey">Cost: {{featureDetails.surveyCost}} Survey</span>
-      <div *ngIf="featureDetails.canBuyExploit">
-        <div *ngFor="let resource of featureDetails.exploitCost.resources">
-          {{resource.resource}}: {{resource.amount | displayNumber}}
-        </div>
+        <button mat-raised-button>Exploit</button>
       </div>
     </div>
   </div>
