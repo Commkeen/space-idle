@@ -3,13 +3,12 @@ import { ResourceService } from './resource.service';
 import { TimeService } from './time.service';
 import { PlanetService } from './planet.service';
 import { STRUCTURE_LIBRARY } from '../staticData/structureDefinitions';
-import { Structure, PlanetInteractionModel, DroneCollection } from '../models/planetInteractionModel';
+import { Structure, PlanetInteractionModel, DroneCollection, RegionInteraction } from '../models/planetInteractionModel';
 import { ResourceCollection } from '../models/resource';
-import { Feature } from '../models/planet';
+import { Feature, Region } from '../models/planet';
 import { EXPLOIT_LIBRARY } from '../staticData/exploitDefinitions';
 import { FEATURE_LIBRARY } from '../staticData/featureDefinitions';
-import { TASK_LIBRARY } from '../staticData/taskDefinitions';
-import { BaseProductionEffect, BaseConsumptionEffect } from '../staticData/effectDefinitions';
+import { BaseProductionEffect, BaseConsumptionEffect, Effect, BaseRegionalPerDroneProductionEffect, StackingRegionalPerDroneProductionEffect } from '../staticData/effectDefinitions';
 
 @Injectable({
   providedIn: 'root'
@@ -48,15 +47,17 @@ export class SimulationService {
   }
 
   private updateLocalPlanetProductionRates(instanceId: number) {
+    const regions = this._planetService.getPlanet(instanceId).regions;
     const interactionModel = this._planetService.getPlanetInteractionModel(instanceId);
     interactionModel.localResources.resetRates();
-    this.updateDroneProductionRate(interactionModel.drones, interactionModel.localResources);
-    interactionModel.features.features.forEach(feature => {
-      if (feature.exploited) {
-        const featureInstance = this._planetService.getFeature(feature.featureInstanceId, instanceId);
-        this.updateFeatureProductionRate(featureInstance, interactionModel.localResources);
-      }
+    const drones = interactionModel.drones;
+    const regionInteractions = interactionModel.regions;
+    regionInteractions.regions.forEach(regionInteraction => {
+      const region = regions.find(x => x.instanceId === regionInteraction.regionInstanceId);
+      const assignedDrones = drones.get(regionInteraction.regionInstanceId);
+      this.updateRegionProductionRate(region, regionInteraction, assignedDrones, interactionModel.localResources);
     });
+
     interactionModel.structures.forEach(structure => {
       this.updateStructureProductionRate(structure, interactionModel.localResources);
     });
@@ -65,16 +66,46 @@ export class SimulationService {
     });
   }
 
-  private updateFeatureProductionRate(feature: Feature, resources: ResourceCollection) {
+  private updateRegionProductionRate(region: Region, regionInteraction: RegionInteraction,
+                                      assignedDrones: number, resources: ResourceCollection) {
+    const effects = this.getActiveEffectsForRegion(region, regionInteraction);
+    const productionTotals = this.getProductionTotalsForEffects(effects, assignedDrones);
+    productionTotals.resources.forEach(x => {
+      resources.addProductionRate(x.resource, x.productionRate);
+    });
+  }
 
-    const featureDef = FEATURE_LIBRARY.find(x => x.name === feature.specificName);
-    const exploitDef = EXPLOIT_LIBRARY.find(x => x.name === featureDef.exploitName);
-    exploitDef.effects.forEach(element => {
-      if (element instanceof BaseProductionEffect) {
-        const resourceGen = (element as BaseProductionEffect);
-        resources.addProductionRate(resourceGen.resource, resourceGen.amount);
+  private getProductionTotalsForEffects(effects: Effect[], assignedDrones: number): ResourceCollection {
+    const results = new ResourceCollection();
+    const baseProductionEffects = effects.filter(
+      x => x instanceof BaseRegionalPerDroneProductionEffect) as BaseRegionalPerDroneProductionEffect[];
+    const addedProductionEffects = effects.filter(
+      x => x instanceof StackingRegionalPerDroneProductionEffect) as StackingRegionalPerDroneProductionEffect[];
+    baseProductionEffects.forEach(x => {
+      if (results.getProduction(x.resource) < x.amount) {
+        results.setProductionRate(x.resource, x.amount);
       }
     });
+    addedProductionEffects.forEach(x => {
+      results.addProductionRate(x.resource, x.amount);
+    });
+    results.resources.forEach(x => {
+      x.productionRate = x.productionRate * assignedDrones;
+    });
+    return results;
+  }
+
+  private getActiveEffectsForRegion(region: Region, regionInteraction: RegionInteraction): Effect[] {
+    let result: Effect[] = [];
+    region.features.forEach(feature => {
+      const featureDef = FEATURE_LIBRARY.find(x => feature.name === x.name);
+      const exploitDef = EXPLOIT_LIBRARY.find(x => featureDef.exploitName === x.name);
+      result = result.concat(featureDef.effects);
+      if (exploitDef && regionInteraction) {
+        result = result.concat(exploitDef.effects);
+      }
+    });
+    return result;
   }
 
   private updateStructureProductionRate(structure: Structure, resources: ResourceCollection) {
@@ -126,14 +157,6 @@ export class SimulationService {
 
     consumption.resources.forEach(resource => {
       resources.addConsumptionRate(resource.resource, resource.amount);
-    });
-  }
-
-  private updateDroneProductionRate(drones: DroneCollection, resources: ResourceCollection) {
-    TASK_LIBRARY.forEach(task => {
-      task.baseProduction.resources.forEach(resource => {
-        resources.addProductionRate(resource.resource, resource.amount * drones.get(task.name));
-      });
     });
   }
 

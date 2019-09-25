@@ -1,35 +1,39 @@
-export class UnsurveyedFeatureDefinition {
-  constructor (
-    public name: string,
-    public surveyTech: string,
-    public description: string,
-  ) {}
-}
+import { Effect, BaseRegionalPerDroneProductionEffect } from "./effectDefinitions";
 
 export class FeatureDefinition {
+  public effects: Effect[] = [];
+  public description = '';
+  public exploitName = '';
+
   constructor (
     public name: string,
-    public description: string,
-    public exploitName: string,
-  ) {}
-}
+    description?: string,
+    exploitName?: string
+  ) {
+    if (description) {
+      this.description = description;
+    }
+    if (exploitName) {
+      this.exploitName = exploitName;
+    }
+  }
 
-export const UNSURVEYED_FEATURE_LIBRARY: UnsurveyedFeatureDefinition[] = [
-  new UnsurveyedFeatureDefinition('crash site', '', 'The wreckage of a ship is visible in the distance.'),
-  new UnsurveyedFeatureDefinition('hills', '', 'The rolling hills of geologically active planets often conceal valuable metal deposits.'),
-  new UnsurveyedFeatureDefinition('forest', '',
-    'Carbon-based plant life can be a useful source of hydrocarbons for manufacturing and energy production.'),
-  new UnsurveyedFeatureDefinition('mountain', 'mountainSurveyUpgrade',
-    'Mountains are difficult for drones to navigate, but can be an excellent source of valuable minerals.'),
-  new UnsurveyedFeatureDefinition('desert', 'desertSurveyUpgrade',
-    'Deserts contain the possibility of oil reserves, as well as more exotic resources.'),
-  new UnsurveyedFeatureDefinition('ocean', 'oceanSurveyUpgrade',
-    'The ocean can hide a wealth of resources, and crossing them can lead to new lands.'),
-  new UnsurveyedFeatureDefinition('coast', '', 'The coastline is rich in silicates, which can be used in electronics fabrication.'),
-  new UnsurveyedFeatureDefinition('arctic', 'arcticSurveyUpgrade', 'The inhospitable cold of the arctic requires special drone upgrades.'),
-  new UnsurveyedFeatureDefinition('abyssal crater', 'underseaSurveyUpgrade',
-    'The deepest reaches of the planet\'s oceans.  What could be lurking down here?')
-];
+  public addProduction(resource: string, amount: number): FeatureDefinition {
+    const effect = new BaseRegionalPerDroneProductionEffect(resource, amount);
+    this.effects.push(effect);
+    return this;
+  }
+
+  public setDescription(desc: string): FeatureDefinition {
+    this.description = desc;
+    return this;
+  }
+
+  public setExploit(name: string): FeatureDefinition {
+    this.exploitName = name;
+    return this;
+  }
+}
 
 export const FEATURE_LIBRARY: FeatureDefinition[] = [
   new FeatureDefinition('depleted power core',

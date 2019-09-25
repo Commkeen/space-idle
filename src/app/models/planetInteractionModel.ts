@@ -5,7 +5,7 @@ export class PlanetInteractionModel {
     planetInstanceId: number;
     outpostLevel: 0;
     structures: Structure[];
-    features: FeatureInteractionCollection = new FeatureInteractionCollection();
+    regions: RegionInteractionCollection = new RegionInteractionCollection();
     localResources: ResourceCollection;
     drones: DroneCollection = new DroneCollection();
 }
@@ -18,58 +18,71 @@ export class Structure {
 }
 
 export class FeatureInteraction {
-    featureInstanceId: number;
-    discovered: boolean;
-    surveyed: boolean;
-    exploited: boolean;
+  featureInstanceId: number;
+  exploited: boolean;
 }
 
-export class FeatureInteractionCollection {
-  features: FeatureInteraction[] = [];
+export class RegionInteraction {
+  regionInstanceId: number;
+  infrastructureLevel: number;
+  features: FeatureInteraction[];
 
-  isDiscovered(id: number): boolean {
-    return this.getFeature(id).discovered;
+  isFeatureExploited(feature: number): boolean {
+    return this.getFeature(feature).exploited;
   }
 
-  isSurveyed(id: number): boolean {
-    return this.getFeature(id).surveyed;
-  }
-
-  isExploited(id: number): boolean {
-    return this.getFeature(id).exploited;
-  }
-
-  discover(id: number): void {
-    this.getFeature(id).discovered = true;
-  }
-
-  survey(id: number): void {
-    this.getFeature(id).surveyed = true;
-  }
-
-  exploit(id: number): void {
-    this.getFeature(id).exploited = true;
-  }
-
-  private getFeature(id: number): FeatureInteraction {
-    let feature = this.features.find(x => x.featureInstanceId === id);
+  getFeature(featureId: number): FeatureInteraction {
+    let feature = this.features.find(x => x.featureInstanceId === featureId);
     if (isNullOrUndefined(feature)) {
       feature = new FeatureInteraction();
-      feature.featureInstanceId = id;
+      feature.featureInstanceId = featureId;
       this.features.push(feature);
     }
     return feature;
   }
 }
 
+
+
+export class RegionInteractionCollection {
+  regions: RegionInteraction[] = [];
+
+  isFeatureExploited(region: number, feature: number): boolean {
+    return this.getRegion(region).isFeatureExploited(feature);
+  }
+
+  advanceInfrastructure(regionId: number) {
+    this.getRegion(regionId).infrastructureLevel++;
+  }
+
+  exploit(region: number, feature: number): void {
+    this.getFeature(region, feature).exploited = true;
+  }
+
+  private getRegion(regionId: number): RegionInteraction {
+    let region = this.regions.find(x => x.regionInstanceId === regionId);
+    if (isNullOrUndefined(region)) {
+      region = new RegionInteraction();
+      region.regionInstanceId = regionId;
+      this.regions.push(region);
+    }
+    return region;
+  }
+
+  private getFeature(regionId: number, featureId: number): FeatureInteraction {
+    const region = this.getRegion(regionId);
+    return region.getFeature(featureId);
+  }
+}
+
 export class DroneCollection {
   public droneCapacity = 0;
   private idleDrones = 0;
-  private tasks: Map<string, number> = new Map();
+  private regionAssignments: Map<number, number> = new Map();
 
-  get(task: string): number {
-    if (this.tasks.has(task)) {
-      return this.tasks.get(task);
+  get(regionId: number): number {
+    if (this.regionAssignments.has(regionId)) {
+      return this.regionAssignments.get(regionId);
     }
     return 0;
   }
@@ -80,7 +93,7 @@ export class DroneCollection {
 
   getTotal(): number {
     let total = this.idleDrones;
-    for (const value of Array.from(this.tasks.values())) {
+    for (const value of Array.from(this.regionAssignments.values())) {
       total += value;
     }
     return total;
@@ -90,22 +103,21 @@ export class DroneCollection {
     this.idleDrones += 1;
   }
 
-  assign(task: string): void {
+  assign(regionId: number): void {
     if (this.idleDrones <= 0) {
       return;
     }
-    if (!this.tasks.has(task)) {
-      this.tasks.set(task, 0);
+    if (!this.regionAssignments.has(regionId)) {
+      this.regionAssignments.set(regionId, 0);
     }
-    this.tasks.set(task, this.get(task) + 1);
+    this.regionAssignments.set(regionId, this.get(regionId) + 1);
     this.idleDrones -= 1;
   }
 
-  unassign(task: string): void {
-    if (this.get(task) > 0) {
-      this.tasks.set(task, this.get(task) - 1);
+  unassign(regionId: number): void {
+    if (this.get(regionId) > 0) {
+      this.regionAssignments.set(regionId, this.get(regionId) - 1);
       this.idleDrones += 1;
     }
   }
-
 }

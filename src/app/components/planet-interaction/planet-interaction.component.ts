@@ -9,13 +9,14 @@ import { FlagsService } from '../../services/flags.service';
 export class PlanetInteractionComponent implements OnInit {
 
   public showStructures = false;
-  public showTerrain = false;
+  public showTerrain = true;
   public showUpgrades = false;
 
   constructor(private flagsService: FlagsService) { }
 
   ngOnInit() {
     this.flagsService.onFlagsUpdated.subscribe(() => this.updateTabVisibility());
+    this.updateTabVisibility();
   }
 
   updateTabVisibility() {

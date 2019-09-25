@@ -15,7 +15,7 @@ export class FlagsService {
   public showDroneHarvest = false;
   public showDroneSift = false;
   public showOutpostPanel = false;
-  public showTerrain = false;
+  public showTerrain = true;
   public showStructures = false;
   public showUpgrades = false;
   public showPower = false;
@@ -26,9 +26,6 @@ export class FlagsService {
               private _resourceService: ResourceService, private _researchService: ResearchService) {}
 
   init(): void {
-    this._planetService.onFeatureSurveyed.subscribe(x =>
-      this.onFeatureSurveyed(x)
-    );
     this._planetService.onOutpostUpgraded.subscribe(x =>
       this.onOutpostUpgraded()
     );
@@ -36,27 +33,12 @@ export class FlagsService {
       this.onResearchUpdated()
     );
     this._timeService.tick.subscribe(x => this.update(x));
+    this.onFlagsUpdated.next();
   }
 
   update(dT: number) {
     if (!this.showTerrain) { this.checkForTerrainTabUnlock(); }
     if (!this.showOutpostPanel) { this.checkForOutpostPanelUnlock(); }
-  }
-
-  onFeatureSurveyed(feature: Feature): void {
-    if (feature.genericName === 'crash site') {
-      this.showDroneBuild = true;
-    }
-    if (feature.genericName === 'hills') {
-      this.showDroneMine = true;
-    }
-    if (feature.genericName === 'forest') {
-      this.showDroneHarvest = true;
-    }
-    if (feature.genericName === 'coast') {
-      this.showDroneSift = true;
-    }
-    this.onFlagsUpdated.next();
   }
 
   onOutpostUpgraded(): void {

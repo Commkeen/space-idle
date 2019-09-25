@@ -35,13 +35,7 @@ export class PiCommandComponent implements OnInit {
   shipLaunched: boolean;
 
   constructor(private planetService: PlanetService, private resourceService: ResourceService, private flagsService: FlagsService) {
-    this.droneTasks.push(new DroneTaskItem('Survey'));
-    this.droneTasks.push(new DroneTaskItem('Mining'));
-    this.droneTasks.push(new DroneTaskItem('Logging'));
-    this.droneTasks.push(new DroneTaskItem('Sifting'));
-    this.revealDroneTask('Survey');
 
-    this.planetService.selectedPlanetChanged.subscribe(x => this.updateDrones());
     this.planetService.selectedPlanetChanged.subscribe(x => this.updateOutpost());
 
     this.initShip();
@@ -110,48 +104,10 @@ export class PiCommandComponent implements OnInit {
     if (!this.resourceService.spend(this.outpostUpgradeCosts)) { return; }
     this.planetService.upgradeOutpost();
     this.updateOutpost();
-    this.updateDrones();
-  }
-
-  updateDrones(): void {
-    const drones = this.getSelectedPlanetInteractionModel().drones;
-    this.droneCost = this.planetService.getNextDroneCost();
-    this.maxDrones = drones.droneCapacity;
-    this.currentDrones = drones.getTotal();
-    this.idleDrones = drones.getIdle();
-    this.droneTasks.forEach(element => {
-      element.assigned = drones.get(element.name);
-    });
   }
 
   onFlagsUpdated(): void {
     if (this.flagsService.showOutpostPanel) {this.showOutpostPanel = true; }
-    if (this.flagsService.showDroneBuild) {this.showBuildDrone = true; }
-    if (this.flagsService.showDroneHarvest) { this.revealDroneTask('Logging'); }
-    if (this.flagsService.showDroneMine) { this.revealDroneTask('Mining'); }
-    if (this.flagsService.showDroneSift) { this.revealDroneTask('Sifting'); }
-  }
-
-  revealDroneTask(task: string): void {
-    this.droneTasks.find(x => x.name === task).visible = true;
-  }
-
-  onBuildDrone(): void {
-    if (this.currentDrones < this.maxDrones) {
-      if (!this.resourceService.spend(this.droneCost)) { return; }
-      this.getSelectedPlanetInteractionModel().drones.createDrone();
-      this.updateDrones();
-    }
-  }
-
-  onAssignDrone(task: string): void {
-    this.getSelectedPlanetInteractionModel().drones.assign(task);
-    this.updateDrones();
-  }
-
-  onUnassignDrone(task: string): void {
-    this.getSelectedPlanetInteractionModel().drones.unassign(task);
-    this.updateDrones();
   }
 
   onBuildShipComponent(part: ShipPart): void {

@@ -1,13 +1,13 @@
 import { Injectable, OnInit } from '@angular/core';
-import {Planet, Feature} from '../models/planet';
+import {Planet, Feature, Region} from '../models/planet';
 import {PlanetInteractionModel, Structure} from '../models/planetInteractionModel';
 import {MOCK_SYSTEM} from '../models/planet';
 import { STRUCTURE_LIBRARY, StructureDefinition } from '../staticData/structureDefinitions';
 import { ResourceCollection, Resource } from '../models/resource';
 import { Subject } from 'rxjs';
-// tslint:disable-next-line:max-line-length
-import { FeatureDefinition, FEATURE_LIBRARY, UNSURVEYED_FEATURE_LIBRARY, UnsurveyedFeatureDefinition } from '../staticData/featureDefinitions';
+import { FeatureDefinition, FEATURE_LIBRARY } from '../staticData/featureDefinitions';
 import { EXPLOIT_LIBRARY, ExploitDefinition } from '../staticData/exploitDefinitions';
+import { REGION_LIBRARY, RegionDefinition } from '../staticData/regionDefinitions';
 import { OutpostDefinition, OUTPOST_LIBRARY } from '../staticData/outpostDefinitions';
 import { ResourceService } from './resource.service';
 
@@ -44,11 +44,6 @@ export class PlanetService {
         const structure = {name: structureDef.name, amount: 0, active: 0, canBuild: false};
         interactionModel.structures.push(structure);
       });
-      element.features.forEach(feature => {
-        if (!feature.hiddenBehindSurvey) {
-          interactionModel.features.discover(feature.instanceId);
-        }
-      });
       this.updateInteractionModel(interactionModel);
       this._currentSystemInteractionModels.push(interactionModel);
     });
@@ -81,23 +76,31 @@ export class PlanetService {
     return model;
   }
 
-  getFeature(featureInstanceId: number, planetInstanceId?: number): Feature {
+  getRegion(regionId: number, planetInstanceId?: number): Region {
     if (!planetInstanceId) {
       planetInstanceId = this.getSelectedPlanet().instanceId;
     }
-    return this.getPlanet(planetInstanceId).features.find(x => x.instanceId === featureInstanceId);
+    return this.getPlanet(planetInstanceId).regions.find(x => x.instanceId === regionId);
   }
 
-  getUnsurveyedFeatureDefinition(name: string): UnsurveyedFeatureDefinition {
-    return UNSURVEYED_FEATURE_LIBRARY.find(def => def.name === name);
+  getFeature(regionId: number, featureId: number, planetInstanceId?: number): Feature {
+    if (!planetInstanceId) {
+      planetInstanceId = this.getSelectedPlanet().instanceId;
+    }
+    const region = this.getPlanet(planetInstanceId).regions.find(x => x.instanceId === regionId);
+    return region.features.find(x => x.instanceId === featureId);
   }
 
-  getSurveyedFeatureDefinition(name: string): FeatureDefinition {
+  getRegionDefinition(name: string): RegionDefinition {
+    return REGION_LIBRARY.find(def => def.name === name);
+  }
+
+  getFeatureDefinition(name: string): FeatureDefinition {
     return FEATURE_LIBRARY.find(def => def.name === name);
   }
 
   getExploitDefinitionForFeature(feature: string): ExploitDefinition {
-    const featureDef = this.getSurveyedFeatureDefinition(feature);
+    const featureDef = this.getFeatureDefinition(feature);
     return EXPLOIT_LIBRARY.find(def => def.name === featureDef.exploitName);
   }
 
@@ -190,37 +193,26 @@ export class PlanetService {
     this.onOutpostUpgraded.next(interactionModel);
   }
 
-  discoverFeature(planetId: number, featureId: number): void {
-    const interactionModel = this.getPlanetInteractionModel(planetId);
-    interactionModel.features.discover(featureId);
+  upgradeInfrastructure(regionId: number, planetInstanceId?: number) {
+    if (!planetInstanceId) {
+      planetInstanceId = this.getSelectedPlanet().instanceId;
+    }
+    // TODO
   }
 
-  surveyFeature(planetId: number, featureId: number): void {
-    const planet = this.getPlanet(planetId);
-    const interactionModel = this.getPlanetInteractionModel(planetId);
-    const surveyedFeature = planet.features.find(x => x.instanceId === featureId);
-
-    if (!this._resourceService.spend(new Resource('survey', surveyedFeature.surveyCost))) { return; }
-
-    interactionModel.features.survey(featureId);
-    this._resourceService.globalResources.addCollection(surveyedFeature.resourcesOnSurvey);
-    this.onFeatureSurveyed.next(surveyedFeature);
-    planet.features.forEach(feature => {
-      if (feature.hiddenBehindSurvey === featureId) {
-        interactionModel.features.discover(feature.instanceId);
-      }
-    });
-  }
-
-  exploitFeature(planetId: number, featureId: number): void {
-    const planet = this.getPlanet(planetId);
-    const interactionModel = this.getPlanetInteractionModel(planetId);
-    const exploitedFeature = planet.features.find(x => x.instanceId === featureId);
-    const exploitDefinition = this.getExploitDefinitionForFeature(exploitedFeature.specificName);
+  exploitFeature(regionId: number, featureId: number, planetInstanceId?: number): void {
+    if (!planetInstanceId) {
+      planetInstanceId = this.getSelectedPlanet().instanceId;
+    }
+    const planet = this.getPlanet(planetInstanceId);
+    const interactionModel = this.getPlanetInteractionModel(planetInstanceId);
+    const region = planet.regions.find(x => x.instanceId === regionId);
+    const feature = region.features.find(x => x.instanceId === featureId);
+    const exploitDefinition = this.getExploitDefinitionForFeature(feature.name);
 
     if (!this._resourceService.spend(exploitDefinition.cost)) { return; }
 
-    interactionModel.features.exploit(featureId);
+    interactionModel.regions.exploit(regionId, featureId);
   }
 
   updateInteractionModel(interactionModel: PlanetInteractionModel): void {

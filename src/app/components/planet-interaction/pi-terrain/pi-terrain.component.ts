@@ -13,13 +13,13 @@ import { ResourceService } from 'src/app/services/resource.service';
 })
 export class PiTerrainComponent implements OnInit {
 
+  selectedRegionId: number;
   selectedFeatureId: number;
   featureList: FeatureListItem[] = [];
   featureDetails: FeatureDetailsViewModel = new FeatureDetailsViewModel();
 
   constructor(private planetService: PlanetService, private researchService: ResearchService, private resourceService: ResourceService) {
     this.planetService.selectedPlanetChanged.subscribe(x => this.updateFeatureList());
-    this.researchService.onResearchUpdated.subscribe(x => this.updateFeatureDetails(this.selectedFeatureId));
   }
 
   ngOnInit() {
@@ -32,14 +32,7 @@ export class PiTerrainComponent implements OnInit {
 
   selectFeature(id: number) {
     this.selectedFeatureId = id;
-    this.updateFeatureDetails(id);
-  }
-
-  buySurvey() {
-    const id = this.selectedFeatureId;
-    this.planetService.surveyFeature(this.getSelectedPlanet().instanceId, id);
-    this.updateFeatureList();
-    this.selectFeature(id);
+    // this.updateFeatureDetails(id);
   }
 
   buyExploit() {
@@ -47,11 +40,6 @@ export class PiTerrainComponent implements OnInit {
     this.planetService.exploitFeature(this.getSelectedPlanet().instanceId, id);
     this.updateFeatureList();
     this.selectFeature(id);
-  }
-
-  canAffordSurvey(): boolean {
-    if (isNullOrUndefined(this.featureDetails)) { return false; }
-    return this.resourceService.canAfford(new Resource('survey', this.featureDetails.surveyCost));
   }
 
   canAffordExploit(): boolean {
@@ -62,81 +50,66 @@ export class PiTerrainComponent implements OnInit {
   updateFeatureList() {
     this.featureList = [];
     if (isNullOrUndefined(this.getSelectedPlanet())) { return; }
-
-    const features = this.getSelectedPlanet().features;
-    const featureInteractions = this.planetService.getPlanetInteractionModel(this.getSelectedPlanet().instanceId).features;
-    features.forEach(element => {
-      const featureItem = new FeatureListItem();
-      featureItem.id = element.instanceId;
-      featureItem.name = featureInteractions.isSurveyed(element.instanceId) ? element.specificName : element.genericName;
-      featureItem.discovered = featureInteractions.isDiscovered(element.instanceId);
-      featureItem.surveyed = featureInteractions.isSurveyed(element.instanceId);
-      featureItem.exploited = featureInteractions.isExploited(element.instanceId);
-      this.featureList.push(featureItem);
-    });
-
-    this.selectFeature(0);
   }
 
-  updateFeatureDetails(instanceId: number) {
+  updateFeatureDetails(regionId: number, featureId: number) {
     this.featureDetails = new FeatureDetailsViewModel();
-    if (isNullOrUndefined(instanceId) || instanceId === 0) { return; }
+    if (isNullOrUndefined(regionId) || regionId === 0
+        || isNullOrUndefined(featureId) || featureId === 0) { return; }
 
-    const feature = this.getSelectedPlanet().features.find(x => x.instanceId === instanceId);
-    const featureInteractions = this.planetService.getPlanetInteractionModel().features;
-    const exploitDef = this.planetService.getExploitDefinitionForFeature(feature.specificName);
-    const unsurveyedFeatureDef = this.planetService.getUnsurveyedFeatureDefinition(feature.genericName);
-    const surveyedFeatureDef = this.planetService.getSurveyedFeatureDefinition(feature.specificName);
+    const region = this.getSelectedPlanet().regions.find(x => x.instanceId === regionId);
+    const feature = region.features.find(x => x.instanceId === featureId);
+    const regionInteractions = this.planetService.getPlanetInteractionModel().regions;
+    const exploitDef = this.planetService.getExploitDefinitionForFeature(feature.name);
+    const featureDef = this.planetService.getFeatureDefinition(feature.name);
 
-    this.featureDetails.surveyed = featureInteractions.isSurveyed(instanceId);
-    this.featureDetails.exploited = featureInteractions.isExploited(instanceId);
-    this.featureDetails.surveyButtonText = 'SURVEY';
+    this.featureDetails.exploited = regionInteractions.isFeatureExploited(regionId, featureId);
     this.featureDetails.exploitButtonText = 'EXPLOIT';
-    this.featureDetails.surveyCost = feature.surveyCost;
     this.featureDetails.exploitCost.addCollection(exploitDef.cost);
     this.featureDetails.exploitProduction.addCollection(exploitDef.getProduction());
 
-    // TODO: canBuyExploit and canSurvey should be based on research, not upgrades
-    this.featureDetails.needSurveyTech =
-          unsurveyedFeatureDef.surveyTech !== '' && !this.researchService.isUpgradeCompleted(unsurveyedFeatureDef.surveyTech);
+    this.featureDetails.canBuyExploit = !this.featureDetails.exploited;
 
-
-    this.featureDetails.canSurvey = !this.featureDetails.surveyed && !this.featureDetails.needSurveyTech;
-    this.featureDetails.canBuyExploit = this.featureDetails.surveyed && !this.featureDetails.exploited;
-
-    if (!this.featureDetails.surveyed) {
-      this.featureDetails.name = unsurveyedFeatureDef.name;
-      this.featureDetails.description = unsurveyedFeatureDef.description;
-    } else if (!this.featureDetails.exploited) {
-      this.featureDetails.name = surveyedFeatureDef.name;
-      this.featureDetails.description = surveyedFeatureDef.description;
+    if (!this.featureDetails.exploited) {
+      this.featureDetails.name = featureDef.name;
+      this.featureDetails.description = featureDef.description;
     } else if (this.featureDetails.exploited) {
-      this.featureDetails.name = surveyedFeatureDef.name;
+      this.featureDetails.name = featureDef.name;
       this.featureDetails.description = 'Already exploited';
     }
   }
 }
 
+export class RegionListItem {
+  public name: string;
+  public id: number;
+  public infrastructureLevel: number;
+  public dronesAssigned: number;
+  public droneSlots: number;
+  public expanded = false;
+  public features: FeatureListItem[];
+}
+
 export class FeatureListItem {
   public name: string;
   public id: number;
-  public discovered: boolean;
-  public surveyed: boolean;
   public exploited: boolean;
+}
+
+export class RegionDetailsViewModel {
+  public name = '';
+  public description = '';
+  public currentProduction: ResourceCollection = new ResourceCollection();
 }
 
 export class FeatureDetailsViewModel {
   public name = '';
   public description = '';
-  public surveyed = false;
   public exploited = false;
-  public canSurvey = false;
   public canBuyExploit = false;
-  public needSurveyTech = false;
   public needExploitTech = false;
-  public surveyButtonText = '';
   public exploitButtonText = '';
-  public surveyCost: number;
+  public currentProduction: ResourceCollection = new ResourceCollection();
   public exploitCost: ResourceCollection = new ResourceCollection();
   public exploitProduction: ResourceCollection = new ResourceCollection();
 }
