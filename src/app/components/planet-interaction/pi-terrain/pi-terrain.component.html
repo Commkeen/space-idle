@@ -1,5 +1,5 @@
 <div fxLayout="row" class="layout-container">
-  <div fxFlex="60" class="layout-column-left">
+  <div fxFlex="100" class="layout-column-left">
     <div class="region-list">
       <div class="region">
         <div fxLayout="row" class="region-header">
@@ -12,6 +12,7 @@
           <div fxFlex="40">
             <div>
               Infrastructure: 0
+              <button mat-raised-button>Upgrade</button>
             </div>
             <div>
               <span>Drones: 0/2</span>
@@ -21,6 +22,32 @@
           </div>
         </div>
         <mat-divider></mat-divider>
+        <div class="region-content" fxLayout="row">
+          <div class="region-income">
+            <div>Metal: 1/s (0.2/drone)</div>
+            <div>Hydrocarbon: 0.25/s (0.05/drone)</div>
+          </div>
+          <mat-divider [vertical]="true"></mat-divider>
+          <div class="feature-list">
+            <div>
+              Iron Deposit
+              <button>Exploit</button>
+            </div>
+            <div>
+              Iron Deposit
+              <button>Exploit</button>
+            </div>
+            <div>
+              Titanium Deposit
+            </div>
+            <div>
+              Bitumen Deposit
+            </div>
+            <div>
+              -10- ????
+            </div>
+          </div>
+        </div>
         <div class="feature-list">
           <div *ngFor="let feature of featureList">
             <fa-icon icon="cog"></fa-icon>
@@ -28,32 +55,6 @@
           </div>
         </div>
         <mat-divider></mat-divider>
-      </div>
-    </div>
-  </div>
-  <mat-divider [vertical]="true"></mat-divider>
-  <div fxFlex="40" class="layout-column-right">
-    <div class="region-detail">
-      <div>Plains</div>
-      <div>A wide open plain.</div>
-
-    </div>
-    <mat-divider></mat-divider>
-    <div class="feature-detail">
-      <div>Copper Deposit</div>
-      <div>Can be mined for metal.</div>
-      <div>
-        Adds to each drone's production:
-        <div class="productionItem">
-          metal: 0.35/s
-        </div>
-      </div>
-      <div>
-        Upgrade:
-        <div class="costItem">
-          metal: 15
-        </div>
-        <button mat-raised-button>Exploit</button>
       </div>
     </div>
   </div>
