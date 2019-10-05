@@ -1,0 +1,35 @@
+.container {
+  padding: 10px;
+  background: white;
+  border: 1px solid black;
+  margin: 0px;
+  width: 150px;
+}
+
+.name {
+  font-weight: bold;
+}
+
+.description {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.cost-section {
+  border-top: 1px solid black;
+  padding-top: 5px;
+}
+
+.cost {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.cost-name {
+
+}
+
+.cost-amount {
+  text-align: right;
+}

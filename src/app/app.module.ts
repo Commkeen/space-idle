@@ -3,6 +3,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 import { AppComponent } from './app.component';
 import { MaterialModule } from './shared/material.module';
@@ -23,6 +24,8 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCog, faCompass, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { DisplayNumberPipe } from './pipes/display-number.pipe';
 import { ActionsComponent } from './components/actions/actions.component';
+import { GameTooltipDirective } from './directives/game-tooltip.directive';
+import { GameTooltipComponent } from './components/game-tooltip/game-tooltip.component';
 
 library.add(faCog);
 library.add(faCompass);
@@ -43,7 +46,9 @@ library.add(faCheck);
     SiSystemsComponent,
     PiCommandComponent,
     DisplayNumberPipe,
-    ActionsComponent
+    ActionsComponent,
+    GameTooltipDirective,
+    GameTooltipComponent
   ],
   imports: [
     BrowserModule,
@@ -54,6 +59,7 @@ library.add(faCheck);
     FontAwesomeModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [GameTooltipComponent]
 })
 export class AppModule { }
