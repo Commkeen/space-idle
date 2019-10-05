@@ -1,16 +1,12 @@
 <div class="container">
   <div class="header-section">
-    <div class="name">Test Name</div>
-    <div class="description">This is a button that does some stuff.  It's going to be useful at some point.</div>
+    <div class="name">{{tooltipModel.name}}</div>
+    <div class="description">{{tooltipModel.desc}}</div>
   </div>
   <div class="cost-section">
-    <div class="cost">
-      <span class="cost-name">metal</span>
-      <span class="cost-amount">21</span>
-    </div>
-    <div class="cost">
-      <span class="cost-name">silicates</span>
-      <span class="cost-amount">53</span>
+    <div class="cost" *ngFor="let costItem of tooltipModel.costs.resources">
+      <span class="cost-name">{{costItem.resource}}</span>
+      <span class="cost-amount">{{costItem.amount}}</span>
     </div>
   </div>
 </div>
