@@ -1,19 +1,25 @@
-<br />
-<br />
-<div fxLayout="row" fxLayoutGap="10px" class="layout-container">
-    <div fxFlex="10" fxLayout="column" fxLayoutGap="10px" class="layout-column-left">
-        <app-system-overview *ngIf="false" fxFlex="50"></app-system-overview>
-        <div *ngIf="false" class="spaceidle-section" fxFlex="50">Messages</div>
+<div fxLayout="column" class="layout-container">
+  <div fxFlex="4" class="layout-top"></div>
+  <div fxFlex="96" fxLayout="row" class="layout-center">
+    <div fxFlex="20" fxLayout="column" class="layout-column-left">
+      <div fxFlex="60" class="layout-column-left-top">
+        <app-resource-overview></app-resource-overview>
+      </div>
+      <div fxFlex="40" class="layout-column-left-bottom">
+        <app-actions></app-actions>
+      </div>
     </div>
     <div fxFlex="70" fxLayout="column" class="layout-column-center">
         <app-planet-interaction fxFlex="100" [hidden]="showResearchScreen"></app-planet-interaction>
         <app-ship-interaction fxFlex="100" [hidden]="!showResearchScreen"></app-ship-interaction>
     </div>
-    <div fxFlex="20" fxLayout="column" fxLayoutGap="20px" class="layout-column-right">
+    <div fxFlex="10" fxLayout="column" class="layout-column-right">
         <app-resource-overview fxFlex="100"></app-resource-overview>
         <!--<app-ship-overview fxFlex="40" (researchButtonClicked)="onResearchButtonClicked()"></app-ship-overview>-->
     </div>
+  </div>
 </div>
+
 <!--
 <div>{{currentTime}}</div>
 <button mat-button (click)="onResetButtonClicked()">Reset</button>

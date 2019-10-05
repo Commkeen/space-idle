@@ -2,37 +2,30 @@
     height: 100%;
 }
 
-/*
-.layout-container{
-    display: flex;
-    flex-direction: row;
-    height: 100%;
+.layout-top{
+  border-bottom: 1px solid black;
+  padding: 2px;
 }
 
 .layout-column-left{
-    //height: 100%;
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 auto;
-    background-color: #55FF55;
-    padding: 8px;
+
+}
+
+.layout-column-left-top{
+  background-color: #55FF55;
+  border-bottom: 1px solid black;
+}
+
+.layout-column-left-bottom{
+  background-color: rgb(255, 119, 85);
 }
 
 .layout-column-center{
-    //height: 100%;
-    display: flex;
-    flex: 3 1 auto;
-    flex-direction: column;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
     background-color: #55CC55;
-    padding: 8px;
 }
 
 .layout-column-right{
-    //height: 100%;
-    display: flex;
-    flex: 1 1 auto;
-    flex-direction: column;
     background-color: #555555;
-    padding: 8px;
 }
-*/

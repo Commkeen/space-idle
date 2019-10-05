@@ -22,6 +22,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCog, faCompass, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { DisplayNumberPipe } from './pipes/display-number.pipe';
+import { ActionsComponent } from './components/actions/actions.component';
 
 library.add(faCog);
 library.add(faCompass);
@@ -41,7 +42,8 @@ library.add(faCheck);
     SiUpgradesComponent,
     SiSystemsComponent,
     PiCommandComponent,
-    DisplayNumberPipe
+    DisplayNumberPipe,
+    ActionsComponent
   ],
   imports: [
     BrowserModule,

@@ -2,7 +2,9 @@
 
 html, body
 {
-    height: 95%;
+    overflow: hidden;
+    margin: 0;
+    height: 100%;
 }
 
 .mat-tab-body-wrapper{
@@ -10,8 +12,7 @@ html, body
 }
 
 .spaceidle-section{
+  overflow: hidden;
   flex-grow: 1;
   height: 100%;
-  padding: 5px;
-  border: 0px solid black;
 }
