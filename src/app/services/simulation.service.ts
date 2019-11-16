@@ -50,11 +50,10 @@ export class SimulationService {
     const regions = this._planetService.getPlanet(instanceId).regions;
     const interactionModel = this._planetService.getPlanetInteractionModel(instanceId);
     interactionModel.localResources.resetRates();
-    const drones = interactionModel.drones;
     const regionInteractions = interactionModel.regions;
     regionInteractions.regions.forEach(regionInteraction => {
       const region = regions.find(x => x.instanceId === regionInteraction.regionInstanceId);
-      const assignedDrones = drones.get(regionInteraction.regionInstanceId);
+      const assignedDrones = regionInteraction.assignedDrones;
       this.updateRegionProductionRate(region, regionInteraction, assignedDrones, interactionModel.localResources);
     });
 

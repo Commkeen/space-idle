@@ -1,21 +1,22 @@
 <div fxLayout="row" class="layout-container">
   <div fxFlex="100" class="layout-column-left">
     <div class="region-list">
-      <div class="region">
+      <div class="region" *ngFor="let region of regionList">
+        <mat-divider></mat-divider>
         <div fxLayout="row" class="region-header">
           <div fxFlex="20">
             <fa-icon icon="cog"></fa-icon>
           </div>
           <div fxFlex="40">
-            Plains
+            {{region.name}}
           </div>
           <div fxFlex="40">
             <div>
-              Infrastructure: 0
-              <button mat-raised-button>Upgrade</button>
+              Infrastructure: {{region.infrastructureLevel}}
+              <button>Upgrade</button>
             </div>
             <div>
-              <span>Drones: 0/2</span>
+              <span>Drones: {{region.dronesAssigned}}/{{region.droneSlots}}</span>
               <button>-</button>
               <button>+</button>
             </div>
@@ -29,29 +30,10 @@
           </div>
           <mat-divider [vertical]="true"></mat-divider>
           <div class="feature-list">
-            <div>
-              Iron Deposit
-              <button>Exploit</button>
+            <div class="feature" *ngFor="let feature of region.features">
+              {{feature.name}}
+              <button *ngIf="feature.canExploit">Exploit</button>
             </div>
-            <div>
-              Iron Deposit
-              <button>Exploit</button>
-            </div>
-            <div>
-              Titanium Deposit
-            </div>
-            <div>
-              Bitumen Deposit
-            </div>
-            <div>
-              -10- ????
-            </div>
-          </div>
-        </div>
-        <div class="feature-list">
-          <div *ngFor="let feature of featureList">
-            <fa-icon icon="cog"></fa-icon>
-            <span>{{ feature.name }}</span>
           </div>
         </div>
         <mat-divider></mat-divider>

@@ -17,7 +17,7 @@ export class Region {
     public name: string
   ) {}
 
-  public hideBehindSurvey(regionId: number, level: number): Region {
+  public hideBehindInfrastructure(regionId: number, level: number): Region {
     this.hiddenBehindRegion = regionId;
     this.hiddenBehindInfrastructure = level;
     return this;
@@ -44,15 +44,15 @@ export const MOCK_SYSTEM: Planet[] = [
     {instanceId: 1, name: 'forest planet', temperature: 'temperate', atmosphere: 'oxygen', regions: [
         new Region(1, 'Plains')
           .addFeature('copper deposit')
-          .addFeature('lignite deposit')
-          .addFeature('copper deposit')
-          .addFeature('silver vein', 1),
+          .addFeature('lignite deposit', 2)
+          .addFeature('copper deposit', 2)
+          .addFeature('silver vein', 3),
         new Region(2, 'Hills')
           .addFeature('hematite deposit')
           .addFeature('lignite deposit')
-          .addFeature('methane vent', 1),
+          .addFeature('methane vent', 2),
         new Region(3, 'Mountain')
-          .hideBehindSurvey(2, 1)
+          .hideBehindInfrastructure(2, 1)
           .addFeature('silver vein')
     ]},
     {instanceId: 2, name: 'ice planet', temperature: 'frozen', atmosphere: 'oxygen', regions: [

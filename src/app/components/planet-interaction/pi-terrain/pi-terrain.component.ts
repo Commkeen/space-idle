@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { PlanetService } from '../../../services/planet.service';
-import { Planet } from '../../../models/planet';
+import { Planet, Region, Feature } from '../../../models/planet';
 import { isNullOrUndefined } from 'util';
 import { Resource, ResourceCollection } from '../../../models/resource';
 import { ResearchService } from 'src/app/services/research.service';
 import { ResourceService } from 'src/app/services/resource.service';
+import { RegionInteraction, FeatureInteraction } from 'src/app/models/planetInteractionModel';
 
 @Component({
   selector: 'app-pi-terrain',
@@ -13,70 +14,73 @@ import { ResourceService } from 'src/app/services/resource.service';
 })
 export class PiTerrainComponent implements OnInit {
 
-  selectedRegionId: number;
-  selectedFeatureId: number;
-  featureList: FeatureListItem[] = [];
-  featureDetails: FeatureDetailsViewModel = new FeatureDetailsViewModel();
-
   constructor(private planetService: PlanetService, private researchService: ResearchService, private resourceService: ResourceService) {
-    this.planetService.selectedPlanetChanged.subscribe(x => this.updateFeatureList());
+    this.planetService.selectedPlanetChanged.subscribe(x => this.updateRegionList());
   }
 
+  public regionList: RegionListItem[] = [];
+
   ngOnInit() {
-    this.updateFeatureList();
+    this.updateRegionList();
   }
 
   getSelectedPlanet(): Planet {
     return this.planetService.getSelectedPlanet();
   }
 
-  selectFeature(id: number) {
-    this.selectedFeatureId = id;
-    // this.updateFeatureDetails(id);
+  buyInfrastructure(regionId: number) {
+    // TODO
   }
 
-  buyExploit() {
-    const id = this.selectedFeatureId;
-    this.planetService.exploitFeature(this.getSelectedPlanet().instanceId, id);
-    this.updateFeatureList();
-    this.selectFeature(id);
+  canAffordInfrastructure(regionId: number): boolean {
+    return true; // TODO
   }
 
-  canAffordExploit(): boolean {
-    if (isNullOrUndefined(this.featureDetails)) { return false; }
-    return this.resourceService.canAfford(this.featureDetails.exploitCost);
+  buyExploit(regionId: number, featureId: number) {
+    this.planetService.exploitFeature(regionId, featureId);
+    this.updateRegionList();
   }
 
-  updateFeatureList() {
-    this.featureList = [];
-    if (isNullOrUndefined(this.getSelectedPlanet())) { return; }
+  canAffordExploit(feature: FeatureListItem): boolean {
+    if (isNullOrUndefined(feature.exploitCost)) { return false; }
+    return this.resourceService.canAfford(feature.exploitCost);
   }
 
-  updateFeatureDetails(regionId: number, featureId: number) {
-    this.featureDetails = new FeatureDetailsViewModel();
-    if (isNullOrUndefined(regionId) || regionId === 0
-        || isNullOrUndefined(featureId) || featureId === 0) { return; }
-
-    const region = this.getSelectedPlanet().regions.find(x => x.instanceId === regionId);
-    const feature = region.features.find(x => x.instanceId === featureId);
+  updateRegionList() {
+    this.regionList = [];
+    const regions = this.getSelectedPlanet().regions;
     const regionInteractions = this.planetService.getPlanetInteractionModel().regions;
-    const exploitDef = this.planetService.getExploitDefinitionForFeature(feature.name);
+    regions.forEach(regionModel => {
+      const regionInteraction = regionInteractions.getRegion(regionModel.instanceId);
+      this.regionList.push(this.createRegionListItem(regionModel, regionInteraction));
+    });
+  }
+
+  private createRegionListItem(region: Region, regionInteraction: RegionInteraction): RegionListItem {
+    const item = new RegionListItem();
+    item.name = region.name;
+    item.id = region.instanceId;
+    item.infrastructureLevel = regionInteraction.infrastructureLevel;
+    item.droneSlots = 0; // TODO
+    item.dronesAssigned = regionInteraction.assignedDrones;
+    region.features.forEach(f => {
+      const featureInteraction = regionInteraction.getFeature(f.instanceId);
+      item.features.push(this.createFeatureListItem(f, featureInteraction));
+    });
+    return item;
+  }
+
+  private createFeatureListItem(feature: Feature, featureInteraction: FeatureInteraction): FeatureListItem {
     const featureDef = this.planetService.getFeatureDefinition(feature.name);
+    const exploitDef = this.planetService.getExploitDefinitionForFeature(feature.name);
+    const item = new FeatureListItem();
+    item.name = feature.name;
+    item.id = feature.instanceId;
+    item.infrastructureNeeded = feature.hiddenBehindInfrastructure;
+    item.canExploit = !featureInteraction.exploited;
+    item.exploitCost = exploitDef.cost;
 
-    this.featureDetails.exploited = regionInteractions.isFeatureExploited(regionId, featureId);
-    this.featureDetails.exploitButtonText = 'EXPLOIT';
-    this.featureDetails.exploitCost.addCollection(exploitDef.cost);
-    this.featureDetails.exploitProduction.addCollection(exploitDef.getProduction());
-
-    this.featureDetails.canBuyExploit = !this.featureDetails.exploited;
-
-    if (!this.featureDetails.exploited) {
-      this.featureDetails.name = featureDef.name;
-      this.featureDetails.description = featureDef.description;
-    } else if (this.featureDetails.exploited) {
-      this.featureDetails.name = featureDef.name;
-      this.featureDetails.description = 'Already exploited';
-    }
+    return item;
   }
 }
 
@@ -87,29 +91,19 @@ export class RegionListItem {
   public dronesAssigned: number;
   public droneSlots: number;
   public expanded = false;
-  public features: FeatureListItem[];
+  public features: FeatureListItem[] = [];
 }
 
 export class FeatureListItem {
   public name: string;
   public id: number;
-  public exploited: boolean;
+  public infrastructureNeeded: number;
+  public canExploit: boolean;
+  public exploitCost: ResourceCollection;
 }
 
 export class RegionDetailsViewModel {
   public name = '';
   public description = '';
   public currentProduction: ResourceCollection = new ResourceCollection();
-}
-
-export class FeatureDetailsViewModel {
-  public name = '';
-  public description = '';
-  public exploited = false;
-  public canBuyExploit = false;
-  public needExploitTech = false;
-  public exploitButtonText = '';
-  public currentProduction: ResourceCollection = new ResourceCollection();
-  public exploitCost: ResourceCollection = new ResourceCollection();
-  public exploitProduction: ResourceCollection = new ResourceCollection();
 }

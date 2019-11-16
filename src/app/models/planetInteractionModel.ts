@@ -7,7 +7,6 @@ export class PlanetInteractionModel {
     structures: Structure[];
     regions: RegionInteractionCollection = new RegionInteractionCollection();
     localResources: ResourceCollection;
-    drones: DroneCollection = new DroneCollection();
 }
 
 export class Structure {
@@ -24,8 +23,9 @@ export class FeatureInteraction {
 
 export class RegionInteraction {
   regionInstanceId: number;
-  infrastructureLevel: number;
-  features: FeatureInteraction[];
+  infrastructureLevel = 0;
+  assignedDrones = 0;
+  features: FeatureInteraction[] = [];
 
   isFeatureExploited(feature: number): boolean {
     return this.getFeature(feature).exploited;
@@ -59,7 +59,7 @@ export class RegionInteractionCollection {
     this.getFeature(region, feature).exploited = true;
   }
 
-  private getRegion(regionId: number): RegionInteraction {
+  getRegion(regionId: number): RegionInteraction {
     let region = this.regions.find(x => x.regionInstanceId === regionId);
     if (isNullOrUndefined(region)) {
       region = new RegionInteraction();
@@ -69,7 +69,7 @@ export class RegionInteractionCollection {
     return region;
   }
 
-  private getFeature(regionId: number, featureId: number): FeatureInteraction {
+  getFeature(regionId: number, featureId: number): FeatureInteraction {
     const region = this.getRegion(regionId);
     return region.getFeature(featureId);
   }

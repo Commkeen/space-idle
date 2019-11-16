@@ -147,6 +147,12 @@ export class ResourceCollection {
         return resourceItem.productionRate - resourceItem.consumptionRate;
     }
 
+    getMax(resource: string): number {
+      const resourceItem = this.resources.find(x => x.resource === resource);
+        if (isNullOrUndefined(resourceItem)) {return 0; }
+        return resourceItem.max;
+    }
+
     clear() {
       while (this.resources.length > 0) {
         this.resources.pop();

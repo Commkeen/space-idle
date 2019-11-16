@@ -1,16 +1,12 @@
+.region{
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+
 .feature-list{
   list-style-type: none;
   column-count: 2;
   column-gap: 20px;
-}
-
-.detail-card{
-  margin-top: 50px;
-}
-
-.feature-list-item{
-  cursor: pointer;
-  user-select: none;
 }
 
 .unselected{

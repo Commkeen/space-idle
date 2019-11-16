@@ -38,8 +38,6 @@ export class PlanetService {
       interactionModel.outpostLevel = 0;
       interactionModel.structures = [];
       interactionModel.localResources = new ResourceCollection();
-      interactionModel.drones.droneCapacity = 3;
-      interactionModel.drones.createDrone();
       STRUCTURE_LIBRARY.forEach(structureDef => {
         const structure = {name: structureDef.name, amount: 0, active: 0, canBuild: false};
         interactionModel.structures.push(structure);
@@ -112,21 +110,6 @@ export class PlanetService {
     return OUTPOST_LIBRARY.find(def => def.planetType === 'temperate');
   }
 
-  getNextDroneCost(planetInstanceId?: number): ResourceCollection {
-    const resources = new ResourceCollection();
-    if (!planetInstanceId) {
-      planetInstanceId = this.getSelectedPlanet().instanceId;
-    }
-    const interactionModel = this.getPlanetInteractionModel(planetInstanceId);
-    const currentDrones = interactionModel.drones.getTotal();
-    if (currentDrones < 10) {
-      resources.add('nanochips', 5 * currentDrones);
-    } else {
-      resources.add('optronics', 3 * (currentDrones - 8));
-    }
-    return resources;
-  }
-
   canBuildStructure(structureName: string, planetInstanceId?: number): boolean {
     if (!planetInstanceId) {
       planetInstanceId = this.getSelectedPlanet().instanceId;
@@ -187,8 +170,8 @@ export class PlanetService {
     interactionModel.outpostLevel += 1;
     const newLevel = outpostDef.getLevel(interactionModel.outpostLevel);
     const newDroneCap = newLevel.droneCapacity;
-    if (newDroneCap > interactionModel.drones.droneCapacity) {
-         interactionModel.drones.droneCapacity = newDroneCap;
+    if (newDroneCap > interactionModel.localResources.getMax('drones')) {
+         interactionModel.localResources.setMax('drones', newDroneCap);
        }
     this.onOutpostUpgraded.next(interactionModel);
   }
