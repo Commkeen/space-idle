@@ -4,13 +4,13 @@
       <div class="region" *ngFor="let region of regionList">
         <mat-divider></mat-divider>
         <div fxLayout="row" class="region-header">
-          <div fxFlex="20">
+          <div fxFlex="5">
             <fa-icon icon="cog"></fa-icon>
           </div>
-          <div fxFlex="40">
+          <div fxFlex="20">
             {{region.name}}
           </div>
-          <div fxFlex="40">
+          <div fxFlex="20">
             <div>
               Infrastructure: {{region.infrastructureLevel}}
               <button>Upgrade</button>
@@ -24,16 +24,13 @@
         </div>
         <mat-divider></mat-divider>
         <div class="region-content" fxLayout="row">
-          <div class="region-income">
-            <div>Metal: 1/s (0.2/drone)</div>
-            <div>Hydrocarbon: 0.25/s (0.05/drone)</div>
-          </div>
-          <mat-divider [vertical]="true"></mat-divider>
           <div class="feature-list">
-            <div class="feature" *ngFor="let feature of region.features">
-              {{feature.name}}
-              <button>Gather</button>
-              <button *ngIf="feature.canExploit">Exploit</button>
+            <div class="feature" fxLayout="row" *ngFor="let feature of region.features">
+              <div class="feature-name" fxFlex="60">{{feature.name}}</div>
+              <div class="feature-buttons" fxFlex="40">
+                  <button>Gather</button>
+                  <button *ngIf="feature.canExploit">Exploit</button>
+              </div>
             </div>
           </div>
         </div>

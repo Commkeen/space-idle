@@ -5,8 +5,12 @@
 
 .feature-list{
   list-style-type: none;
-  column-count: 2;
+  column-width: 320px;
   column-gap: 20px;
+}
+
+.feature {
+  min-width: 300px;
 }
 
 .unselected{
