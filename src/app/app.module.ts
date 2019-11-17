@@ -26,6 +26,7 @@ import { DisplayNumberPipe } from './pipes/display-number.pipe';
 import { ActionsComponent } from './components/actions/actions.component';
 import { GameTooltipDirective } from './directives/game-tooltip.directive';
 import { GameTooltipComponent } from './components/game-tooltip/game-tooltip.component';
+import { ProgressBarComponent } from './components/common/progress-bar/progress-bar.component';
 
 library.add(faCog);
 library.add(faCompass);
@@ -48,7 +49,8 @@ library.add(faCheck);
     DisplayNumberPipe,
     ActionsComponent,
     GameTooltipDirective,
-    GameTooltipComponent
+    GameTooltipComponent,
+    ProgressBarComponent
   ],
   imports: [
     BrowserModule,

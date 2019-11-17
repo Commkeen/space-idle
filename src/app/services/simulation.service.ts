@@ -25,6 +25,8 @@ export class SimulationService {
     this._resourceService.globalResources.setMax('silicate', 10000000);
     this._resourceService.globalResources.setMax('hydrocarbon', 10000000);
     this._resourceService.globalResources.setMax('duranium', 10000000);
+
+    this._resourceService.globalResources.setMax('energy', 10);
   }
 
   reset() {
@@ -38,6 +40,11 @@ export class SimulationService {
     system.forEach(planet => {
       this.updatePlanet(dT, planet.instanceId);
     });
+    this.updateEnergy(dT);
+  }
+
+  private updateEnergy(dT: number) {
+    this._resourceService.globalResources.add('energy', this._resourceService.energyRate * (dT/1000));
   }
 
   private updatePlanet(dT: number, instanceId: number) {

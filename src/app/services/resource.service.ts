@@ -9,6 +9,7 @@ export class ResourceService {
 
   public globalResources: ResourceCollection = new ResourceCollection();
   public discoveredResources: string[] = [];
+  public energyRate = 0.15;
 
   constructor(private _timeService: TimeService) { }
 

@@ -32,6 +32,7 @@
           <div class="feature-list">
             <div class="feature" *ngFor="let feature of region.features">
               {{feature.name}}
+              <button>Gather</button>
               <button *ngIf="feature.canExploit">Exploit</button>
             </div>
           </div>
