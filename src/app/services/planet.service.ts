@@ -180,7 +180,8 @@ export class PlanetService {
     if (!planetInstanceId) {
       planetInstanceId = this.getSelectedPlanet().instanceId;
     }
-    // TODO
+    const regionInteraction = this.getPlanetInteractionModel(planetInstanceId).regions;
+    regionInteraction.advanceInfrastructure(regionId);
   }
 
   exploitFeature(regionId: number, featureId: number, planetInstanceId?: number): void {
@@ -196,6 +197,36 @@ export class PlanetService {
     if (!this._resourceService.spend(exploitDefinition.cost)) { return; }
 
     interactionModel.regions.exploit(regionId, featureId);
+  }
+
+  gatherRegion(regionId: number, planetInstanceId?: number) {
+    if (!planetInstanceId) {
+      planetInstanceId = this.getSelectedPlanet().instanceId;
+    }
+
+    const planet = this.getPlanet(planetInstanceId);
+    const region = planet.regions.find(x => x.instanceId === regionId);
+    const regionInfrastructure = this.getPlanetInteractionModel(planetInstanceId).regions.getInfrastructureLevel(regionId);
+    region.features.forEach(feature => {
+      const featureDefinition = this.getFeatureDefinition(feature.name);
+      if (feature.hiddenBehindInfrastructure <= regionInfrastructure) {
+        this._resourceService.globalResources.addCollection(featureDefinition.gatherRates);
+      }
+    });
+
+  }
+
+  gatherFeature(regionId: number, featureId: number, planetInstanceId?: number) {
+    if (!planetInstanceId) {
+      planetInstanceId = this.getSelectedPlanet().instanceId;
+    }
+
+    const planet = this.getPlanet(planetInstanceId);
+    const region = planet.regions.find(x => x.instanceId === regionId);
+    const feature = region.features.find(x => x.instanceId === featureId);
+    const featureDefinition = this.getFeatureDefinition(feature.name);
+
+    this._resourceService.globalResources.addCollection(featureDefinition.gatherRates);
   }
 
   updateInteractionModel(interactionModel: PlanetInteractionModel): void {

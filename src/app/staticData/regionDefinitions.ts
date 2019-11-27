@@ -52,6 +52,3 @@ export const REGION_LIBRARY: RegionDefinition[] = [
     .addInfrastructure(1, 'Seismic Attenuators').setInfrastructureDescription(1, 'Control for seismic disturbances.')
     .addCost(1, 'nanochips', 5)
 ];
-
-
-

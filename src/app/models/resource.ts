@@ -40,7 +40,7 @@ export class ResourceCollection {
     addCollection(other: ResourceCollection) {
       other.resources.forEach(element => {
         this.add(element.resource, element.amount);
-      });
+      }, this);
     }
 
     remove(resource: string, amount: number): boolean {

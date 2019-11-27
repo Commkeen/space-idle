@@ -28,8 +28,18 @@ export class PiTerrainComponent implements OnInit {
     return this.planetService.getSelectedPlanet();
   }
 
+  gatherRegion(regionId: number) {
+    this.planetService.gatherRegion(regionId);
+  }
+
+  gatherFeature(regionId: number, featureId: number) {
+    this.planetService.gatherFeature(regionId, featureId);
+  }
+
   buyInfrastructure(regionId: number) {
     // TODO
+    this.planetService.upgradeInfrastructure(regionId);
+    this.updateRegionList();
   }
 
   canAffordInfrastructure(regionId: number): boolean {
@@ -63,22 +73,26 @@ export class PiTerrainComponent implements OnInit {
     item.infrastructureLevel = regionInteraction.infrastructureLevel;
     item.droneSlots = 0; // TODO
     item.dronesAssigned = regionInteraction.assignedDrones;
+    item.canGather = item.infrastructureLevel > 0;
     region.features.forEach(f => {
       const featureInteraction = regionInteraction.getFeature(f.instanceId);
-      item.features.push(this.createFeatureListItem(f, featureInteraction));
+      item.features.push(this.createFeatureListItem(f, featureInteraction, item.infrastructureLevel));
     });
     return item;
   }
 
-  private createFeatureListItem(feature: Feature, featureInteraction: FeatureInteraction): FeatureListItem {
+  private createFeatureListItem(feature: Feature, featureInteraction: FeatureInteraction, infrastructureLevel: number): FeatureListItem {
     const featureDef = this.planetService.getFeatureDefinition(feature.name);
     const exploitDef = this.planetService.getExploitDefinitionForFeature(feature.name);
     const item = new FeatureListItem();
     item.name = feature.name;
     item.id = feature.instanceId;
     item.infrastructureNeeded = feature.hiddenBehindInfrastructure;
-    item.canExploit = !featureInteraction.exploited;
+    item.canExploit = !featureInteraction.exploited && infrastructureLevel > 0;
+    item.canGather = infrastructureLevel === 0;
     item.exploitCost = exploitDef.cost;
+    item.active = item.infrastructureNeeded <= infrastructureLevel;
+    item.hintActive = item.infrastructureNeeded > infrastructureLevel;
 
     return item;
   }
@@ -92,12 +106,16 @@ export class RegionListItem {
   public droneSlots: number;
   public expanded = false;
   public features: FeatureListItem[] = [];
+  public canGather = false;
 }
 
 export class FeatureListItem {
   public name: string;
   public id: number;
   public infrastructureNeeded: number;
+  public active: boolean;
+  public hintActive: boolean;
+  public canGather: boolean;
   public canExploit: boolean;
   public exploitCost: ResourceCollection;
 }

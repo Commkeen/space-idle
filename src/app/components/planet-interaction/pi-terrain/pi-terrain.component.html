@@ -8,14 +8,15 @@
             <fa-icon icon="cog"></fa-icon>
           </div>
           <div fxFlex="20">
-            {{region.name}}
+            <div>{{region.name}}</div>
+            <div><button *ngIf="region.canGather" (click)="gatherRegion(region.id)">Gather</button></div>
           </div>
           <div fxFlex="20">
             <div>
               Infrastructure: {{region.infrastructureLevel}}
-              <button>Upgrade</button>
+              <button (click)="buyInfrastructure(region.id)">Upgrade</button>
             </div>
-            <div>
+            <div *ngIf="region.droneSlots > 0">
               <span>Drones: {{region.dronesAssigned}}/{{region.droneSlots}}</span>
               <button>-</button>
               <button>+</button>
@@ -26,10 +27,15 @@
         <div class="region-content" fxLayout="row">
           <div class="feature-list">
             <div class="feature" fxLayout="row" *ngFor="let feature of region.features">
-              <div class="feature-name" fxFlex="60">{{feature.name}}</div>
-              <div class="feature-buttons" fxFlex="40">
-                  <button>Gather</button>
+              <div class="feature-active" fxLayout="row" *ngIf="feature.active">
+                <div class="feature-name" fxFlex="60">{{feature.name}}</div>
+                <div class="feature-buttons" fxFlex="40">
+                  <button *ngIf="feature.canGather" (click)="gatherFeature(region.id, feature.id)">Gather</button>
                   <button *ngIf="feature.canExploit">Exploit</button>
+                </div>
+              </div>
+              <div class="feature-hidden" *ngIf="feature.hintActive">
+                ---{{feature.infrastructureNeeded}}---
               </div>
             </div>
           </div>

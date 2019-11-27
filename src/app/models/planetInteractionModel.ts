@@ -55,6 +55,10 @@ export class RegionInteractionCollection {
     this.getRegion(regionId).infrastructureLevel++;
   }
 
+  getInfrastructureLevel(regionId: number): number {
+    return this.getRegion(regionId).infrastructureLevel;
+  }
+
   exploit(region: number, feature: number): void {
     this.getFeature(region, feature).exploited = true;
   }

@@ -1,9 +1,11 @@
 import { Effect, BaseRegionalPerDroneProductionEffect } from "./effectDefinitions";
+import { ResourceCollection } from "../models/resource";
 
 export class FeatureDefinition {
   public effects: Effect[] = [];
   public description = '';
   public exploitName = '';
+  public gatherRates: ResourceCollection = new ResourceCollection();
 
   constructor (
     public name: string,
@@ -16,6 +18,11 @@ export class FeatureDefinition {
     if (exploitName) {
       this.exploitName = exploitName;
     }
+  }
+
+  public addGather(resource: string, amount: number): FeatureDefinition {
+    this.gatherRates.add(resource, amount);
+    return this;
   }
 
   public addProduction(resource: string, amount: number): FeatureDefinition {
@@ -38,20 +45,25 @@ export class FeatureDefinition {
 export const FEATURE_LIBRARY: FeatureDefinition[] = [
   new FeatureDefinition('depleted power core',
     'The power core is mostly spent, but with the right equipment it could still prove useful.', 'energy recombiner'),
-  new FeatureDefinition('hematite deposit', 'A deposit of the iron-rich mineral hematite.', 'hematite mineshaft'),
+  new FeatureDefinition('hematite deposit', 'A deposit of the iron-rich mineral hematite.', 'hematite mineshaft')
+  .addGather('metal', 2),
   new FeatureDefinition('magnetite deposit', 'A deposit of the iron-rich mineral magnetite.', 'magnetite mineshaft'),
   new FeatureDefinition('corundum deposit', 'A deposit of the semi-precious crystalline mineral corundum.', 'corundum quarry'),
-  new FeatureDefinition('copper deposit', 'A native deposit of metallic copper.', 'copper mineshaft'),
-  new FeatureDefinition('silver vein', 'A native deposit of metallic silver.', 'silver mineshaft'),
+  new FeatureDefinition('copper deposit', 'A native deposit of metallic copper.', 'copper mineshaft')
+  .addGather('metal', 2),
+  new FeatureDefinition('silver vein', 'A native deposit of metallic silver.', 'silver mineshaft')
+  .addGather('rareMetal', 1),
   new FeatureDefinition('gold vein', 'A native deposit of metallic gold.', 'gold mineshaft'),
   new FeatureDefinition('lignite deposit',
-                        'A deposit of lignite, a carbon-rich rock formed from long-decayed organic matter.', 'lignite mine'),
+                        'A deposit of lignite, a carbon-rich rock formed from long-decayed organic matter.', 'lignite mine')
+  .addGather('hydrocarbon', 2),
   new FeatureDefinition('bitumen deposit',
                         'A deposit of bitumen, a carbon-rich rock formed from long-decayed organic matter.', 'bitumen mine'),
   new FeatureDefinition('methane vent',
                         'The ground here emits methane, a simple gaseous hydrocarbon that can be used as fuel or in chemical engineering,' +
                         'as well as small amounts of other gases.',
-                        'methane extractor'),
+                        'methane extractor')
+  .addGather('hydrocarbon', 3),
   new FeatureDefinition('glittersand spout',
                         'An unknown process, either geologic or organic, causes glittersand to erupt from the desert\'s depths at semi-regular intervals',
                         'crawler'),
