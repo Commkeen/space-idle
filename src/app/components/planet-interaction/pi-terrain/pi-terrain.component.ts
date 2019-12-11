@@ -61,8 +61,10 @@ export class PiTerrainComponent implements OnInit {
     const regions = this.getSelectedPlanet().regions;
     const regionInteractions = this.planetService.getPlanetInteractionModel().regions;
     regions.forEach(regionModel => {
-      const regionInteraction = regionInteractions.getRegion(regionModel.instanceId);
-      this.regionList.push(this.createRegionListItem(regionModel, regionInteraction));
+      if (this.planetService.isRegionVisible(regionModel.instanceId)) {
+        const regionInteraction = regionInteractions.getRegion(regionModel.instanceId);
+        this.regionList.push(this.createRegionListItem(regionModel, regionInteraction));
+      }
     });
   }
 
@@ -74,14 +76,23 @@ export class PiTerrainComponent implements OnInit {
     item.droneSlots = 0; // TODO
     item.dronesAssigned = regionInteraction.assignedDrones;
     item.canGather = item.infrastructureLevel > 0;
+
+    // Get all hidden features, and find the lowest infrastructure required one,
+    // So we know which level to cut off hints at
+    let hintLevel = 0;
+    const hiddenFeatures = region.features.filter(x => x.hiddenBehindInfrastructure > item.infrastructureLevel);
+    if (hiddenFeatures.length > 0) {
+      hintLevel = Math.min(...hiddenFeatures.map(x => x.hiddenBehindInfrastructure));
+    }
+
     region.features.forEach(f => {
       const featureInteraction = regionInteraction.getFeature(f.instanceId);
-      item.features.push(this.createFeatureListItem(f, featureInteraction, item.infrastructureLevel));
+      item.features.push(this.createFeatureListItem(f, featureInteraction, item.infrastructureLevel, hintLevel));
     });
     return item;
   }
 
-  private createFeatureListItem(feature: Feature, featureInteraction: FeatureInteraction, infrastructureLevel: number): FeatureListItem {
+  private createFeatureListItem(feature: Feature, featureInteraction: FeatureInteraction, infrastructureLevel: number, hintLevel: number): FeatureListItem {
     const featureDef = this.planetService.getFeatureDefinition(feature.name);
     const exploitDef = this.planetService.getExploitDefinitionForFeature(feature.name);
     const item = new FeatureListItem();
@@ -92,7 +103,7 @@ export class PiTerrainComponent implements OnInit {
     item.canGather = infrastructureLevel === 0;
     item.exploitCost = exploitDef.cost;
     item.active = item.infrastructureNeeded <= infrastructureLevel;
-    item.hintActive = item.infrastructureNeeded > infrastructureLevel;
+    item.hintActive = item.infrastructureNeeded > infrastructureLevel && item.infrastructureNeeded <= hintLevel;
 
     return item;
   }

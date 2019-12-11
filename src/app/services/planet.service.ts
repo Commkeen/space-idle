@@ -110,6 +110,19 @@ export class PlanetService {
     return OUTPOST_LIBRARY.find(def => def.planetType === 'temperate');
   }
 
+  isRegionVisible(regionId: number, planetInstanceId?: number): boolean {
+    if (!planetInstanceId) {
+      planetInstanceId = this.getSelectedPlanet().instanceId;
+    }
+    const region = this.getRegion(regionId, planetInstanceId);
+    if (region.hiddenBehindRegion != 0)
+    {
+      const otherRegionInfrastructure = this.getPlanetInteractionModel(planetInstanceId).regions.getInfrastructureLevel(region.hiddenBehindRegion);
+      return otherRegionInfrastructure >= region.hiddenBehindInfrastructure;
+    }
+    return true;
+  }
+
   canBuildStructure(structureName: string, planetInstanceId?: number): boolean {
     if (!planetInstanceId) {
       planetInstanceId = this.getSelectedPlanet().instanceId;

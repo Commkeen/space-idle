@@ -31,8 +31,7 @@ export class ResourceService {
       return this.globalResources.has(resources.resource, resources.amount);
     }
     resources.resources.forEach(element => {
-      if (!this.globalResources.has(element.resource, element.amount))
-      {
+      if (!this.globalResources.has(element.resource, element.amount)) {
         result = false;
       }
     });
