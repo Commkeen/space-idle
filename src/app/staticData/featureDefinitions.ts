@@ -1,7 +1,9 @@
 import { Effect, BaseRegionalPerDroneProductionEffect } from "./effectDefinitions";
 import { ResourceCollection } from "../models/resource";
+import { FeatureAction } from "./actionDefinitions";
 
 export class FeatureDefinition {
+  public actions: FeatureAction[] = [];
   public effects: Effect[] = [];
   public description = '';
   public exploitName = '';
@@ -45,6 +47,12 @@ export class FeatureDefinition {
 export const FEATURE_LIBRARY: FeatureDefinition[] = [
   new FeatureDefinition('depleted power core',
     'The power core is mostly spent, but with the right equipment it could still prove useful.', 'energy recombiner'),
+  new FeatureDefinition('crater',
+    'A crater in the distance appears to have been recently made.'),
+  new FeatureDefinition('crashed shuttle',
+    'The ship\'s reserve power is still functioning, along with basic fabrication systems.  It may be possible to repair the computer.'),
+  new FeatureDefinition('downed shuttle',
+    'With core systems repaired, the shuttle may be able to reach space with the help of a launch facility.'),
   new FeatureDefinition('hematite deposit', 'A deposit of the iron-rich mineral hematite.', 'hematite mineshaft')
   .addGather('metal', 2),
   new FeatureDefinition('magnetite deposit', 'A deposit of the iron-rich mineral magnetite.', 'magnetite mineshaft'),
