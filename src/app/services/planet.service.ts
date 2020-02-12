@@ -212,6 +212,15 @@ export class PlanetService {
     interactionModel.regions.exploit(regionId, featureId);
   }
 
+  replaceFeature(regionId: number, featureId: number, newFeatureName: string, planetInstanceId?: number): void {
+    if (!planetInstanceId) {
+      planetInstanceId = this.getSelectedPlanet().instanceId;
+    }
+    const planet = this.getPlanet(planetInstanceId);
+    const region = planet.regions.find(x => x.instanceId === regionId);
+    region.replaceFeature(featureId, newFeatureName);
+  }
+
   gatherRegion(regionId: number, planetInstanceId?: number) {
     if (!planetInstanceId) {
       planetInstanceId = this.getSelectedPlanet().instanceId;

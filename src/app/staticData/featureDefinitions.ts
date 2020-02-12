@@ -1,9 +1,10 @@
 import { Effect, BaseRegionalPerDroneProductionEffect } from "./effectDefinitions";
 import { ResourceCollection } from "../models/resource";
 import { FeatureAction } from "./actionDefinitions";
+import { AbilityDefinition } from "./abilityDefinitions";
 
 export class FeatureDefinition {
-  public actions: FeatureAction[] = [];
+  public abilities: AbilityDefinition[] = [];
   public effects: Effect[] = [];
   public description = '';
   public exploitName = '';
@@ -42,13 +43,28 @@ export class FeatureDefinition {
     this.exploitName = name;
     return this;
   }
+
+  public addAbility(name: string, costResource: string, costAmount: number): FeatureDefinition {
+    const ability = new AbilityDefinition();
+    ability.name = name;
+    if (costAmount > 0) {
+      ability.addCost(costResource, costAmount);
+    }
+    this.abilities.push(ability);
+    return this;
+  }
+
+
 }
 
 export const FEATURE_LIBRARY: FeatureDefinition[] = [
   new FeatureDefinition('depleted power core',
     'The power core is mostly spent, but with the right equipment it could still prove useful.', 'energy recombiner'),
   new FeatureDefinition('crater',
-    'A crater in the distance appears to have been recently made.'),
+    'A crater in the distance appears to have been recently made.')
+    .addAbility('Search', 'drones', 1)
+    .addTransformAction('Search', 'crashed shuttle')
+    .addFlagAction()
   new FeatureDefinition('crashed shuttle',
     'The ship\'s reserve power is still functioning, along with basic fabrication systems.  It may be possible to repair the computer.'),
   new FeatureDefinition('downed shuttle',

@@ -29,6 +29,11 @@ export class Region {
     this.features.push(feature);
     return this;
   }
+
+  public replaceFeature(oldFeatureId: number, newFeatureName: string): Region {
+    this.features[oldFeatureId].name = newFeatureName;
+    return this;
+  }
 }
 
 export class Feature {
