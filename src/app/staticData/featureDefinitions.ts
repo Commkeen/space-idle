@@ -62,9 +62,9 @@ export const FEATURE_LIBRARY: FeatureDefinition[] = [
     'The power core is mostly spent, but with the right equipment it could still prove useful.', 'energy recombiner'),
   new FeatureDefinition('crater',
     'A crater in the distance appears to have been recently made.')
-    .addAbility('Search', 'drones', 1)
-    .addTransformAction('Search', 'crashed shuttle')
-    .addFlagAction()
+    .addAbility('Search', 'drones', 1),
+    // .addTransformAction('Search', 'crashed shuttle')
+    // .addFlagAction()
   new FeatureDefinition('crashed shuttle',
     'The ship\'s reserve power is still functioning, along with basic fabrication systems.  It may be possible to repair the computer.'),
   new FeatureDefinition('downed shuttle',
