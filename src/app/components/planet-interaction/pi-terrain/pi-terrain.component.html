@@ -30,6 +30,9 @@
               <div class="feature-active" fxLayout="row" *ngIf="feature.active">
                 <div class="feature-name" fxFlex="60">{{feature.name}}</div>
                 <div class="feature-buttons" fxFlex="40">
+                  <span class="ability" *ngFor="let ability of feature.abilities">
+                    <button (click)="activateAbility(region.id, feature.id, ability.index)">{{ability.name}}</button>
+                  </span>
                   <button *ngIf="feature.canGather" (click)="gatherFeature(region.id, feature.id)">Gather</button>
                   <button *ngIf="feature.canExploit">Exploit</button>
                 </div>

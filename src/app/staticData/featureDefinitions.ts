@@ -1,10 +1,10 @@
 import { Effect, BaseRegionalPerDroneProductionEffect } from "./effectDefinitions";
 import { ResourceCollection } from "../models/resource";
-import { FeatureAction } from "./actionDefinitions";
-import { AbilityDefinition } from "./abilityDefinitions";
+import { FeatureAction, TransformFeatureAction } from "./actionDefinitions";
+import { FeatureAbilityDefinition } from "./abilityDefinitions";
 
 export class FeatureDefinition {
-  public abilities: AbilityDefinition[] = [];
+  public abilities: FeatureAbilityDefinition[] = [];
   public effects: Effect[] = [];
   public description = '';
   public exploitName = '';
@@ -45,12 +45,23 @@ export class FeatureDefinition {
   }
 
   public addAbility(name: string, costResource: string, costAmount: number): FeatureDefinition {
-    const ability = new AbilityDefinition();
+    const ability = new FeatureAbilityDefinition();
     ability.name = name;
     if (costAmount > 0) {
       ability.addCost(costResource, costAmount);
     }
     this.abilities.push(ability);
+    return this;
+  }
+
+  public addTransformAction(triggerAbilityName: string, newFeatureName: string): FeatureDefinition {
+    const action = new TransformFeatureAction(newFeatureName);
+    const ability = this.abilities.find(x => x.name === triggerAbilityName);
+    ability.addAction(action);
+    return this;
+  }
+
+  public addFlagAction(triggerAbilityName: string, flagName: string): FeatureDefinition {
     return this;
   }
 
@@ -62,9 +73,9 @@ export const FEATURE_LIBRARY: FeatureDefinition[] = [
     'The power core is mostly spent, but with the right equipment it could still prove useful.', 'energy recombiner'),
   new FeatureDefinition('crater',
     'A crater in the distance appears to have been recently made.')
-    .addAbility('Search', 'drones', 1),
-    // .addTransformAction('Search', 'crashed shuttle')
-    // .addFlagAction()
+    .addAbility('Search', 'drones', 1)
+    .addTransformAction('Search', 'crashed shuttle')
+    .addFlagAction('Search', 'shuttleFound'),
   new FeatureDefinition('crashed shuttle',
     'The ship\'s reserve power is still functioning, along with basic fabrication systems.  It may be possible to repair the computer.'),
   new FeatureDefinition('downed shuttle',
@@ -74,7 +85,11 @@ export const FEATURE_LIBRARY: FeatureDefinition[] = [
   new FeatureDefinition('magnetite deposit', 'A deposit of the iron-rich mineral magnetite.', 'magnetite mineshaft'),
   new FeatureDefinition('corundum deposit', 'A deposit of the semi-precious crystalline mineral corundum.', 'corundum quarry'),
   new FeatureDefinition('copper deposit', 'A native deposit of metallic copper.', 'copper mineshaft')
-  .addGather('metal', 2),
+  .addGather('metal', 2)
+  .addAbility('Build Mine', 'metal', 50)
+  .addTransformAction('Build Mine', 'copper mineshaft'),
+  new FeatureDefinition('copper mineshaft', 'A mineshaft built on a copper deposit.')
+  .addGather('metal', 4),
   new FeatureDefinition('silver vein', 'A native deposit of metallic silver.', 'silver mineshaft')
   .addGather('rareMetal', 1),
   new FeatureDefinition('gold vein', 'A native deposit of metallic gold.', 'gold mineshaft'),

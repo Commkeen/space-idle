@@ -9,7 +9,7 @@ export class Action {
 }
 
 export abstract class FeatureAction extends Action {
-  abstract doAction(planetSvc: PlanetService, regionId: number, targetFeature: Feature);
+  public abstract doFeatureAction(planetSvc: PlanetService, regionId: number, targetFeature: Feature);
 }
 
 export class TransformFeatureAction extends FeatureAction {
@@ -17,7 +17,7 @@ export class TransformFeatureAction extends FeatureAction {
     super();
   }
 
-  doAction(planetSvc: PlanetService, regionId: number, targetFeature: Feature) {
+  doFeatureAction(planetSvc: PlanetService, regionId: number, targetFeature: Feature) {
     planetSvc.replaceFeature(regionId, targetFeature.instanceId, this.newFeatureName);
   }
 }

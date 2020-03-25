@@ -1,10 +1,12 @@
 import { ResourceCollection } from "../models/resource";
+import { Action } from './actionDefinitions';
 
 
 // Defines ship abilities and feature abilities
 export class AbilityDefinition {
   public name: string;
   public costs: ResourceCollection = new ResourceCollection();
+  public actions: Action[] = [];
 
   setDescription(): AbilityDefinition {
     return this;
@@ -16,6 +18,11 @@ export class AbilityDefinition {
   }
 
   addCooldown(): AbilityDefinition {
+    return this;
+  }
+
+  addAction(action: Action): AbilityDefinition {
+    this.actions.push(action);
     return this;
   }
 }

@@ -6,6 +6,7 @@ import { Resource, ResourceCollection } from '../../../models/resource';
 import { ResearchService } from 'src/app/services/research.service';
 import { ResourceService } from 'src/app/services/resource.service';
 import { RegionInteraction, FeatureInteraction } from 'src/app/models/planetInteractionModel';
+import { FeatureAction } from 'src/app/staticData/actionDefinitions';
 
 @Component({
   selector: 'app-pi-terrain',
@@ -34,6 +35,16 @@ export class PiTerrainComponent implements OnInit {
 
   gatherFeature(regionId: number, featureId: number) {
     this.planetService.gatherFeature(regionId, featureId);
+  }
+
+  activateAbility(regionId: number, featureId: number, abilityIndex: number) {
+    const feature = this.planetService.getFeature(regionId, featureId);
+    const featureDef = this.planetService.getFeatureDefinition(feature.name);
+    const abilityDef = featureDef.abilities[abilityIndex];
+    abilityDef.actions.forEach (a => {
+      (a as FeatureAction).doFeatureAction(this.planetService, regionId, feature);
+    });
+    this.updateRegionList();
   }
 
   buyInfrastructure(regionId: number) {
@@ -99,11 +110,18 @@ export class PiTerrainComponent implements OnInit {
     item.name = feature.name;
     item.id = feature.instanceId;
     item.infrastructureNeeded = feature.hiddenBehindInfrastructure;
-    item.canExploit = !featureInteraction.exploited && infrastructureLevel > 0;
+    item.canExploit = false;
     item.canGather = infrastructureLevel === 0;
-    item.exploitCost = exploitDef.cost;
+    item.exploitCost = exploitDef?.cost ?? new ResourceCollection();
     item.active = item.infrastructureNeeded <= infrastructureLevel;
     item.hintActive = item.infrastructureNeeded > infrastructureLevel && item.infrastructureNeeded <= hintLevel;
+    featureDef.abilities.forEach((a, i) => {
+      const ability = new AbilityItem();
+      ability.name = a.name;
+      ability.index = i;
+      ability.canActivate = true;
+      item.abilities.push(ability);
+    });
 
     return item;
   }
@@ -129,6 +147,13 @@ export class FeatureListItem {
   public canGather: boolean;
   public canExploit: boolean;
   public exploitCost: ResourceCollection;
+  public abilities: AbilityItem[] = [];
+}
+
+export class AbilityItem {
+  public name: string;
+  public index: number;
+  public canActivate: boolean;
 }
 
 export class RegionDetailsViewModel {
