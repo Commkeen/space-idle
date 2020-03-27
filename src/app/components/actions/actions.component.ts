@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Resource } from 'src/app/models/resource';
+import { ResourceService } from 'src/app/services/resource.service';
 
 @Component({
   selector: 'app-actions',
@@ -7,9 +9,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ActionsComponent implements OnInit {
 
-  constructor() { }
+  constructor(public resourceService: ResourceService) { }
 
   ngOnInit() {
+
   }
 
 }

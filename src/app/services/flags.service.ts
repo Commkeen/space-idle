@@ -20,6 +20,8 @@ export class FlagsService {
   public showUpgrades = false;
   public showPower = false;
 
+  public flags: Set<string> = new Set<string>();
+
   public onFlagsUpdated: Subject<void> = new Subject();
 
   constructor(private _planetService: PlanetService, private _timeService: TimeService,
@@ -39,6 +41,18 @@ export class FlagsService {
   update(dT: number) {
     if (!this.showTerrain) { this.checkForTerrainTabUnlock(); }
     if (!this.showOutpostPanel) { this.checkForOutpostPanelUnlock(); }
+  }
+
+  check(flag: string): boolean {
+    return this.flags.has(flag);
+  }
+
+  set(flag: string) {
+    this.flags.add(flag);
+  }
+
+  clear(flag: string) {
+    this.flags.delete(flag);
   }
 
   onOutpostUpgraded(): void {

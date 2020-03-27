@@ -27,6 +27,7 @@ import { ActionsComponent } from './components/actions/actions.component';
 import { GameTooltipDirective } from './directives/game-tooltip.directive';
 import { GameTooltipComponent } from './components/game-tooltip/game-tooltip.component';
 import { ProgressBarComponent } from './components/common/progress-bar/progress-bar.component';
+import { ResourceBarComponent } from './components/common/resource-bar/resource-bar.component';
 
 library.add(faCog);
 library.add(faCompass);
@@ -50,7 +51,8 @@ library.add(faCheck);
     ActionsComponent,
     GameTooltipDirective,
     GameTooltipComponent,
-    ProgressBarComponent
+    ProgressBarComponent,
+    ResourceBarComponent
   ],
   imports: [
     BrowserModule,

@@ -1,5 +1,5 @@
 <div class="spaceidle-section">
-  <app-progress-bar></app-progress-bar>
+  <app-resource-bar [resource]="resourceService.globalResources.get('energy')"></app-resource-bar>
   <div class="action-list">
       <button appGameTooltip="Hello">Build Drone</button>
       <button>Fabricate Nanochip</button>

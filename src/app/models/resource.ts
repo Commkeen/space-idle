@@ -25,6 +25,10 @@ export class ResourceCollection {
 
     constructor() {}
 
+    get(resource: string): Resource {
+      return this.resources.find(x => x.resource === resource);
+    }
+
     add(resource: string, amount: number) {
         let resourceItem = this.resources.find(x => x.resource === resource);
         if (isNullOrUndefined(resourceItem)) {
