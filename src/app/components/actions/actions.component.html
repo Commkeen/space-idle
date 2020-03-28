@@ -1,8 +1,7 @@
 <div class="spaceidle-section">
   <app-resource-bar [resource]="resourceService.globalResources.get('energy')"></app-resource-bar>
-  <div class="action-list">
-      <button appGameTooltip="Hello">Build Drone</button>
-      <button>Fabricate Nanochip</button>
+  <div class="action-list" *ngFor="let ability of getAbilities()">
+    <button [appGameTooltip]="getTooltip(ability)" (click)="onClickAbility(ability)">{{ability.name}}</button>
   </div>
 
 </div>

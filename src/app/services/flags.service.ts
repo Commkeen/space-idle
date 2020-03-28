@@ -44,10 +44,12 @@ export class FlagsService {
   }
 
   check(flag: string): boolean {
+    if (flag === '') {return true;}
     return this.flags.has(flag);
   }
 
   set(flag: string) {
+    if (flag === '') {return;}
     this.flags.add(flag);
   }
 

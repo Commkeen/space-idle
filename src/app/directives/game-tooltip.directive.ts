@@ -2,15 +2,14 @@ import { Directive, Input, HostListener, OnInit, ElementRef } from '@angular/cor
 import { OverlayRef, Overlay, OverlayPositionBuilder } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { GameTooltipComponent } from '../components/game-tooltip/game-tooltip.component';
+import { TooltipViewModel } from '../models/tooltipViewModel';
 
 @Directive({
   selector: '[appGameTooltip]'
 })
 export class GameTooltipDirective implements OnInit {
 
-  @Input('appGameTooltip') text = '';
-
-
+  @Input('appGameTooltip') model: TooltipViewModel;
 
   private overlayRef: OverlayRef;
 
