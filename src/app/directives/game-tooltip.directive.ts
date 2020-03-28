@@ -1,6 +1,6 @@
 import { Directive, Input, HostListener, OnInit, ElementRef } from '@angular/core';
 import { OverlayRef, Overlay, OverlayPositionBuilder } from '@angular/cdk/overlay';
-import { ComponentPortal } from '@angular/cdk/portal';
+import { ComponentPortal, DomPortalHost } from '@angular/cdk/portal';
 import { GameTooltipComponent } from '../components/game-tooltip/game-tooltip.component';
 import { TooltipViewModel } from '../models/tooltipViewModel';
 
@@ -35,6 +35,7 @@ export class GameTooltipDirective implements OnInit {
     const tooltipPortal = new ComponentPortal(GameTooltipComponent);
 
     const tooltipRef = this.overlayRef.attach(tooltipPortal);
+    tooltipRef.instance.tooltipModel = this.model;
   }
 
   @HostListener('mouseout')
