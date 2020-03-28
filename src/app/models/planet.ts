@@ -50,7 +50,7 @@ export const MOCK_SYSTEM: Planet[] = [
         new Region(1, 'Plains')
           .addFeature('copper deposit')
           .addFeature('lignite deposit', 2)
-          .addFeature('copper deposit', 2)
+          .addFeature('crater', 2)
           .addFeature('silver vein', 3),
         new Region(2, 'Hills')
           .hideBehindInfrastructure(1, 1)

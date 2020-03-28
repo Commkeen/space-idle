@@ -7,6 +7,7 @@ import { ResearchService } from 'src/app/services/research.service';
 import { ResourceService } from 'src/app/services/resource.service';
 import { RegionInteraction, FeatureInteraction } from 'src/app/models/planetInteractionModel';
 import { FeatureAction } from 'src/app/staticData/actionDefinitions';
+import { ActionService } from 'src/app/services/action.service';
 
 @Component({
   selector: 'app-pi-terrain',
@@ -15,7 +16,7 @@ import { FeatureAction } from 'src/app/staticData/actionDefinitions';
 })
 export class PiTerrainComponent implements OnInit {
 
-  constructor(private planetService: PlanetService, private researchService: ResearchService, private resourceService: ResourceService) {
+  constructor(private actionService: ActionService, private planetService: PlanetService, private researchService: ResearchService, private resourceService: ResourceService) {
     this.planetService.selectedPlanetChanged.subscribe(x => this.updateRegionList());
   }
 
@@ -42,7 +43,12 @@ export class PiTerrainComponent implements OnInit {
     const featureDef = this.planetService.getFeatureDefinition(feature.name);
     const abilityDef = featureDef.abilities[abilityIndex];
     abilityDef.actions.forEach (a => {
-      (a as FeatureAction).doFeatureAction(this.planetService, regionId, feature);
+      if (a instanceof FeatureAction) {
+        (a as FeatureAction).doFeatureAction(this.actionService, regionId, feature);
+      }
+      else {
+        a.doAction(this.actionService);
+      }
     });
     this.updateRegionList();
   }

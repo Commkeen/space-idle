@@ -1,6 +1,6 @@
 import { Effect, BaseRegionalPerDroneProductionEffect } from "./effectDefinitions";
 import { ResourceCollection } from "../models/resource";
-import { FeatureAction, TransformFeatureAction } from "./actionDefinitions";
+import { FeatureAction, TransformFeatureAction, FlagAction } from "./actionDefinitions";
 import { FeatureAbilityDefinition } from "./abilityDefinitions";
 
 export class FeatureDefinition {
@@ -62,6 +62,9 @@ export class FeatureDefinition {
   }
 
   public addFlagAction(triggerAbilityName: string, flagName: string): FeatureDefinition {
+    const action = new FlagAction(flagName);
+    const ability = this.abilities.find(x => x.name === triggerAbilityName);
+    ability.addAction(action);
     return this;
   }
 

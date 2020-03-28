@@ -5,6 +5,7 @@ import { Action } from 'src/app/staticData/actionDefinitions';
 import { SHIP_ABILITY_LIBRARY, ShipAbilityDefinition } from 'src/app/staticData/abilityDefinitions';
 import { FlagsService } from 'src/app/services/flags.service';
 import { TooltipViewModel } from 'src/app/models/tooltipViewModel';
+import { ActionService } from 'src/app/services/action.service';
 
 @Component({
   selector: 'app-actions',
@@ -13,7 +14,7 @@ import { TooltipViewModel } from 'src/app/models/tooltipViewModel';
 })
 export class ActionsComponent implements OnInit {
 
-  constructor(public resourceService: ResourceService, public flagsService: FlagsService) { }
+  constructor(public actionService: ActionService, public resourceService: ResourceService, public flagsService: FlagsService) { }
 
   ngOnInit() {
 
@@ -22,7 +23,7 @@ export class ActionsComponent implements OnInit {
   onClickAbility(ability: ShipAbilityDefinition) {
     this.resourceService.spend(ability.costs);
     ability.actions.forEach(x => {
-      x.doAction(this.resourceService);
+      x.doAction(this.actionService);
     });
   }
 
