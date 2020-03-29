@@ -1,15 +1,13 @@
-<div class="spaceidle-section">
-  <h1>Ship Interaction</h1>
-  <mat-tab-group>
-    <mat-tab label="Ship Systems">
-      <app-si-systems></app-si-systems>
-    </mat-tab>
+<div fxLayout="column" class="spaceidle-section">
+  <div fxFlex="5" class="ship-header">
+    Information about the ship goes here!
+  </div>
+  <mat-tab-group fxFlex="95">
     <mat-tab label="Research">
       <app-si-research></app-si-research>
     </mat-tab>
     <mat-tab label="Upgrades">
       <app-si-upgrades></app-si-upgrades>
     </mat-tab>
-    <mat-tab label="Travel"> </mat-tab>
   </mat-tab-group>
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, EventEmitter, Output } from '@angular/core';
 import {Planet} from '../../models/planet';
 import {PlanetService} from '../../services/planet.service';
 
@@ -9,9 +9,11 @@ import {PlanetService} from '../../services/planet.service';
 })
 export class SystemOverviewComponent implements OnInit {
 
-  planets: Planet[];
+  planets: Planet[] = [];
 
   selectedPlanet: Planet;
+
+  @Output() shipSelected = new EventEmitter<boolean>();
 
   constructor(private planetService: PlanetService) {
     this.planetService.selectedPlanetChanged.subscribe(x => this.updateSelectedPlanet());
@@ -27,11 +29,21 @@ export class SystemOverviewComponent implements OnInit {
   }
 
   onSelectionChange(event: Planet) {
-    this.planetService.selectPlanet(this.selectedPlanet.instanceId);
+    if (event.name === "Ship") {
+      this.shipSelected.next(true);
+    }
+    else {
+      this.planetService.selectPlanet(this.selectedPlanet.instanceId);
+      this.shipSelected.next(false);
+    }
   }
 
   getSystem(): void {
-    this.planets = this.planetService.getCurrentSystem();
+    this.planets = [];
+    const ship = new Planet();
+    ship.name = "Ship";
+    this.planets.push(ship);
+    this.planets = this.planets.concat(this.planetService.getCurrentSystem());
   }
 
   getSelectedPlanet(): Planet {

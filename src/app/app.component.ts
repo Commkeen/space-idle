@@ -13,7 +13,7 @@ import { ResourceService } from './services/resource.service';
 export class AppComponent implements OnInit {
 
   currentTime:number = 0;
-  showResearchScreen:boolean = false;
+  showShipPanel:boolean = false;
   title = 'space-idle';
 
 
@@ -33,8 +33,8 @@ export class AppComponent implements OnInit {
     this.simulationService.reset();
   }
 
-  onResearchButtonClicked(){
-    this.showResearchScreen = !this.showResearchScreen;
+  onShipSelected(value: boolean){
+    this.showShipPanel = value;
   }
 
   onResetButtonClicked(){

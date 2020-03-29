@@ -10,11 +10,11 @@
       </div>
     </div>
     <div fxFlex="70" fxLayout="column" class="layout-column-center">
-        <app-planet-interaction fxFlex="100" [hidden]="showResearchScreen"></app-planet-interaction>
-        <app-ship-interaction fxFlex="100" [hidden]="!showResearchScreen"></app-ship-interaction>
+        <app-planet-interaction fxFlex="100" [hidden]="showShipPanel"></app-planet-interaction>
+        <app-ship-interaction fxFlex="100" [hidden]="!showShipPanel"></app-ship-interaction>
     </div>
     <div fxFlex="10" fxLayout="column" class="layout-column-right">
-        <app-resource-overview fxFlex="100"></app-resource-overview>
+        <app-system-overview fxFlex="100" (shipSelected)="onShipSelected($event)"></app-system-overview>
         <!--<app-ship-overview fxFlex="40" (researchButtonClicked)="onResearchButtonClicked()"></app-ship-overview>-->
     </div>
   </div>

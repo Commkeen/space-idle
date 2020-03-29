@@ -1,10 +1,14 @@
 <div>
-  <h1>Research</h1>
-  <ul>
-    <li *ngFor="let item of researchList" (click)="onClickResearchItem(item)">
-      <button mat-button>
-        <span [ngClass]="{'research-item-complete': item.researched}">{{item.name}}</span>
-      </button>
-    </li>
-  </ul>
+  <div class="research-item" *ngFor="let name of ['Geology', 'Astronomy', 'High-Energy Physics']">
+    <div class="research-item-top">
+      <span class="title">{{name}}</span>
+      <button class="research-btn">Research</button>
+    </div>
+    <div class="research-item-middle">
+      <app-progress-bar [value]="35" [max]="100"></app-progress-bar>
+    </div>
+    <div class="research-item-bottom">
+      <app-progress-bar [value]="20" [max]="100"></app-progress-bar>
+    </div>
+  </div>
 </div>

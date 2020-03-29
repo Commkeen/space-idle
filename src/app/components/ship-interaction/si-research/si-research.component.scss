@@ -1,7 +1,21 @@
-.research-item-available{
-  font-weight: bold;
+.research-item{
+  display: inline-block;
+  width: 15em;
+  margin: 10px;
+  padding: 5px;
+  border: 2px solid black;
 }
 
-.research-item-complete{
-  text-decoration: line-through;
+.research-item-top{
+  display: flex;
+  justify-content: space-between;
 }
+
+.research-item-middle{
+  padding: 3px;
+}
+
+.research-item-bottom{
+  padding: 3px;
+}
+

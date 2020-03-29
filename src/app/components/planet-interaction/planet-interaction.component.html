@@ -1,13 +1,13 @@
-<div class="spaceidle-section">
-  <mat-tab-group>
-    <mat-tab label="Command">
-      <app-pi-command></app-pi-command>
+<div fxLayout="column" class="spaceidle-section">
+  <div fxFlex="5" class="planet-header">
+    Information about the current planet goes here!
+  </div>
+  <mat-tab-group fxFlex="95">
+    <mat-tab label="Explore">
+      <app-pi-terrain></app-pi-terrain>
     </mat-tab>
     <mat-tab label="Structures" *ngIf="showStructures">
       <app-pi-structures></app-pi-structures>
-    </mat-tab>
-    <mat-tab label="Terrain" *ngIf="showTerrain">
-      <app-pi-terrain></app-pi-terrain>
     </mat-tab>
     <mat-tab label="Upgrades" *ngIf="showUpgrades">
       <app-si-upgrades></app-si-upgrades>
