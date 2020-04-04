@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ResearchService } from '../../../services/research.service';
+import { ResearchProgress } from 'src/app/models/research';
 
 @Component({
   selector: 'app-si-research',
@@ -19,36 +20,27 @@ export class SiResearchComponent implements OnInit {
   updateResearchList() {
     while (this.researchList.length > 0) { this.researchList.pop(); }
 
-    this._researchService.getCompletedResearch().forEach(x => {
-      const researchDef = this._researchService.getResearchDefinition(x);
+    this._researchService.getDisciplines().forEach(discipline => {
+      if (!this._researchService.hasProgress(discipline.name)) {return;}
+      const progress = this._researchService.getProgress(discipline.name);
       const item: ResearchListItem = {
-        name: x,
-        researched: true,
-        cost: researchDef.cost
-      };
-      this.researchList.push(item);
-    });
-
-    this._researchService.getAvailableResearch().forEach(x => {
-      const researchDef = this._researchService.getResearchDefinition(x);
-      const item: ResearchListItem = {
-        name: x,
-        researched: false,
-        cost: researchDef.cost
+        name: discipline.name,
+        progress: progress
       };
       this.researchList.push(item);
     });
   }
 
-  onClickResearchItem(item: ResearchListItem) {
-    if (item.researched) { return; }
-    this._researchService.buyResearch(item.name);
-    this.updateResearchList();
+  getKnowledgeNeeded(research: ResearchListItem): number {
+    return this._researchService.knowledgeNeeded(research.name);
+  }
+
+  getTheoryNeeded(research: ResearchListItem): number {
+    return this._researchService.theoryNeeded(research.name);
   }
 }
 
 export class ResearchListItem {
   public name: string;
-  public researched: boolean;
-  public cost: number;
+  public progress: ResearchProgress;
 }

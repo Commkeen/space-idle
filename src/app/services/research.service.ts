@@ -1,50 +1,62 @@
 import { Injectable } from '@angular/core';
-import { RESEARCH_LIBRARY, ResearchDefinition } from '../staticData/researchDefinitions';
+import { RESEARCH_LIBRARY, ResearchDiscipline } from '../staticData/researchDefinitions';
 import { UPGRADE_LIBRARY, UpgradeDefinition } from '../staticData/upgradeDefinitions';
 import { Subject } from 'rxjs';
 import { ResourceService } from './resource.service';
+import { ResearchProgress } from '../models/research';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ResearchService {
 
-  completedResearch: string[] = [];
+  researchProgress: ResearchProgress[] = [];
   completedUpgrades: string[] = [];
 
   public onResearchUpdated: Subject<void> = new Subject();
 
   constructor(private _resourceService: ResourceService) { }
 
-  isResearchCompleted(research: string) {
-    return this.completedResearch.some(x => x === research);
+  getDiscipline(discipline: string): ResearchDiscipline {
+    return RESEARCH_LIBRARY.find(x => x.name === discipline);
   }
 
-  getAvailableResearch(): string[] {
-    const availableResearch: string[] = [];
-    RESEARCH_LIBRARY.forEach(def => {
-      if (!this.isResearchCompleted(def.name) &&
-        (def.prerequisite == null || this.isResearchCompleted(def.prerequisite))
-      ) {
-        availableResearch.push(def.name);
-      }
-    });
-    return availableResearch;
+  getDisciplines(): ResearchDiscipline[] {
+    return RESEARCH_LIBRARY;
   }
 
-  getCompletedResearch(): string[] {
-    return this.completedResearch;
+  hasProgress(discipline: string): boolean {
+    return this.researchProgress.find(x => x.discipline === discipline) != null;
   }
 
-  getResearchDefinition(research: string): ResearchDefinition {
-    return RESEARCH_LIBRARY.find(x => x.name === research);
+  getProgress(discipline: string): ResearchProgress {
+    let progress = this.researchProgress.find(x => x.discipline === discipline);
+    if (progress != null) {return progress;}
+    progress = new ResearchProgress();
+    progress.discipline = discipline;
+    this.researchProgress.push(progress);
+    return progress;
   }
 
-  buyResearch(research: string) {
-    if (!this.completedResearch.some(x => x === research)) {
-      this.completedResearch.push(research);
-    }
-    this.onResearchUpdated.next();
+  addKnowledge(discipline: string) {
+
+  }
+
+  addTheory(discipline: string) {
+
+  }
+
+  knowledgeNeeded(disciplineName: string): number {
+    const discipline = RESEARCH_LIBRARY.find(x => x.name === disciplineName);
+    if (discipline == null) {return 0;}
+    const progress = this.getProgress(disciplineName);
+    const baseCost = ResearchDiscipline.baseKnowledgeCost * discipline.baseCostMultiplier;
+    const costExponent = ResearchDiscipline.knowledgeExpCost * discipline.compoundingCostMultiplier;
+    return baseCost * Math.pow(costExponent, progress.knowledgeLevel);
+  }
+
+  theoryNeeded(disciplineName: string): number {
+    return ResearchDiscipline.baseTheoryCost;
   }
 
   isUpgradeCompleted(upgrade: string) {

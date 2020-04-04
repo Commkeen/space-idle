@@ -11,6 +11,8 @@ export class GameTooltipDirective implements OnInit {
 
   @Input('appGameTooltip') model: TooltipViewModel;
 
+  private static currentTooltip: GameTooltipDirective = null;
+
   private overlayRef: OverlayRef;
 
   constructor(private overlayPositionBuilder: OverlayPositionBuilder,
@@ -36,11 +38,17 @@ export class GameTooltipDirective implements OnInit {
 
     const tooltipRef = this.overlayRef.attach(tooltipPortal);
     tooltipRef.instance.tooltipModel = this.model;
+
+    if (GameTooltipDirective.currentTooltip != null) {
+      GameTooltipDirective.currentTooltip.hide();
+    }
+    GameTooltipDirective.currentTooltip = this;
   }
 
   @HostListener('mouseout')
   hide() {
     this.overlayRef.detach();
+    GameTooltipDirective.currentTooltip = null;
   }
 
 

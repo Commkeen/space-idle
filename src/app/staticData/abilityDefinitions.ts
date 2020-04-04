@@ -1,5 +1,5 @@
 import { ResourceCollection } from "../models/resource";
-import { Action, AddResourceAction } from './actionDefinitions';
+import { Action, AddResourceAction, FlagAction } from './actionDefinitions';
 
 
 // Defines ship abilities and feature abilities
@@ -9,15 +9,21 @@ export class AbilityDefinition {
   public cooldown: number;
   public costs: ResourceCollection = new ResourceCollection();
   public actions: Action[] = [];
-  public visibleFlag = '';
+  public visibleFlags: string[] = [];
+  public hiddenFlag: string = '';
 
   setDescription(desc: string): AbilityDefinition {
     this.desc = desc;
     return this;
   }
 
-  setVisibleFlag(flag: string): AbilityDefinition {
-    this.visibleFlag = flag;
+  addVisibleFlag(flag: string): AbilityDefinition {
+    this.visibleFlags.push(flag);
+    return this;
+  }
+
+  setHiddenFlag(flag: string): AbilityDefinition {
+    this.hiddenFlag = flag;
     return this;
   }
 
@@ -41,6 +47,12 @@ export class AbilityDefinition {
     this.addAction(action);
     return this;
   }
+
+  setsFlag(flag: string): AbilityDefinition {
+    const action = new FlagAction(flag);
+    this.addAction(action);
+    return this;
+  }
 }
 
 export class FeatureAbilityDefinition extends AbilityDefinition {
@@ -60,8 +72,11 @@ export const SHIP_ABILITY_LIBRARY: ShipAbilityDefinition[] = [
   .addCost('energy', 4)
   .grantsResource('drones', 1),
   new ShipAbilityDefinition('Fabricate Nanochip')
-  .setVisibleFlag('shuttleFound')
+  .addVisibleFlag('shuttleFound')
   .addCost('metal', 20)
   .addCost('silicates', 15)
-  .grantsResource('nanochips', 1)
+  .grantsResource('nanochips', 1),
+  new ShipAbilityDefinition('Launch Ship')
+  .setsFlag('shuttleLaunched')
+  .setHiddenFlag('shuttleLaunched')
 ];

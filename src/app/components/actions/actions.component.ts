@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Resource } from 'src/app/models/resource';
 import { ResourceService } from 'src/app/services/resource.service';
 import { Action } from 'src/app/staticData/actionDefinitions';
-import { SHIP_ABILITY_LIBRARY, ShipAbilityDefinition } from 'src/app/staticData/abilityDefinitions';
+import { SHIP_ABILITY_LIBRARY, ShipAbilityDefinition, AbilityDefinition } from 'src/app/staticData/abilityDefinitions';
 import { FlagsService } from 'src/app/services/flags.service';
 import { TooltipViewModel } from 'src/app/models/tooltipViewModel';
 import { ActionService } from 'src/app/services/action.service';
@@ -41,10 +41,21 @@ export class ActionsComponent implements OnInit {
 
   getAbilities(): ShipAbilityDefinition[] {
     const abilities = SHIP_ABILITY_LIBRARY.filter(x => {
-      return this.flagsService.check(x.visibleFlag);
+      return this.isVisible(x);
     });
 
     return abilities;
+  }
+
+  isVisible(ability: AbilityDefinition) {
+    if (this.flagsService.check(ability.hiddenFlag)) {return false;}
+    return !ability.visibleFlags.some(x => {
+      return !this.flagsService.check(x);
+    })
+  }
+
+  showWin() {
+    return this.flagsService.check('shuttleLaunched');
   }
 
 }

@@ -1,5 +1,6 @@
 <div class="spaceidle-section">
   <app-resource-bar [resource]="resourceService.globalResources.get('energy')"></app-resource-bar>
+  <div *ngIf="showWin()">Congratulations, you have completed the space idle prototype!</div>
   <div class="action-list" *ngFor="let ability of getAbilities()">
     <button [appGameTooltip]="getTooltip(ability)" (click)="onClickAbility(ability)">{{ability.name}}</button>
   </div>

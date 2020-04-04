@@ -1,50 +1,68 @@
-import {Resource} from '../models/resource';
+export class ResearchDiscipline {
+    static baseKnowledgeCost: number = 35;
+    static baseTheoryCost: number = 20;
+    static knowledgeExpCost: number = Math.sqrt(18);
 
-export class ResearchDefinition {
     name: string;
-    prerequisite: string;
-    cost: number;
+    desc: string = '';
+    baseCostMultiplier: number = 1;
+    compoundingCostMultiplier: number = 1;
+    theoryCostMultiplier: number = 1;
+
+    upgradeUnlocks: Map<number, string> = new Map<number, string>();
+    flagUnlocks: Map<number, string> = new Map<number, string>();
+
+    constructor(name: string) {
+      this.name = name;
+    }
+
+    setDesc(desc: string): ResearchDiscipline {
+      this.desc = desc;
+      return this;
+    }
+
+    addUpgrade(level: number, upgrade: string): ResearchDiscipline {
+      this.upgradeUnlocks.set(level, upgrade);
+      return this;
+    }
+
+    addFlag(level: number, flag: string): ResearchDiscipline {
+      this.flagUnlocks.set(level, flag);
+      return this;
+    }
+
 }
 
-export const RESEARCH_LIBRARY: ResearchDefinition[] = [
-    {
-        name: 'Alloys',
-        prerequisite: null,
-        cost: 10
-    },
-    {
-        name: 'Electronics',
-        prerequisite: 'Alloys',
-        cost: 15
-    },
-    {
-        name: 'Longrange Sensing',
-        prerequisite: 'Electronics',
-        cost: 15
-    },
-    {
-        name: 'Photovoltaic Energy Systems',
-        prerequisite: 'Electronics',
-        cost: 30
-    },
-    {
-        name: 'Nullpressure Adaptation',
-        prerequisite: 'Photovoltaic Energy Systems',
-        cost: 30
-    },
-    {
-        name: 'Artificial Satellites',
-        prerequisite: 'Photovoltaic Energy Systems',
-        cost: 30
-    },
-    {
-        name: 'Elementary Fission',
-        prerequisite: 'Nullpressure Adaptation',
-        cost: 30
-    },
-    {
-        name: 'Nanomaterials',
-        prerequisite: 'Nullpressure Adaptation',
-        cost: 30
-    },
+export const RESEARCH_LIBRARY: ResearchDiscipline[] = [
+  new ResearchDiscipline('Material Science')
+    .addUpgrade(1, 'Construction')
+    .addUpgrade(3, 'Tensile Polymers')
+    .addUpgrade(5, 'Unbreakable Materials'),
+  new ResearchDiscipline('Electronics')
+    .addUpgrade(1, 'Automated Fabrication')
+    .addUpgrade(3, 'Photon Processing')
+    .addUpgrade(5, 'Synthetic Thought'),
+  new ResearchDiscipline('Hypertopology')
+    .addUpgrade(1, 'Extradimensional Synthesis'),
+  new ResearchDiscipline('High Energy Physics')
+    .addUpgrade(1, 'Electrodynamics'),
+  new ResearchDiscipline('Gravitics')
+    .addUpgrade(1, 'Artificial Gravity'),
+  new ResearchDiscipline('Planetary Survey')
+    .addUpgrade(2, 'Maritime Survey')
+    .addUpgrade(3, 'Mountain Survey')
+    .addUpgrade(4, 'Desert Survey')
+    .addUpgrade(5, 'Arctic Survey')
+    .addUpgrade(6, 'Undersea Survey'),
+  new ResearchDiscipline('Drone Control')
+    .addUpgrade(1, 'Bandwidth Multiplexing')
+    .addUpgrade(2, 'Adaptive Tooling')
+    .addUpgrade(3, 'Heuristic Processors'),
+  new ResearchDiscipline('Resource Exploitation')
+    .addUpgrade(1, 'Mineral Extraction')
+    .addUpgrade(2, 'Liquid Extraction')
+    .addUpgrade(3, 'Clathrate Extraction')
+    .addUpgrade(4, 'Particulate Enrichment')
+    .addUpgrade(5, 'Crystal Extraction'),
+  new ResearchDiscipline('Anomaly Scanning')
 ];

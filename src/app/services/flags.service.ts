@@ -44,7 +44,7 @@ export class FlagsService {
   }
 
   check(flag: string): boolean {
-    if (flag === '') {return true;}
+    if (flag === '') {return false;}
     return this.flags.has(flag);
   }
 
