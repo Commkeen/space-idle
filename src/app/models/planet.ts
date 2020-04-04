@@ -10,7 +10,7 @@ export class Planet {
 
 export class Region {
   public hiddenBehindRegion = 0;
-  public hiddenBehindInfrastructure = 0;
+  public hiddenBehindSurvey = 0;
   public features: Feature[] = [];
   constructor(
     public instanceId: number,
@@ -19,13 +19,13 @@ export class Region {
 
   public hideBehindInfrastructure(regionId: number, level: number): Region {
     this.hiddenBehindRegion = regionId;
-    this.hiddenBehindInfrastructure = level;
+    this.hiddenBehindSurvey = level;
     return this;
   }
 
   public addFeature(name: string, infrastructureLevel: number = 0): Region {
     const feature = new Feature(this.features.length, name);
-    feature.hiddenBehindInfrastructure = infrastructureLevel;
+    feature.hiddenBehindSurvey = infrastructureLevel;
     this.features.push(feature);
     return this;
   }
@@ -38,7 +38,7 @@ export class Region {
 
 export class Feature {
 
-    public hiddenBehindInfrastructure = 1;
+    public hiddenBehindSurvey = 1;
     constructor(
       public instanceId: number,
       public name: string

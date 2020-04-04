@@ -7,20 +7,32 @@
           <div fxFlex="5">
             <fa-icon icon="cog"></fa-icon>
           </div>
-          <div fxFlex="20">
+          <div class="region-title" fxFlex="15">
             <div>{{region.name}}</div>
             <div><button *ngIf="region.canGather" (click)="gatherRegion(region.id)">Gather</button></div>
           </div>
-          <div fxFlex="20">
-            <div>
-              Infrastructure: {{region.infrastructureLevel}}
-              <button (click)="buyInfrastructure(region.id)">Upgrade</button>
+
+          <div class="region-outpost" fxFlex="20" *ngIf="showOutpostPanel(region.id)">
+            <div *ngIf="region.outpostLevel == 0">
+              <button (click)="buyOutpost(region.id)">Build Outpost</button>
+            </div>
+            <div *ngIf="region.outpostLevel > 0">
+              Outpost: {{region.outpostLevel}}
+              <button (click)="buyOutpost(region.id)">Upgrade</button>
             </div>
             <div *ngIf="region.droneSlots > 0">
               <span>Drones: {{region.dronesAssigned}}/{{region.droneSlots}}</span>
               <button>-</button>
               <button>+</button>
             </div>
+          </div>
+          <div class="region-survey" fxFlex="50">
+            <div fxLayout="row">
+              <span *ngIf="region.surveyLevel == 0">Unsurveyed</span>
+              <span *ngIf="region.surveyLevel > 0">Survey Lv {{region.surveyLevel}}</span>
+              <app-progress-bar fxFlex="50" [value]="region.surveyProgress" [max]="getSurveyProgressNeeded(region.id)"></app-progress-bar>
+            </div>
+            <div><button (click)="survey(region.id)">Survey</button></div>
           </div>
         </div>
         <mat-divider></mat-divider>
@@ -34,11 +46,10 @@
                     <button (click)="activateAbility(region.id, feature.id, ability.index)">{{ability.name}}</button>
                   </span>
                   <button *ngIf="feature.canGather" (click)="gatherFeature(region.id, feature.id)">Gather</button>
-                  <button *ngIf="feature.canExploit">Exploit</button>
                 </div>
               </div>
               <div class="feature-hidden" *ngIf="feature.hintActive">
-                ---{{feature.infrastructureNeeded}}---
+                ---{{feature.surveyNeeded}}---
               </div>
             </div>
           </div>

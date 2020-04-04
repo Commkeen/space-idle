@@ -72,10 +72,22 @@ export const SHIP_ABILITY_LIBRARY: ShipAbilityDefinition[] = [
   .addCost('energy', 4)
   .grantsResource('drones', 1),
   new ShipAbilityDefinition('Fabricate Nanochip')
-  .addVisibleFlag('shuttleFound')
+  .addVisibleFlag('fabricatorRepaired')
   .addCost('metal', 20)
   .addCost('silicates', 15)
   .grantsResource('nanochips', 1),
+  new ShipAbilityDefinition('Repair Fabricator')
+  .addVisibleFlag('shuttleFound')
+  .setsFlag('fabricatorRepaired')
+  .setHiddenFlag('fabricatorRepaired'),
+  new ShipAbilityDefinition('Repair Drone Relay')
+  .addVisibleFlag('shuttleFound')
+  .setsFlag('droneRelayRepaired')
+  .setHiddenFlag('droneRelayRepaired'),
+  new ShipAbilityDefinition('Repair Research Computer')
+  .addVisibleFlag('shuttleFound')
+  .setsFlag('researchUnlocked')
+  .setHiddenFlag('researchUnlocked'),
   new ShipAbilityDefinition('Launch Ship')
   .setsFlag('shuttleLaunched')
   .setHiddenFlag('shuttleLaunched')

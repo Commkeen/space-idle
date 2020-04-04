@@ -23,7 +23,9 @@ export class FeatureInteraction {
 
 export class RegionInteraction {
   regionInstanceId: number;
-  infrastructureLevel = 0;
+  outpostLevel = 0;
+  surveyLevel = 0;
+  surveyProgress = 0;
   assignedDrones = 0;
   features: FeatureInteraction[] = [];
 
@@ -51,12 +53,16 @@ export class RegionInteractionCollection {
     return this.getRegion(region).isFeatureExploited(feature);
   }
 
-  advanceInfrastructure(regionId: number) {
-    this.getRegion(regionId).infrastructureLevel++;
+  advanceOutpost(regionId: number) {
+    this.getRegion(regionId).outpostLevel++;
   }
 
-  getInfrastructureLevel(regionId: number): number {
-    return this.getRegion(regionId).infrastructureLevel;
+  getOutpostLevel(regionId: number): number {
+    return this.getRegion(regionId).outpostLevel;
+  }
+
+  getSurveyLevel(regionId: number): number {
+    return this.getRegion(regionId).surveyLevel;
   }
 
   exploit(region: number, feature: number): void {

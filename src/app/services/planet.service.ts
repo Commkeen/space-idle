@@ -117,8 +117,8 @@ export class PlanetService {
     const region = this.getRegion(regionId, planetInstanceId);
     if (region.hiddenBehindRegion != 0)
     {
-      const otherRegionInfrastructure = this.getPlanetInteractionModel(planetInstanceId).regions.getInfrastructureLevel(region.hiddenBehindRegion);
-      return otherRegionInfrastructure >= region.hiddenBehindInfrastructure;
+      const otherRegionSurvey = this.getPlanetInteractionModel(planetInstanceId).regions.getSurveyLevel(region.hiddenBehindRegion);
+      return otherRegionSurvey >= region.hiddenBehindSurvey;
     }
     return true;
   }
@@ -174,42 +174,29 @@ export class PlanetService {
     this.updateInteractionModel(interactionModel);
   }
 
-  upgradeOutpost(planetInstanceId?: number): void {
-    if (!planetInstanceId) {
-      planetInstanceId = this.getSelectedPlanet().instanceId;
-    }
-    const interactionModel = this.getPlanetInteractionModel(planetInstanceId);
-    const outpostDef = this.getOutpostTypeForPlanet(planetInstanceId);
-    interactionModel.outpostLevel += 1;
-    const newLevel = outpostDef.getLevel(interactionModel.outpostLevel);
-    const newDroneCap = newLevel.droneCapacity;
-    if (newDroneCap > interactionModel.localResources.getMax('drones')) {
-         interactionModel.localResources.setMax('drones', newDroneCap);
-       }
-    this.onOutpostUpgraded.next(interactionModel);
-  }
-
-  upgradeInfrastructure(regionId: number, planetInstanceId?: number) {
+  upgradeOutpost(regionId: number, planetInstanceId?: number) {
     if (!planetInstanceId) {
       planetInstanceId = this.getSelectedPlanet().instanceId;
     }
     const regionInteraction = this.getPlanetInteractionModel(planetInstanceId).regions;
-    regionInteraction.advanceInfrastructure(regionId);
+    regionInteraction.advanceOutpost(regionId);
   }
 
-  exploitFeature(regionId: number, featureId: number, planetInstanceId?: number): void {
+  surveyRegion(regionId: number, planetInstanceId?: number) {
     if (!planetInstanceId) {
       planetInstanceId = this.getSelectedPlanet().instanceId;
     }
-    const planet = this.getPlanet(planetInstanceId);
-    const interactionModel = this.getPlanetInteractionModel(planetInstanceId);
-    const region = planet.regions.find(x => x.instanceId === regionId);
-    const feature = region.features.find(x => x.instanceId === featureId);
-    const exploitDefinition = this.getExploitDefinitionForFeature(feature.name);
+    const regionInteraction = this.getPlanetInteractionModel(planetInstanceId).regions.getRegion(regionId);
+    const surveyProgressNeeded = this.getSurveyProgressNeeded(regionId, planetInstanceId);
+    regionInteraction.surveyProgress += 10; //TODO: calc survey speed
+    if (regionInteraction.surveyProgress >= surveyProgressNeeded) {
+      regionInteraction.surveyProgress -= surveyProgressNeeded;
+      regionInteraction.surveyLevel++;
+    }
+  }
 
-    if (!this._resourceService.spend(exploitDefinition.cost)) { return; }
-
-    interactionModel.regions.exploit(regionId, featureId);
+  getSurveyProgressNeeded(regionId: number, planetInstanceId?: number) {
+    return 100;
   }
 
   replaceFeature(regionId: number, featureId: number, newFeatureName: string, planetInstanceId?: number): void {
@@ -228,10 +215,10 @@ export class PlanetService {
 
     const planet = this.getPlanet(planetInstanceId);
     const region = planet.regions.find(x => x.instanceId === regionId);
-    const regionInfrastructure = this.getPlanetInteractionModel(planetInstanceId).regions.getInfrastructureLevel(regionId);
+    const regionSurvey = this.getPlanetInteractionModel(planetInstanceId).regions.getSurveyLevel(regionId);
     region.features.forEach(feature => {
       const featureDefinition = this.getFeatureDefinition(feature.name);
-      if (feature.hiddenBehindInfrastructure <= regionInfrastructure) {
+      if (feature.hiddenBehindSurvey <= regionSurvey) {
         this._resourceService.globalResources.addCollection(featureDefinition.gatherRates);
       }
     });

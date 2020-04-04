@@ -8,6 +8,7 @@ import { ResourceService } from 'src/app/services/resource.service';
 import { RegionInteraction, FeatureInteraction } from 'src/app/models/planetInteractionModel';
 import { FeatureAction } from 'src/app/staticData/actionDefinitions';
 import { ActionService } from 'src/app/services/action.service';
+import { FlagsService } from 'src/app/services/flags.service';
 
 @Component({
   selector: 'app-pi-terrain',
@@ -16,7 +17,9 @@ import { ActionService } from 'src/app/services/action.service';
 })
 export class PiTerrainComponent implements OnInit {
 
-  constructor(private actionService: ActionService, private planetService: PlanetService, private researchService: ResearchService, private resourceService: ResourceService) {
+  constructor(private actionService: ActionService, private planetService: PlanetService,
+              private researchService: ResearchService, private resourceService: ResourceService,
+              private flagService: FlagsService) {
     this.planetService.selectedPlanetChanged.subscribe(x => this.updateRegionList());
   }
 
@@ -28,6 +31,14 @@ export class PiTerrainComponent implements OnInit {
 
   getSelectedPlanet(): Planet {
     return this.planetService.getSelectedPlanet();
+  }
+
+  getSurveyProgressNeeded(regionId: number): number {
+    return this.planetService.getSurveyProgressNeeded(regionId);
+  }
+
+  showOutpostPanel(regionId: number): boolean {
+    return this.flagService.check('droneRelayRepaired');
   }
 
   gatherRegion(regionId: number) {
@@ -53,24 +64,19 @@ export class PiTerrainComponent implements OnInit {
     this.updateRegionList();
   }
 
-  buyInfrastructure(regionId: number) {
+  survey(regionId: number) {
+    this.planetService.surveyRegion(regionId);
+    this.updateRegionList();
+  }
+
+  buyOutpost(regionId: number) {
     // TODO
-    this.planetService.upgradeInfrastructure(regionId);
+    this.planetService.upgradeOutpost(regionId);
     this.updateRegionList();
   }
 
-  canAffordInfrastructure(regionId: number): boolean {
+  canAffordOutpost(regionId: number): boolean {
     return true; // TODO
-  }
-
-  buyExploit(regionId: number, featureId: number) {
-    this.planetService.exploitFeature(regionId, featureId);
-    this.updateRegionList();
-  }
-
-  canAffordExploit(feature: FeatureListItem): boolean {
-    if (isNullOrUndefined(feature.exploitCost)) { return false; }
-    return this.resourceService.canAfford(feature.exploitCost);
   }
 
   updateRegionList() {
@@ -89,38 +95,38 @@ export class PiTerrainComponent implements OnInit {
     const item = new RegionListItem();
     item.name = region.name;
     item.id = region.instanceId;
-    item.infrastructureLevel = regionInteraction.infrastructureLevel;
-    item.droneSlots = 0; // TODO
+    item.outpostLevel = regionInteraction.outpostLevel;
+    item.surveyLevel = regionInteraction.surveyLevel;
+    item.surveyProgress = regionInteraction.surveyProgress;
+    item.droneSlots = regionInteraction.outpostLevel;
     item.dronesAssigned = regionInteraction.assignedDrones;
-    item.canGather = item.infrastructureLevel > 0;
+    item.canGather = item.outpostLevel > 0;
 
-    // Get all hidden features, and find the lowest infrastructure required one,
+    // Get all hidden features, and find the lowest survey required one,
     // So we know which level to cut off hints at
     let hintLevel = 0;
-    const hiddenFeatures = region.features.filter(x => x.hiddenBehindInfrastructure > item.infrastructureLevel);
+    const hiddenFeatures = region.features.filter(x => x.hiddenBehindSurvey > item.surveyLevel);
     if (hiddenFeatures.length > 0) {
-      hintLevel = Math.min(...hiddenFeatures.map(x => x.hiddenBehindInfrastructure));
+      hintLevel = Math.min(...hiddenFeatures.map(x => x.hiddenBehindSurvey));
     }
 
     region.features.forEach(f => {
       const featureInteraction = regionInteraction.getFeature(f.instanceId);
-      item.features.push(this.createFeatureListItem(f, featureInteraction, item.infrastructureLevel, hintLevel));
+      item.features.push(this.createFeatureListItem(f, featureInteraction, item.outpostLevel, item.surveyLevel, hintLevel));
     });
     return item;
   }
 
-  private createFeatureListItem(feature: Feature, featureInteraction: FeatureInteraction, infrastructureLevel: number, hintLevel: number): FeatureListItem {
+  private createFeatureListItem(feature: Feature, featureInteraction: FeatureInteraction, outpostLevel: number, surveyLevel: number, hintLevel: number): FeatureListItem {
     const featureDef = this.planetService.getFeatureDefinition(feature.name);
     const exploitDef = this.planetService.getExploitDefinitionForFeature(feature.name);
     const item = new FeatureListItem();
     item.name = feature.name;
     item.id = feature.instanceId;
-    item.infrastructureNeeded = feature.hiddenBehindInfrastructure;
-    item.canExploit = false;
-    item.canGather = infrastructureLevel === 0;
-    item.exploitCost = exploitDef?.cost ?? new ResourceCollection();
-    item.active = item.infrastructureNeeded <= infrastructureLevel;
-    item.hintActive = item.infrastructureNeeded > infrastructureLevel && item.infrastructureNeeded <= hintLevel;
+    item.surveyNeeded = feature.hiddenBehindSurvey;
+    item.canGather = outpostLevel === 0;
+    item.active = item.surveyNeeded <= surveyLevel;
+    item.hintActive = item.surveyNeeded > surveyLevel && item.surveyNeeded <= hintLevel;
     featureDef.abilities.forEach((a, i) => {
       const ability = new AbilityItem();
       ability.name = a.name;
@@ -136,10 +142,11 @@ export class PiTerrainComponent implements OnInit {
 export class RegionListItem {
   public name: string;
   public id: number;
-  public infrastructureLevel: number;
+  public outpostLevel: number;
+  public surveyLevel: number;
+  public surveyProgress: number;
   public dronesAssigned: number;
   public droneSlots: number;
-  public expanded = false;
   public features: FeatureListItem[] = [];
   public canGather = false;
 }
@@ -147,12 +154,10 @@ export class RegionListItem {
 export class FeatureListItem {
   public name: string;
   public id: number;
-  public infrastructureNeeded: number;
+  public surveyNeeded: number;
   public active: boolean;
   public hintActive: boolean;
   public canGather: boolean;
-  public canExploit: boolean;
-  public exploitCost: ResourceCollection;
   public abilities: AbilityItem[] = [];
 }
 
