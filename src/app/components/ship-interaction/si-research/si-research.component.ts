@@ -14,7 +14,12 @@ export class SiResearchComponent implements OnInit {
   constructor(private _researchService: ResearchService) { }
 
   ngOnInit() {
+    this._researchService.onResearchUpdated.subscribe(() => {this.updateResearchList();});
     this.updateResearchList();
+  }
+
+  research(item: ResearchListItem) {
+    this._researchService.addKnowledge(item.name, 10);
   }
 
   updateResearchList() {

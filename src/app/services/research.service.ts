@@ -38,12 +38,26 @@ export class ResearchService {
     return progress;
   }
 
-  addKnowledge(discipline: string) {
-
+  addKnowledge(discipline: string, amount: number) {
+    const progress = this.getProgress(discipline);
+    const needed = this.knowledgeNeeded(discipline);
+    progress.knowledgeProgress += amount;
+    if (progress.knowledgeProgress >= needed) {
+      progress.knowledgeProgress -= needed;
+      progress.knowledgeLevel++;
+    }
+    this.onResearchUpdated.next();
   }
 
-  addTheory(discipline: string) {
-
+  addTheory(discipline: string, amount: number) {
+    const progress = this.getProgress(discipline);
+    const needed = this.theoryNeeded(discipline);
+    progress.theoryProgress += amount;
+    if (progress.theoryProgress >= needed) {
+      progress.theoryProgress -= needed;
+      progress.theoryLevel++;
+    }
+    this.onResearchUpdated.next();
   }
 
   knowledgeNeeded(disciplineName: string): number {

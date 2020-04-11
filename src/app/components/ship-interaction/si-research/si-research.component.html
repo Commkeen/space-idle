@@ -1,14 +1,15 @@
 <div>
-  <div class="research-item" *ngFor="let name of ['Geology', 'Astronomy', 'High-Energy Physics']">
+  <div class="research-item" *ngFor="let item of researchList">
     <div class="research-item-top">
-      <span class="title">{{name}}</span>
-      <button class="research-btn">Research</button>
+      <span class="title">{{item.name}} {{item.progress.knowledgeLevel}}</span>
+      <button class="research-btn" (click)="research(item)">Research</button>
     </div>
     <div class="research-item-middle">
-      <app-progress-bar [value]="35" [max]="100"></app-progress-bar>
+      <app-progress-bar [value]="item.progress.knowledgeProgress" [max]="getKnowledgeNeeded(item)"></app-progress-bar>
     </div>
     <div class="research-item-bottom">
-      <app-progress-bar [value]="20" [max]="100"></app-progress-bar>
+      <span>Theory Lv {{item.progress.theoryLevel}}</span>
+      <app-progress-bar [value]="item.progress.theoryProgress" [max]="getTheoryNeeded(item)"></app-progress-bar>
     </div>
   </div>
 </div>

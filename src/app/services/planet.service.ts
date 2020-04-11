@@ -10,6 +10,7 @@ import { EXPLOIT_LIBRARY, ExploitDefinition } from '../staticData/exploitDefinit
 import { REGION_LIBRARY, RegionDefinition } from '../staticData/regionDefinitions';
 import { OutpostDefinition, OUTPOST_LIBRARY } from '../staticData/outpostDefinitions';
 import { ResourceService } from './resource.service';
+import { ResearchService } from './research.service';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,7 @@ export class PlanetService {
   private _selectedPlanet: Planet = null;
   private _selectedPlanetInteractionModel: PlanetInteractionModel = null;
 
-  constructor(private _resourceService: ResourceService) { }
+  constructor(private _resourceService: ResourceService, private _researchService: ResearchService) { }
 
   initializeSystem(): void {
     this._currentSystem = MOCK_SYSTEM;
@@ -188,10 +189,12 @@ export class PlanetService {
     }
     const regionInteraction = this.getPlanetInteractionModel(planetInstanceId).regions.getRegion(regionId);
     const surveyProgressNeeded = this.getSurveyProgressNeeded(regionId, planetInstanceId);
-    regionInteraction.surveyProgress += 10; //TODO: calc survey speed
+    const surveyResearch = this._researchService.getProgress('Planetary Survey');
+    regionInteraction.surveyProgress += 10 + (10*surveyResearch.knowledgeLevel*0.2); //TODO: calc survey speed
     if (regionInteraction.surveyProgress >= surveyProgressNeeded) {
       regionInteraction.surveyProgress -= surveyProgressNeeded;
       regionInteraction.surveyLevel++;
+      this._researchService.addTheory('Planetary Survey', 10);
     }
   }
 

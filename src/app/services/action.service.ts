@@ -3,13 +3,15 @@ import { FlagsService } from './flags.service';
 import { PlanetService } from './planet.service';
 import { ResourceService } from './resource.service';
 import { Resource } from '../models/resource';
+import { ResearchService } from './research.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ActionService {
 
-  constructor(private _flagService: FlagsService, private _planetService: PlanetService, private _resourceService: ResourceService) { }
+  constructor(private _flagService: FlagsService, private _planetService: PlanetService,
+              private _resourceService: ResourceService, private _researchService: ResearchService) { }
 
   setFlag(flag: string) {
     this._flagService.set(flag);

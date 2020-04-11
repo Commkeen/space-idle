@@ -100,11 +100,6 @@ export class PiCommandComponent implements OnInit {
     this.outpostUpgradeCosts = outpostNextLevelDef.cost;
   }
 
-  onUpgradeOutpost(): void {
-    if (!this.resourceService.spend(this.outpostUpgradeCosts)) { return; }
-    this.planetService.upgradeOutpost();
-    this.updateOutpost();
-  }
 
   onFlagsUpdated(): void {
     if (this.flagsService.showOutpostPanel) {this.showOutpostPanel = true; }
