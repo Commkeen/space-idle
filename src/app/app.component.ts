@@ -4,6 +4,7 @@ import { TimeService } from './services/time.service';
 import { SimulationService } from './services/simulation.service';
 import { FlagsService } from './services/flags.service';
 import { ResourceService } from './services/resource.service';
+import { TaskService } from './services/task.service';
 
 @Component({
   selector: 'app-root',
@@ -21,7 +22,8 @@ export class AppComponent implements OnInit {
               private timeService:TimeService,
               private simulationService:SimulationService,
               private flagsService:FlagsService,
-              private resourceService:ResourceService){}
+              private resourceService:ResourceService,
+              private taskService:TaskService){}
 
   ngOnInit(): void {
     this.timeService.startGame();
@@ -31,6 +33,7 @@ export class AppComponent implements OnInit {
     this.resourceService.init();
     this.simulationService.init();
     this.simulationService.reset();
+    this.taskService.init();
   }
 
   onShipSelected(value: boolean){

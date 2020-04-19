@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ResearchService } from '../../../services/research.service';
 import { ResearchProgress } from 'src/app/models/research';
+import { TaskService } from 'src/app/services/task.service';
 
 @Component({
   selector: 'app-si-research',
@@ -11,7 +12,7 @@ export class SiResearchComponent implements OnInit {
 
   researchList: ResearchListItem[] = [];
 
-  constructor(private _researchService: ResearchService) { }
+  constructor(private _researchService: ResearchService, private _taskService: TaskService) { }
 
   ngOnInit() {
     this._researchService.onResearchUpdated.subscribe(() => {this.updateResearchList();});
@@ -19,7 +20,7 @@ export class SiResearchComponent implements OnInit {
   }
 
   research(item: ResearchListItem) {
-    this._researchService.addKnowledge(item.name, 10);
+    this._taskService.beginResearch(item.name);
   }
 
   updateResearchList() {

@@ -6,6 +6,7 @@ import { SHIP_ABILITY_LIBRARY, ShipAbilityDefinition, AbilityDefinition } from '
 import { FlagsService } from 'src/app/services/flags.service';
 import { TooltipViewModel } from 'src/app/models/tooltipViewModel';
 import { ActionService } from 'src/app/services/action.service';
+import { TaskService } from 'src/app/services/task.service';
 
 @Component({
   selector: 'app-actions',
@@ -14,10 +15,14 @@ import { ActionService } from 'src/app/services/action.service';
 })
 export class ActionsComponent implements OnInit {
 
-  constructor(public actionService: ActionService, public resourceService: ResourceService, public flagsService: FlagsService) { }
+  constructor(public actionService: ActionService, public resourceService: ResourceService, public flagsService: FlagsService, public taskService: TaskService) { }
 
   ngOnInit() {
 
+  }
+
+  getCurrentTask() {
+    return this.taskService.getCurrentTask();
   }
 
   onClickAbility(ability: ShipAbilityDefinition) {

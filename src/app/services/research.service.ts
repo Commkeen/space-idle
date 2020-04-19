@@ -73,6 +73,11 @@ export class ResearchService {
     return ResearchDiscipline.baseTheoryCost;
   }
 
+  theoryBonus(discipline: string): number {
+    const progress = this.getProgress(discipline);
+    return Math.pow(2, progress.theoryLevel);
+  }
+
   isUpgradeCompleted(upgrade: string) {
     return this.completedUpgrades.some(x => x === upgrade);
   }

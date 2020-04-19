@@ -1,4 +1,8 @@
 <div class="spaceidle-section">
+  <div class="current-task" *ngIf="getCurrentTask() != null">
+    <div class="current-task-name">{{getCurrentTask().name}}</div>
+    <app-progress-bar [value]="getCurrentTask().progress" [max]="getCurrentTask().needed"></app-progress-bar>
+  </div>
   <app-resource-bar [resource]="resourceService.globalResources.get('energy')"></app-resource-bar>
   <div *ngIf="showWin()">Congratulations, you have completed the space idle prototype!</div>
   <div class="action-list" *ngFor="let ability of getAbilities()">
