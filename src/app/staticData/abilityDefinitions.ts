@@ -11,6 +11,8 @@ export class AbilityDefinition {
   public actions: Action[] = [];
   public visibleFlags: string[] = [];
   public hiddenFlag: string = '';
+  public visibleNeededResearchName: string = '';
+  public visibleNeededResearchLevel: number = 0;
 
   setDescription(desc: string): AbilityDefinition {
     this.desc = desc;
@@ -24,6 +26,12 @@ export class AbilityDefinition {
 
   setHiddenFlag(flag: string): AbilityDefinition {
     this.hiddenFlag = flag;
+    return this;
+  }
+
+  setVisibleNeededResearch(discipline: string, level: number): AbilityDefinition {
+    this.visibleNeededResearchName = discipline;
+    this.visibleNeededResearchLevel = level;
     return this;
   }
 
@@ -90,5 +98,7 @@ export const SHIP_ABILITY_LIBRARY: ShipAbilityDefinition[] = [
   .setHiddenFlag('researchUnlocked'),
   new ShipAbilityDefinition('Launch Ship')
   .setsFlag('shuttleLaunched')
+  .setVisibleNeededResearch('Gravitics', 1)
   .setHiddenFlag('shuttleLaunched')
+
 ];
