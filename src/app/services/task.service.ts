@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ResearchService } from './research.service';
 import { Task, SurveyTask, ResearchTask } from '../models/task';
 import { TimeService } from './time.service';
+import { PlanetService } from './planet.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ export class TaskService {
 
   _currentTask: Task = null;
 
-  constructor(private _researchService: ResearchService, private _timeService: TimeService) { }
+  constructor(private _planetService: PlanetService, private _researchService: ResearchService, private _timeService: TimeService) { }
 
   init() {
     this._timeService.tick.subscribe(x => this.update(x));
@@ -22,6 +23,16 @@ export class TaskService {
 
   public beginTask(task: Task) {
     this._currentTask = task;
+  }
+
+  public beginSurvey(planetId: number, regionId: number) {
+    const surveyTask = new SurveyTask();
+    surveyTask.name = "Surveying"; //TODO: Region name
+    surveyTask.planetId = planetId;
+    surveyTask.regionId = regionId;
+    surveyTask.progress = 0;
+    surveyTask.needed = 100;
+    this._currentTask = surveyTask;
   }
 
   public beginResearch(discipline: string) {
@@ -50,6 +61,10 @@ export class TaskService {
   tickSurveyTask(task: SurveyTask, dT: number) {
     const planetId = task.planetId;
     const regionId = task.regionId;
+
+    this._planetService.surveyRegion(0.01*dT, regionId, planetId);
+    task.needed = this._planetService.getSurveyProgressNeeded(regionId, planetId);
+    task.progress = this._planetService.getPlanetInteractionModel(planetId).regions.getRegion(regionId).surveyProgress;
   }
 
   tickResearchTask(task: ResearchTask, dT: number) {

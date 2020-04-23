@@ -45,8 +45,9 @@ export class ResearchService {
     if (progress.knowledgeProgress >= needed) {
       progress.knowledgeProgress -= needed;
       progress.knowledgeLevel++;
+      this.onResearchUpdated.next();
     }
-    this.onResearchUpdated.next();
+
   }
 
   addTheory(discipline: string, amount: number) {
@@ -56,8 +57,9 @@ export class ResearchService {
     if (progress.theoryProgress >= needed) {
       progress.theoryProgress -= needed;
       progress.theoryLevel++;
+      this.onResearchUpdated.next();
     }
-    this.onResearchUpdated.next();
+
   }
 
   knowledgeNeeded(disciplineName: string): number {

@@ -30,7 +30,7 @@
             <div fxLayout="row">
               <span *ngIf="region.surveyLevel == 0">Unsurveyed</span>
               <span *ngIf="region.surveyLevel > 0">Survey Lv {{region.surveyLevel}}</span>
-              <app-progress-bar fxFlex="50" [value]="region.surveyProgress" [max]="getSurveyProgressNeeded(region.id)"></app-progress-bar>
+              <app-progress-bar fxFlex="50" [value]="getSurveyProgress(region.id)" [max]="getSurveyProgressNeeded(region.id)"></app-progress-bar>
             </div>
             <div><button (click)="survey(region.id)">Survey</button></div>
           </div>

@@ -9,6 +9,7 @@ import { RegionInteraction, FeatureInteraction } from 'src/app/models/planetInte
 import { FeatureAction } from 'src/app/staticData/actionDefinitions';
 import { ActionService } from 'src/app/services/action.service';
 import { FlagsService } from 'src/app/services/flags.service';
+import { TaskService } from 'src/app/services/task.service';
 
 @Component({
   selector: 'app-pi-terrain',
@@ -19,7 +20,7 @@ export class PiTerrainComponent implements OnInit {
 
   constructor(private actionService: ActionService, private planetService: PlanetService,
               private researchService: ResearchService, private resourceService: ResourceService,
-              private flagService: FlagsService) {
+              private flagService: FlagsService, private taskService: TaskService) {
     this.planetService.selectedPlanetChanged.subscribe(x => this.updateRegionList());
   }
 
@@ -31,6 +32,10 @@ export class PiTerrainComponent implements OnInit {
 
   getSelectedPlanet(): Planet {
     return this.planetService.getSelectedPlanet();
+  }
+
+  getSurveyProgress(regionId: number): number {
+    return this.planetService.getSurveyProgress(regionId);
   }
 
   getSurveyProgressNeeded(regionId: number): number {
@@ -65,8 +70,19 @@ export class PiTerrainComponent implements OnInit {
   }
 
   survey(regionId: number) {
-    this.planetService.surveyRegion(regionId);
+    const useSurveyTask = this.flagService.check('surveyRepaired');
+    if (useSurveyTask) {
+      this.taskService.beginSurvey(this.getSelectedPlanet().instanceId, regionId);
+    }
+    else {
+      this.planetService.surveyRegion(10, regionId);
+    }
+
     this.updateRegionList();
+  }
+
+  canAffordSurvey(regionId: number): boolean {
+    return true; // TODO
   }
 
   buyOutpost(regionId: number) {

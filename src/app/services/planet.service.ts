@@ -183,19 +183,27 @@ export class PlanetService {
     regionInteraction.advanceOutpost(regionId);
   }
 
-  surveyRegion(regionId: number, planetInstanceId?: number) {
+  surveyRegion(amount: number, regionId: number, planetInstanceId?: number) {
     if (!planetInstanceId) {
       planetInstanceId = this.getSelectedPlanet().instanceId;
     }
     const regionInteraction = this.getPlanetInteractionModel(planetInstanceId).regions.getRegion(regionId);
     const surveyProgressNeeded = this.getSurveyProgressNeeded(regionId, planetInstanceId);
     const surveyResearch = this._researchService.getProgress('Planetary Survey');
-    regionInteraction.surveyProgress += 10 + (10*surveyResearch.knowledgeLevel*0.2); //TODO: calc survey speed
+    regionInteraction.surveyProgress += amount + (amount*surveyResearch.knowledgeLevel*0.2); //TODO: calc survey speed
     if (regionInteraction.surveyProgress >= surveyProgressNeeded) {
       regionInteraction.surveyProgress -= surveyProgressNeeded;
       regionInteraction.surveyLevel++;
       this._researchService.addTheory('Planetary Survey', 10);
     }
+  }
+
+  getSurveyProgress(regionId: number, planetInstanceId?: number) {
+    if (!planetInstanceId) {
+      planetInstanceId = this.getSelectedPlanet().instanceId;
+    }
+
+    return this.getPlanetInteractionModel(planetInstanceId).regions.getRegion(regionId).surveyProgress;
   }
 
   getSurveyProgressNeeded(regionId: number, planetInstanceId?: number) {

@@ -88,6 +88,10 @@ export const SHIP_ABILITY_LIBRARY: ShipAbilityDefinition[] = [
   .addVisibleFlag('shuttleFound')
   .setsFlag('fabricatorRepaired')
   .setHiddenFlag('fabricatorRepaired'),
+  new ShipAbilityDefinition('Repair Survey Scanner')
+  .addVisibleFlag('shuttleFound')
+  .setsFlag('surveyRepaired')
+  .setHiddenFlag('surveyRepaired'),
   new ShipAbilityDefinition('Repair Drone Relay')
   .addVisibleFlag('shuttleFound')
   .setsFlag('droneRelayRepaired')
