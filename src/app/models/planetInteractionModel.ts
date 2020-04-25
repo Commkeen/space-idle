@@ -1,5 +1,6 @@
 import { ResourceCollection } from './resource';
 import { isNullOrUndefined } from 'util';
+import { Task, FeatureTask } from './task';
 
 export class PlanetInteractionModel {
     planetInstanceId: number;
@@ -19,6 +20,7 @@ export class Structure {
 export class FeatureInteraction {
   featureInstanceId: number;
   exploited: boolean;
+  tasks: FeatureTask[] = [];
 }
 
 export class RegionInteraction {

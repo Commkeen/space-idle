@@ -42,7 +42,7 @@ export class ResearchService {
     const progress = this.getProgress(discipline);
     const needed = this.knowledgeNeeded(discipline);
     progress.knowledgeProgress += amount;
-    if (progress.knowledgeProgress >= needed) {
+    while (progress.knowledgeProgress >= needed) {
       progress.knowledgeProgress -= needed;
       progress.knowledgeLevel++;
       this.onResearchUpdated.next();
@@ -54,7 +54,7 @@ export class ResearchService {
     const progress = this.getProgress(discipline);
     const needed = this.theoryNeeded(discipline);
     progress.theoryProgress += amount;
-    if (progress.theoryProgress >= needed) {
+    while (progress.theoryProgress >= needed) {
       progress.theoryProgress -= needed;
       progress.theoryLevel++;
       this.onResearchUpdated.next();

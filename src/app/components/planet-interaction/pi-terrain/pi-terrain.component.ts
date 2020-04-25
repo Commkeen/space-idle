@@ -10,6 +10,8 @@ import { FeatureAction } from 'src/app/staticData/actionDefinitions';
 import { ActionService } from 'src/app/services/action.service';
 import { FlagsService } from 'src/app/services/flags.service';
 import { TaskService } from 'src/app/services/task.service';
+import { TaskDefinition } from 'src/app/staticData/taskDefinitions';
+import { FeatureTask } from 'src/app/models/task';
 
 @Component({
   selector: 'app-pi-terrain',
@@ -67,6 +69,16 @@ export class PiTerrainComponent implements OnInit {
       }
     });
     this.updateRegionList();
+  }
+
+  activateTask(taskItem: TaskItem) {
+    this.taskService.beginFeatureTask(this.getSelectedPlanet().instanceId, taskItem.regionId, taskItem.featureId, taskItem.def.name);
+    this.updateRegionList();
+  }
+
+  taskIsVisible(taskItem: TaskItem): boolean {
+    if (!taskItem.def.repeatable && taskItem.instance != null && taskItem.instance.progress >= taskItem.instance.needed) {return false;}
+    return true;
   }
 
   survey(regionId: number) {
@@ -128,14 +140,13 @@ export class PiTerrainComponent implements OnInit {
 
     region.features.forEach(f => {
       const featureInteraction = regionInteraction.getFeature(f.instanceId);
-      item.features.push(this.createFeatureListItem(f, featureInteraction, item.outpostLevel, item.surveyLevel, hintLevel));
+      item.features.push(this.createFeatureListItem(region.instanceId, f, featureInteraction, item.outpostLevel, item.surveyLevel, hintLevel));
     });
     return item;
   }
 
-  private createFeatureListItem(feature: Feature, featureInteraction: FeatureInteraction, outpostLevel: number, surveyLevel: number, hintLevel: number): FeatureListItem {
+  private createFeatureListItem(regionId: number, feature: Feature, featureInteraction: FeatureInteraction, outpostLevel: number, surveyLevel: number, hintLevel: number): FeatureListItem {
     const featureDef = this.planetService.getFeatureDefinition(feature.name);
-    const exploitDef = this.planetService.getExploitDefinitionForFeature(feature.name);
     const item = new FeatureListItem();
     item.name = feature.name;
     item.id = feature.instanceId;
@@ -150,8 +161,38 @@ export class PiTerrainComponent implements OnInit {
       ability.canActivate = true;
       item.abilities.push(ability);
     });
+    this.populateFeatureTasks(regionId, item);
 
     return item;
+  }
+
+  private updateFeatureListItem(planetId: number, regionId: number, featureId: number) {
+    if (planetId != this.getSelectedPlanet().instanceId) {return;}
+    const regionItem = this.regionList.find(x => x.id === regionId);
+    if (regionItem == null) {return;}
+    const featureItem = regionItem.features.find(x => x.id === featureId);
+    if (featureItem == null) {
+      return; //TODO: Create feature list item
+    }
+    this.populateFeatureTasks(regionId, featureItem);
+  }
+
+  private populateFeatureTasks(regionId: number, featureItem: FeatureListItem) {
+    featureItem.tasks = [];
+    const featureDef = this.planetService.getFeatureDefinition(featureItem.name);
+    const featureInstance = this.planetService.getFeature(regionId, featureItem.id);
+    const featureInteraction = this.planetService.getPlanetInteractionModel()
+                                .regions.getFeature(regionId, featureItem.id);
+    featureDef.tasks.forEach(tDef => {
+      const instance = featureInteraction.tasks.find(x => x.definition === tDef);
+      const taskItem = new TaskItem();
+      taskItem.regionId = regionId;
+      taskItem.featureId = featureItem.id;
+      taskItem.def = tDef;
+      taskItem.instance = instance;
+      taskItem.index = featureItem.tasks.length;
+      featureItem.tasks.push(taskItem);
+    });
   }
 }
 
@@ -175,12 +216,26 @@ export class FeatureListItem {
   public hintActive: boolean;
   public canGather: boolean;
   public abilities: AbilityItem[] = [];
+  public tasks: TaskItem[] = [];
 }
 
 export class AbilityItem {
   public name: string;
   public index: number;
   public canActivate: boolean;
+}
+
+export class TaskItem {
+  public regionId: number;
+  public featureId: number;
+  public def: TaskDefinition;
+  public instance: FeatureTask;
+  public index: number;
+
+  public progress(): number {
+    if (this.instance != null) {return this.instance.progress;}
+    return 0;
+  }
 }
 
 export class RegionDetailsViewModel {

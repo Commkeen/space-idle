@@ -18,6 +18,17 @@ export class AddResourceAction extends Action {
   }
 }
 
+export class AddTheoryAction extends Action {
+
+  constructor (public discipline: string, public amount: number) {
+    super();
+  }
+
+  doAction(actionService: ActionService) {
+    actionService.addTheory(this.discipline, this.amount);
+  }
+}
+
 export class FlagAction extends Action {
   public flag: string;
   constructor (flag: string) {

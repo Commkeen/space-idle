@@ -1,10 +1,12 @@
 import { Effect, BaseRegionalPerDroneProductionEffect } from "./effectDefinitions";
 import { ResourceCollection } from "../models/resource";
-import { FeatureAction, TransformFeatureAction, FlagAction } from "./actionDefinitions";
+import { FeatureAction, TransformFeatureAction, FlagAction, AddTheoryAction } from "./actionDefinitions";
 import { FeatureAbilityDefinition } from "./abilityDefinitions";
+import { TaskDefinition } from './taskDefinitions';
 
 export class FeatureDefinition {
   public abilities: FeatureAbilityDefinition[] = [];
+  public tasks: TaskDefinition[] = [];
   public effects: Effect[] = [];
   public description = '';
   public exploitName = '';
@@ -68,6 +70,18 @@ export class FeatureDefinition {
     return this;
   }
 
+  public addTask(name: string, needed: number): FeatureDefinition {
+    const task = new TaskDefinition(name, needed);
+    this.tasks.push(task);
+    return this;
+  }
+
+  public addTaskResearchResult(taskName: string, discipline: string, amount: number): FeatureDefinition {
+    const task = this.tasks.find(x => x.name === taskName);
+    const action = new AddTheoryAction(discipline, amount);
+    task.resultsOnComplete.push(action);
+    return this;
+  }
 
 }
 
@@ -90,7 +104,9 @@ export const FEATURE_LIBRARY: FeatureDefinition[] = [
   new FeatureDefinition('copper deposit', 'A native deposit of metallic copper.', 'copper mineshaft')
   .addGather('metal', 2)
   .addAbility('Build Mine', 'metal', 50)
-  .addTransformAction('Build Mine', 'copper mineshaft'),
+  .addTransformAction('Build Mine', 'copper mineshaft')
+  .addTask('Geologic Study', 20)
+  .addTaskResearchResult('Geologic Study', 'Material Science', 20),
   new FeatureDefinition('copper mineshaft', 'A mineshaft built on a copper deposit.')
   .addGather('metal', 4),
   new FeatureDefinition('silver vein', 'A native deposit of metallic silver.', 'silver mineshaft')

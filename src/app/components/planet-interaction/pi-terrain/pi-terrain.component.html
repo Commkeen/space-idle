@@ -45,6 +45,9 @@
                   <span class="ability" *ngFor="let ability of feature.abilities">
                     <button (click)="activateAbility(region.id, feature.id, ability.index)">{{ability.name}}</button>
                   </span>
+                  <span class="task" *ngFor="let task of feature.tasks">
+                    <button *ngIf="taskIsVisible(task)" (click)="activateTask(task)">{{task.def.name}}</button>
+                  </span>
                   <button *ngIf="feature.canGather" (click)="gatherFeature(region.id, feature.id)">Gather</button>
                 </div>
               </div>

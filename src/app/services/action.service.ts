@@ -17,6 +17,10 @@ export class ActionService {
     this._flagService.set(flag);
   }
 
+  addTheory(discipline: string, amount: number) {
+    this._researchService.addTheory(discipline, amount);
+  }
+
   addResource(resource: Resource) {
     this._resourceService.globalResources.add(resource.resource, resource.amount);
   }
