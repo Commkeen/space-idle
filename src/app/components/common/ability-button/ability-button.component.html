@@ -1,4 +1,5 @@
 <game-button [appGameTooltip]="getTooltip()"
              [name]="ability.name"
              [disabled]="!canAfford()"
+             [cooldown]="getCooldownPercent()"
              (click)="onClick()"></game-button>

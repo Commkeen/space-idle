@@ -45,7 +45,7 @@ export class GameTooltipDirective implements OnInit {
     GameTooltipDirective.currentTooltip = this;
   }
 
-  @HostListener('mouseout')
+  @HostListener('mouseleave')
   hide() {
     this.overlayRef.detach();
     GameTooltipDirective.currentTooltip = null;

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, timer, interval, Subject, Subscription } from 'rxjs';
 import { isNullOrUndefined } from 'util';
 
-const tickRate = 127;
+const tickRate = 100;
 
 @Injectable({
   providedIn: 'root'

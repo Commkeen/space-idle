@@ -10,8 +10,21 @@ export class GameButtonComponent implements OnInit, CanDisable {
 
   @Input() name: string;
   @Input() disabled: boolean = false;
-  @Input() cooldown: number = 0;
   @Output() click = new EventEmitter<void>();
+
+  smoothCooldown: boolean = false;
+  private _cooldown: number;
+  get cooldown() {return this._cooldown;}
+  @Input()
+  set cooldown(val: number) {
+    if (val > this._cooldown || val == 0) {
+      this.smoothCooldown = false;
+    }
+    else {
+      this.smoothCooldown = true;
+    }
+    this._cooldown = val;
+  }
 
   constructor() { }
 
@@ -21,6 +34,7 @@ export class GameButtonComponent implements OnInit, CanDisable {
   onClick(event: MouseEvent) {
     event.stopPropagation();
     if (this.disabled) {return false;}
+    if (this.cooldown > 0) {return false;}
     this.click.emit();
   }
 
