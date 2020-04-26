@@ -4,19 +4,23 @@
 }
 
 .feature-list{
-  list-style-type: none;
-  column-width: 320px;
-  column-gap: 20px;
+  flex: 1;
 }
 
 .feature-active {
-  min-width: 300px;
+  flex: 1;
 }
 
-.unselected{
-  color: black;
+.feature-buttons {
+  width: 100%;
 }
 
-.selected{
-  color: red;
+.ability {
+  display: inline-block;
+  width: 175px;
+}
+
+.task {
+  display: inline-block;
+  width: 175px;
 }

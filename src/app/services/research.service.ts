@@ -4,6 +4,7 @@ import { UPGRADE_LIBRARY, UpgradeDefinition } from '../staticData/upgradeDefinit
 import { Subject } from 'rxjs';
 import { ResourceService } from './resource.service';
 import { ResearchProgress } from '../models/research';
+import { FlagsService } from './flags.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,11 +12,12 @@ import { ResearchProgress } from '../models/research';
 export class ResearchService {
 
   researchProgress: ResearchProgress[] = [];
+  unlockedUpgrades: string[] = [];
   completedUpgrades: string[] = [];
 
   public onResearchUpdated: Subject<void> = new Subject();
 
-  constructor(private _resourceService: ResourceService) { }
+  constructor(private _flagService: FlagsService, private _resourceService: ResourceService) { }
 
   getDiscipline(discipline: string): ResearchDiscipline {
     return RESEARCH_LIBRARY.find(x => x.name === discipline);
@@ -39,12 +41,20 @@ export class ResearchService {
   }
 
   addKnowledge(discipline: string, amount: number) {
+    const def = this.getDiscipline(discipline);
     const progress = this.getProgress(discipline);
     const needed = this.knowledgeNeeded(discipline);
     progress.knowledgeProgress += amount;
     while (progress.knowledgeProgress >= needed) {
       progress.knowledgeProgress -= needed;
       progress.knowledgeLevel++;
+      if (def.upgradeUnlocks.has(progress.knowledgeLevel)) {
+        this.unlockedUpgrades.push(def.upgradeUnlocks.get(progress.knowledgeLevel));
+      }
+      if (def.flagUnlocks.has(progress.knowledgeLevel)) {
+        this._flagService.set(def.upgradeUnlocks.get(progress.knowledgeLevel));
+      }
+
       this.onResearchUpdated.next();
     }
 
@@ -57,9 +67,9 @@ export class ResearchService {
     while (progress.theoryProgress >= needed) {
       progress.theoryProgress -= needed;
       progress.theoryLevel++;
+      this._flagService.set('showResearchTab');
       this.onResearchUpdated.next();
     }
-
   }
 
   knowledgeNeeded(disciplineName: string): number {
@@ -93,15 +103,7 @@ export class ResearchService {
   }
 
   getAvailableUpgrades(): string[] {
-    // TODO: Uses upgrades as prereqs for now, switch to using research
-    const availableUpgrades: string[] = [];
-    UPGRADE_LIBRARY.forEach(def => {
-      if (!this.isUpgradeCompleted(def.name) &&
-        (def.researchNeeded == null || def.researchNeeded === '' || this.isUpgradeCompleted(def.researchNeeded))) {
-        availableUpgrades.push(def.name);
-      }
-    });
-    return availableUpgrades;
+    return this.unlockedUpgrades;
   }
 
   getCompletedUpgrades(): string[] {
@@ -109,7 +111,11 @@ export class ResearchService {
   }
 
   getUpgradeDefinition(upgrade: string): UpgradeDefinition {
-    return UPGRADE_LIBRARY.find(x => x.name === upgrade);
+    let def = UPGRADE_LIBRARY.find(x => x.name === upgrade);
+    if (def == null) {
+      def = new UpgradeDefinition(upgrade, 'MISSING');
+    }
+    return def;
   }
 
   buyUpgrade(upgrade: string) {
@@ -117,6 +123,8 @@ export class ResearchService {
     if (!this.completedUpgrades.some(x => x === upgrade)) {
       const spentResourcesSuccessfully = this._resourceService.spend(upgradeCost);
       if (spentResourcesSuccessfully) {
+        const unlockIndex = this.unlockedUpgrades.indexOf(upgrade);
+        if (unlockIndex > -1) {this.unlockedUpgrades.splice(unlockIndex, 1);}
         this.completedUpgrades.push(upgrade);
       }
     }

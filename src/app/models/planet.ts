@@ -25,7 +25,7 @@ export class Region {
   }
 
   public addFeature(name: string, infrastructureLevel: number = 0): Region {
-    const feature = new Feature(this.instanceId, this.features.length, name);
+    const feature = new Feature(this.planetId, this.instanceId, this.features.length, name);
     feature.hiddenBehindSurvey = infrastructureLevel;
     this.features.push(feature);
     return this;
@@ -41,6 +41,7 @@ export class Feature {
 
     public hiddenBehindSurvey = 1;
     constructor(
+      public planetId: number,
       public regionId: number,
       public instanceId: number,
       public name: string

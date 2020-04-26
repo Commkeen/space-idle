@@ -4,6 +4,7 @@ import { PlanetService } from './planet.service';
 import { ResourceService } from './resource.service';
 import { Resource } from '../models/resource';
 import { ResearchService } from './research.service';
+import { Feature } from '../models/planet';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +24,10 @@ export class ActionService {
 
   addResource(resource: Resource) {
     this._resourceService.globalResources.add(resource.resource, resource.amount);
+  }
+
+  gatherFeature(feature: Feature) {
+    this._planetService.gatherFeature(feature.regionId, feature.instanceId);
   }
 
   replaceFeature(regionId: number, featureInstanceId: number, newFeatureName: string) {

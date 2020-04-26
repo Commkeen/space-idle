@@ -1,6 +1,6 @@
 import { Effect, BaseRegionalPerDroneProductionEffect } from "./effectDefinitions";
 import { ResourceCollection } from "../models/resource";
-import { FeatureAction, TransformFeatureAction, FlagAction, AddTheoryAction } from "./actionDefinitions";
+import { FeatureAction, TransformFeatureAction, FlagAction, AddTheoryAction, GatherFeatureAction } from "./actionDefinitions";
 import { FeatureAbilityDefinition } from "./abilityDefinitions";
 import { TaskDefinition } from './taskDefinitions';
 
@@ -10,6 +10,7 @@ export class FeatureDefinition {
   public effects: Effect[] = [];
   public description = '';
   public exploitName = '';
+  public hasGather: boolean = false;
   public gatherRates: ResourceCollection = new ResourceCollection();
 
   constructor (
@@ -26,6 +27,15 @@ export class FeatureDefinition {
   }
 
   public addGather(resource: string, amount: number): FeatureDefinition {
+    if (!this.hasGather) {
+      const gatherAbility = new FeatureAbilityDefinition();
+      gatherAbility.name = 'Gather';
+      gatherAbility.addAction(new GatherFeatureAction());
+      gatherAbility.addCost('energy', 1);
+      gatherAbility.addCooldown(1.5);
+      this.abilities.push(gatherAbility);
+      this.hasGather = true;
+    }
     this.gatherRates.add(resource, amount);
     return this;
   }

@@ -33,10 +33,51 @@
   align-self: stretch;
   overflow: hidden;
   background-color: rgb(160, 252, 255);
+  border-radius: 4px 0px 0px 4px;
   width: 0%;
-  border-radius: 6px;
   pointer-events: none;
   transition: width 0.1s;
+}
+
+.running {
+  display: block;
+  align-self: stretch;
+  overflow: hidden;
+  background: rgb(255, 255, 190);
+  border-radius: 4px;
+  width: 100%;
+  pointer-events: none;
+  transition: width 0.1s;
+}
+
+.running-top {
+  display: block;
+  background: repeating-linear-gradient(
+    60deg,
+    rgb(255, 241, 117),
+    rgb(255, 241, 117) 40px,
+    transparent 40px,
+    transparent 60px
+  );
+  background-size: 693px 1em;
+  height: 50%;
+  width: 100%;
+  animation: Run 3s linear infinite;
+}
+
+.running-bottom {
+  display: block;
+  background: repeating-linear-gradient(
+    120deg,
+    rgb(255, 241, 117),
+    rgb(255, 241, 117) 40px,
+    transparent 40px,
+    transparent 60px
+  );
+  background-size: 693px 1em;
+  height: 50%;
+  width: 100%;
+  animation: Run 3s linear infinite;
 }
 
 .text {
@@ -48,4 +89,9 @@
   text-align: center;
   overflow: hidden;
   pointer-events: none;
+}
+
+@keyframes Run {
+  from {background-position-x:-60px;}
+  to {background-position-x:80px;}
 }

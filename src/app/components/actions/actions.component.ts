@@ -8,6 +8,7 @@ import { TooltipViewModel } from 'src/app/models/tooltipViewModel';
 import { ActionService } from 'src/app/services/action.service';
 import { TaskService } from 'src/app/services/task.service';
 import { ResearchService } from 'src/app/services/research.service';
+import { UpgradeDefinition, UPGRADE_LIBRARY } from 'src/app/staticData/upgradeDefinitions';
 
 @Component({
   selector: 'app-actions',
@@ -30,13 +31,14 @@ export class ActionsComponent implements OnInit {
 
   getAbilities(): ShipAbilityDefinition[] {
     const abilities = SHIP_ABILITY_LIBRARY.filter(x => {
-      return this.isVisible(x);
+      return this.isAbilityVisible(x);
     });
 
     return abilities;
   }
 
-  isVisible(ability: AbilityDefinition) {
+
+  isAbilityVisible(ability: AbilityDefinition) {
     if (this.flagsService.check(ability.hiddenFlag)) {return false;}
     if (ability.visibleNeededResearchName != '') {
       if (this.researchService.getProgress(ability.visibleNeededResearchName).knowledgeLevel < ability.visibleNeededResearchLevel) {
@@ -46,6 +48,31 @@ export class ActionsComponent implements OnInit {
     return !ability.visibleFlags.some(x => {
       return !this.flagsService.check(x);
     })
+  }
+
+  getUpgrades(): UpgradeDefinition[] {
+    const upgrades = this.researchService.getAvailableUpgrades().map(x => {
+      return this.researchService.getUpgradeDefinition(x);
+    });
+
+    return upgrades;
+  }
+
+  getUpgradeTooltip(upg: UpgradeDefinition): TooltipViewModel {
+    const tooltip = new TooltipViewModel();
+    tooltip.name = upg.name;
+    tooltip.desc = upg.description;
+    tooltip.costs = upg.cost;
+    return tooltip;
+  }
+
+  canAffordUpgrade(upg: UpgradeDefinition): boolean {
+    return this.resourceService.canAfford(upg.cost);
+  }
+
+  onClickUpgrade(upg: UpgradeDefinition): boolean {
+    if (!this.canAffordUpgrade(upg)) {return;}
+    this.researchService.buyUpgrade(upg.name);
   }
 
   showWin() {

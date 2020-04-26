@@ -40,15 +40,14 @@
           <div class="feature-list">
             <div class="feature" fxLayout="row" *ngFor="let feature of region.features">
               <div class="feature-active" fxLayout="row" *ngIf="feature.active">
-                <div class="feature-name" fxFlex="60">{{feature.name}}</div>
-                <div class="feature-buttons" fxFlex="40">
-                  <span class="ability" *ngFor="let ability of feature.abilities">
-                    <ability-button [ability]="ability.def" [feature]="feature.featureInstance"></ability-button>
-                  </span>
-                  <span class="task" *ngFor="let task of feature.tasks">
-                    <game-button [name]="task.def.name" *ngIf="taskIsVisible(task)" (click)="activateTask(task)"></game-button>
-                  </span>
-                  <game-button name="Gather" *ngIf="feature.canGather" (click)="gatherFeature(region.id, feature.id)"></game-button>
+                <div class="feature-name" fxFlex="nogrow">{{feature.name}}</div>
+                <div class="feature-buttons" fxLayout="row" fxFlex="70">
+                  <div *ngFor="let ability of feature.abilities">
+                    <ability-button class="ability" [ability]="ability.def" [feature]="feature.featureInstance"></ability-button>
+                  </div>
+                  <div *ngFor="let task of feature.tasks">
+                    <task-button class="task" [task]="task.instance" [taskDef]="task.def" [feature]="feature.featureInstance"></task-button>
+                  </div>
                 </div>
               </div>
               <div class="feature-hidden" *ngIf="feature.hintActive">

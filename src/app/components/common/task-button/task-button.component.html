@@ -1,1 +1,5 @@
-<game-button></game-button>
+<game-button [appGameTooltip]="getTooltip()"
+            [name]="taskDef.name"
+            [disabled]=""
+            [running]="isRunning()"
+            (click)="onClick()"></game-button>

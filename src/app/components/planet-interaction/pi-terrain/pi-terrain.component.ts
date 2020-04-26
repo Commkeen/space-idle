@@ -74,7 +74,7 @@ export class PiTerrainComponent implements OnInit {
   }
 
   activateTask(taskItem: TaskItem) {
-    this.taskService.beginFeatureTask(this.getSelectedPlanet().instanceId, taskItem.regionId, taskItem.featureId, taskItem.def.name);
+    this.taskService.beginFeatureTask(this.planetService.getFeature(taskItem.regionId, taskItem.featureId), taskItem.def.name);
     this.updateRegionList();
   }
 

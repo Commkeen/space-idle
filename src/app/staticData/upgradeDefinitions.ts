@@ -1,14 +1,16 @@
 import { Resource, ResourceCollection } from '../models/resource';
 import { Effect } from './effectDefinitions';
+import { Action, FlagAction } from './actionDefinitions';
 
 export class UpgradeDefinition {
   public cost: ResourceCollection = new ResourceCollection();
   public effects: Effect[] = [];
+  public actions: Action[] = [];
   public friendlyName: string;
   constructor(
     public name: string,
     public description: string,
-    public researchNeeded: string
+    public researchNeeded?: string
   ) {
     this.friendlyName = name;
   }
@@ -18,15 +20,23 @@ export class UpgradeDefinition {
     return this;
   }
 
-  public setFriendlyName(name: string): UpgradeDefinition {
-    this.friendlyName = name;
+  public addAction(action: Action): UpgradeDefinition {
+    this.actions.push(action);
+    return this;
+  }
+
+  public setsFlag(flag: string): UpgradeDefinition {
+    const action = new FlagAction(flag);
+    this.addAction(action);
     return this;
   }
 
 }
 
 export const UPGRADE_LIBRARY: UpgradeDefinition[] = [
-  new UpgradeDefinition('Construction', 'Large scale construction projects.', '').addCost('metal', 25), // Smelter, nanochips
+  new UpgradeDefinition('Construction', 'Large scale construction projects.')
+  .addCost('metal', 25)
+  .setsFlag('showStructureTab'), // Smelter, nanochips
   // new UpgradeDefinition('Improved Furnace', 'desc', 'Construction').addCost('duranium', 10),
   new UpgradeDefinition('Tensile Polymers', 'desc', 'Construction').addCost('duranium', 10).addCost('silicate', 10), // Nanofiber
   // new UpgradeDefinition('Clathrate Extraction', 'desc', 'Tensile Polymers').addCost('nanochips', 10).addCost('nanofiber', 10), // Noble gas

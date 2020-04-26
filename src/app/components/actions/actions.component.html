@@ -8,5 +8,11 @@
   <div class="action-list" *ngFor="let ability of getAbilities()">
     <ability-button [ability]="ability"></ability-button>
   </div>
+  <div class="upgrade-list" *ngFor="let upgrade of getUpgrades()">
+    <game-button [name]="upgrade.name"
+                 [appGameTooltip]="getUpgradeTooltip(upgrade)"
+                 [disabled]="!canAffordUpgrade(upgrade)"
+                 (click)="onClickUpgrade(upgrade)"></game-button>
+  </div>
 
 </div>

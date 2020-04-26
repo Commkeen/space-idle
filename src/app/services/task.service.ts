@@ -5,6 +5,7 @@ import { TimeService } from './time.service';
 import { PlanetService } from './planet.service';
 import { FeatureAction } from '../staticData/actionDefinitions';
 import { ActionService } from './action.service';
+import { Feature } from '../models/planet';
 
 @Injectable({
   providedIn: 'root'
@@ -31,11 +32,10 @@ export class TaskService {
     this._currentTask = task;
   }
 
-  public beginFeatureTask(planetId: number, regionId: number, featureId: number, taskName: string) {
-    const feature = this._planetService.getFeature(regionId, featureId, planetId);
+  public beginFeatureTask(feature: Feature, taskName: string) {
     const featureDef = this._planetService.getFeatureDefinition(feature.name);
-    const featureInteraction = this._planetService.getPlanetInteractionModel(planetId)
-                                    .regions.getFeature(regionId, featureId);
+    const featureInteraction = this._planetService.getPlanetInteractionModel(feature.planetId)
+                                    .regions.getFeature(feature.regionId, feature.instanceId);
     const taskDef = featureDef.tasks.find(x => x.name === taskName);
     let taskInstance = featureInteraction.tasks.find(x => x.name === taskName);
     if (taskInstance == null) {
@@ -43,13 +43,14 @@ export class TaskService {
       taskInstance.name = taskDef.name;
       taskInstance.needed = taskDef.needed;
       taskInstance.definition = taskDef;
-      taskInstance.planetId = planetId;
-      taskInstance.regionId = regionId;
-      taskInstance.featureId = featureId;
+      taskInstance.planetId = feature.planetId;
+      taskInstance.regionId = feature.regionId;
+      taskInstance.featureId = feature.instanceId;
       taskInstance.progress = 0;
       featureInteraction.tasks.push(taskInstance);
     }
     this.beginTask(taskInstance);
+    this._planetService.regionChanged.next(this._planetService.getRegion(feature.regionId, feature.planetId));
   }
 
   public beginSurvey(planetId: number, regionId: number) {
@@ -132,5 +133,6 @@ export class TaskService {
     else {
       this.clearTask();
     }
+    this._planetService.regionChanged.next(this._planetService.getRegion(task.regionId, task.planetId));
   }
 }

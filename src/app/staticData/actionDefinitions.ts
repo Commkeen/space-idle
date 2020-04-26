@@ -46,6 +46,12 @@ export abstract class FeatureAction extends Action {
   public abstract doFeatureAction(actionService: ActionService, targetFeature: Feature);
 }
 
+export class GatherFeatureAction extends FeatureAction {
+  doFeatureAction(actionService: ActionService, targetFeature: Feature) {
+    actionService.gatherFeature(targetFeature);
+  }
+}
+
 export class TransformFeatureAction extends FeatureAction {
   constructor(public newFeatureName: string) {
     super();
