@@ -3,7 +3,8 @@
 }
 
 .layout-top{
-  border-bottom: 1px solid black;
+  background-color: white;
+  border-bottom: 1px solid darkgray;
   padding: 2px;
 }
 
@@ -12,20 +13,20 @@
 }
 
 .layout-column-left-top{
-  background-color: #55FF55;
-  border-bottom: 1px solid black;
+  //background-color: #55FF55;
+  border-bottom: 1px solid darkgray;
 }
 
 .layout-column-left-bottom{
-  background-color: rgb(255, 119, 85);
+  //background-color: rgb(255, 119, 85);
 }
 
 .layout-column-center{
-    border-left: 1px solid black;
-    border-right: 1px solid black;
-    background-color: #55CC55;
+    border-left: 1px solid darkgray;
+    border-right: 1px solid darkgray;
+    //background-color: #55CC55;
 }
 
 .layout-column-right{
-    background-color: #555555;
+    //background-color: #555555;
 }

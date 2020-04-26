@@ -6,6 +6,13 @@ html, body
     overflow: hidden;
     margin: 0;
     height: 100%;
+    font-family: 'PT Sans', sans-serif;
+    background-color: rgb(242, 239, 243);
+}
+
+.mat-tab-group
+{
+  font-family: 'PT Sans', sans-serif;
 }
 
 .mat-tab-body-wrapper{

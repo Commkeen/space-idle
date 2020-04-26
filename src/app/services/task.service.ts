@@ -120,7 +120,7 @@ export class TaskService {
   completeFeatureTask(task: FeatureTask) {
     task.definition.resultsOnComplete.forEach(action => {
       if (action instanceof FeatureAction) {
-        (action as FeatureAction).doFeatureAction(this._actionService, task.regionId, this._planetService.getFeature(task.regionId, task.featureId, task.planetId));
+        (action as FeatureAction).doFeatureAction(this._actionService, this._planetService.getFeature(task.regionId, task.featureId, task.planetId));
       }
       else {
         action.doAction(this._actionService);

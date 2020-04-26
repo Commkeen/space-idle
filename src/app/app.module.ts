@@ -28,6 +28,9 @@ import { GameTooltipDirective } from './directives/game-tooltip.directive';
 import { GameTooltipComponent } from './components/game-tooltip/game-tooltip.component';
 import { ProgressBarComponent } from './components/common/progress-bar/progress-bar.component';
 import { ResourceBarComponent } from './components/common/resource-bar/resource-bar.component';
+import { GameButtonComponent } from './components/common/game-button/game-button.component';
+import { AbilityButtonComponent } from './components/common/ability-button/ability-button.component';
+import { TaskButtonComponent } from './components/common/task-button/task-button.component';
 
 library.add(faCog);
 library.add(faCompass);
@@ -52,7 +55,10 @@ library.add(faCheck);
     GameTooltipDirective,
     GameTooltipComponent,
     ProgressBarComponent,
-    ResourceBarComponent
+    ResourceBarComponent,
+    GameButtonComponent,
+    AbilityButtonComponent,
+    TaskButtonComponent
   ],
   imports: [
     BrowserModule,

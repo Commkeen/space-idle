@@ -28,25 +28,6 @@ export class ActionsComponent implements OnInit {
     return this.taskService.getCurrentTask();
   }
 
-  onClickAbility(ability: ShipAbilityDefinition) {
-    this.resourceService.spend(ability.costs);
-    ability.actions.forEach(x => {
-      x.doAction(this.actionService);
-    });
-  }
-
-  canAfford(ability: ShipAbilityDefinition) {
-    return this.resourceService.canAfford(ability.costs);
-  }
-
-  getTooltip(ability: ShipAbilityDefinition): TooltipViewModel {
-    const tooltip = new TooltipViewModel();
-    tooltip.name = ability.name;
-    tooltip.desc = ability.desc;
-    tooltip.costs = ability.costs;
-    return tooltip;
-  }
-
   getAbilities(): ShipAbilityDefinition[] {
     const abilities = SHIP_ABILITY_LIBRARY.filter(x => {
       return this.isVisible(x);

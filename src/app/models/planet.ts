@@ -13,6 +13,7 @@ export class Region {
   public hiddenBehindSurvey = 0;
   public features: Feature[] = [];
   constructor(
+    public planetId: number,
     public instanceId: number,
     public name: string
   ) {}
@@ -24,7 +25,7 @@ export class Region {
   }
 
   public addFeature(name: string, infrastructureLevel: number = 0): Region {
-    const feature = new Feature(this.features.length, name);
+    const feature = new Feature(this.instanceId, this.features.length, name);
     feature.hiddenBehindSurvey = infrastructureLevel;
     this.features.push(feature);
     return this;
@@ -40,6 +41,7 @@ export class Feature {
 
     public hiddenBehindSurvey = 1;
     constructor(
+      public regionId: number,
       public instanceId: number,
       public name: string
       ) {}
@@ -47,22 +49,22 @@ export class Feature {
 
 export const MOCK_SYSTEM: Planet[] = [
     {instanceId: 1, name: 'forest planet', temperature: 'temperate', atmosphere: 'oxygen', regions: [
-        new Region(1, 'Plains')
+        new Region(1, 1, 'Plains')
           .addFeature('copper deposit')
           .addFeature('lignite deposit', 2)
           .addFeature('crater', 2)
           .addFeature('silver vein', 3),
-        new Region(2, 'Hills')
+        new Region(1, 2, 'Hills')
           .hideBehindInfrastructure(1, 1)
           .addFeature('hematite deposit')
           .addFeature('lignite deposit')
           .addFeature('methane vent', 2),
-        new Region(3, 'Mountain')
+        new Region(1, 3, 'Mountain')
           .hideBehindInfrastructure(2, 1)
           .addFeature('silver vein')
     ]},
     {instanceId: 2, name: 'ice planet', temperature: 'frozen', atmosphere: 'oxygen', regions: [
-      new Region(1, 'Plains')
+      new Region(1, 1, 'Plains')
         .addFeature('methane vent')
         .addFeature('dyene cluster', 1)
     ]}

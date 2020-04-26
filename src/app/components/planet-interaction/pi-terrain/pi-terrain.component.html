@@ -9,7 +9,7 @@
           </div>
           <div class="region-title" fxFlex="15">
             <div>{{region.name}}</div>
-            <div><button *ngIf="region.canGather" (click)="gatherRegion(region.id)">Gather</button></div>
+            <div><game-button name="Gather" *ngIf="region.canGather" (click)="gatherRegion(region.id)"></game-button></div>
           </div>
 
           <div class="region-outpost" fxFlex="20" *ngIf="showOutpostPanel(region.id)">
@@ -32,7 +32,7 @@
               <span *ngIf="region.surveyLevel > 0">Survey Lv {{region.surveyLevel}}</span>
               <app-progress-bar fxFlex="50" [value]="getSurveyProgress(region.id)" [max]="getSurveyProgressNeeded(region.id)"></app-progress-bar>
             </div>
-            <div><button (click)="survey(region.id)">Survey</button></div>
+            <div><game-button name="Survey" (click)="survey(region.id)"></game-button></div>
           </div>
         </div>
         <mat-divider></mat-divider>
@@ -43,12 +43,12 @@
                 <div class="feature-name" fxFlex="60">{{feature.name}}</div>
                 <div class="feature-buttons" fxFlex="40">
                   <span class="ability" *ngFor="let ability of feature.abilities">
-                    <button (click)="activateAbility(region.id, feature.id, ability.index)">{{ability.name}}</button>
+                    <ability-button [ability]="ability.def" [feature]="feature.featureInstance"></ability-button>
                   </span>
                   <span class="task" *ngFor="let task of feature.tasks">
-                    <button *ngIf="taskIsVisible(task)" (click)="activateTask(task)">{{task.def.name}}</button>
+                    <game-button [name]="task.def.name" *ngIf="taskIsVisible(task)" (click)="activateTask(task)"></game-button>
                   </span>
-                  <button *ngIf="feature.canGather" (click)="gatherFeature(region.id, feature.id)">Gather</button>
+                  <game-button name="Gather" *ngIf="feature.canGather" (click)="gatherFeature(region.id, feature.id)"></game-button>
                 </div>
               </div>
               <div class="feature-hidden" *ngIf="feature.hintActive">

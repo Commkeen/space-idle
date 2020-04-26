@@ -43,7 +43,7 @@ export class FlagAction extends Action {
 
 export abstract class FeatureAction extends Action {
   doAction(actionService: ActionService) {};
-  public abstract doFeatureAction(actionService: ActionService, regionId: number, targetFeature: Feature);
+  public abstract doFeatureAction(actionService: ActionService, targetFeature: Feature);
 }
 
 export class TransformFeatureAction extends FeatureAction {
@@ -51,7 +51,7 @@ export class TransformFeatureAction extends FeatureAction {
     super();
   }
 
-  doFeatureAction(actionService: ActionService, regionId: number, targetFeature: Feature) {
-    actionService.replaceFeature(regionId, targetFeature.instanceId, this.newFeatureName);
+  doFeatureAction(actionService: ActionService, targetFeature: Feature) {
+    actionService.replaceFeature(targetFeature.regionId, targetFeature.instanceId, this.newFeatureName);
   }
 }

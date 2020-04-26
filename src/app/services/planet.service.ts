@@ -18,6 +18,7 @@ import { ResearchService } from './research.service';
 export class PlanetService {
 
   selectedPlanetChanged: Subject<number> = new Subject();
+  regionChanged: Subject<Region> = new Subject();
   onFeatureSurveyed: Subject<Feature> = new Subject();
   onOutpostUpgraded: Subject<PlanetInteractionModel> = new Subject();
 
@@ -217,6 +218,7 @@ export class PlanetService {
     const planet = this.getPlanet(planetInstanceId);
     const region = planet.regions.find(x => x.instanceId === regionId);
     region.replaceFeature(featureId, newFeatureName);
+    this.regionChanged.next(region);
   }
 
   gatherRegion(regionId: number, planetInstanceId?: number) {

@@ -78,6 +78,7 @@ export const SHIP_ABILITY_LIBRARY: ShipAbilityDefinition[] = [
   new ShipAbilityDefinition('Build Drone')
   .addCost('metal', 5)
   .addCost('energy', 4)
+  .addCooldown(1)
   .grantsResource('drones', 1),
   new ShipAbilityDefinition('Fabricate Nanochip')
   .addVisibleFlag('fabricatorRepaired')

@@ -1,0 +1,4 @@
+<game-button [appGameTooltip]="getTooltip()"
+             [name]="ability.name"
+             [disabled]="!canAfford()"
+             (click)="onClick()"></game-button>

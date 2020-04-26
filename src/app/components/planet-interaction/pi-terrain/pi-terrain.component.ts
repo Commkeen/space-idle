@@ -12,6 +12,7 @@ import { FlagsService } from 'src/app/services/flags.service';
 import { TaskService } from 'src/app/services/task.service';
 import { TaskDefinition } from 'src/app/staticData/taskDefinitions';
 import { FeatureTask } from 'src/app/models/task';
+import { AbilityDefinition } from 'src/app/staticData/abilityDefinitions';
 
 @Component({
   selector: 'app-pi-terrain',
@@ -24,6 +25,7 @@ export class PiTerrainComponent implements OnInit {
               private researchService: ResearchService, private resourceService: ResourceService,
               private flagService: FlagsService, private taskService: TaskService) {
     this.planetService.selectedPlanetChanged.subscribe(x => this.updateRegionList());
+    this.planetService.regionChanged.subscribe(x => this.updateRegionList());
   }
 
   public regionList: RegionListItem[] = [];
@@ -62,7 +64,7 @@ export class PiTerrainComponent implements OnInit {
     const abilityDef = featureDef.abilities[abilityIndex];
     abilityDef.actions.forEach (a => {
       if (a instanceof FeatureAction) {
-        (a as FeatureAction).doFeatureAction(this.actionService, regionId, feature);
+        (a as FeatureAction).doFeatureAction(this.actionService, feature);
       }
       else {
         a.doAction(this.actionService);
@@ -148,6 +150,7 @@ export class PiTerrainComponent implements OnInit {
   private createFeatureListItem(regionId: number, feature: Feature, featureInteraction: FeatureInteraction, outpostLevel: number, surveyLevel: number, hintLevel: number): FeatureListItem {
     const featureDef = this.planetService.getFeatureDefinition(feature.name);
     const item = new FeatureListItem();
+    item.featureInstance = feature;
     item.name = feature.name;
     item.id = feature.instanceId;
     item.surveyNeeded = feature.hiddenBehindSurvey;
@@ -156,6 +159,7 @@ export class PiTerrainComponent implements OnInit {
     item.hintActive = item.surveyNeeded > surveyLevel && item.surveyNeeded <= hintLevel;
     featureDef.abilities.forEach((a, i) => {
       const ability = new AbilityItem();
+      ability.def = a;
       ability.name = a.name;
       ability.index = i;
       ability.canActivate = true;
@@ -209,6 +213,7 @@ export class RegionListItem {
 }
 
 export class FeatureListItem {
+  public featureInstance: Feature;
   public name: string;
   public id: number;
   public surveyNeeded: number;
@@ -220,6 +225,7 @@ export class FeatureListItem {
 }
 
 export class AbilityItem {
+  public def: AbilityDefinition;
   public name: string;
   public index: number;
   public canActivate: boolean;
