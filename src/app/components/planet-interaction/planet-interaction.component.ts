@@ -9,8 +9,7 @@ import { FlagsService } from '../../services/flags.service';
 export class PlanetInteractionComponent implements OnInit {
 
   public showStructures = false;
-  public showTerrain = true;
-  public showUpgrades = false;
+  public showResearch = false;
 
   constructor(private flagsService: FlagsService) { }
 
@@ -20,8 +19,7 @@ export class PlanetInteractionComponent implements OnInit {
   }
 
   updateTabVisibility() {
-    this.showStructures = this.flagsService.showStructures;
-    this.showTerrain = this.flagsService.showTerrain;
-    this.showUpgrades = this.flagsService.showUpgrades;
+    this.showStructures = this.flagsService.check('showStructureTab');
+    this.showResearch = this.flagsService.check('showResearchTab');
   }
 }

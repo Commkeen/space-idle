@@ -1,7 +1,7 @@
 <div fxLayout="column" class="layout-container">
   <div fxFlex="4" class="layout-top"></div>
   <div fxFlex="96" fxLayout="row" class="layout-center">
-    <div fxFlex="20" fxLayout="column" class="layout-column-left">
+    <div fxFlex="15" fxLayout="column" class="layout-column-left">
       <div fxFlex="60" class="layout-column-left-top">
         <app-resource-overview></app-resource-overview>
       </div>
@@ -9,14 +9,14 @@
         <app-actions></app-actions>
       </div>
     </div>
-    <div fxFlex="70" fxLayout="column" class="layout-column-center">
+    <div fxFlex="85" fxLayout="column" class="layout-column-center">
         <app-planet-interaction fxFlex="100" [hidden]="showShipPanel"></app-planet-interaction>
         <app-ship-interaction fxFlex="100" [hidden]="!showShipPanel"></app-ship-interaction>
     </div>
-    <div fxFlex="10" fxLayout="column" class="layout-column-right">
+    <!-- <div fxFlex="10" fxLayout="column" class="layout-column-right">
         <app-system-overview fxFlex="100" (shipSelected)="onShipSelected($event)"></app-system-overview>
-        <!--<app-ship-overview fxFlex="40" (researchButtonClicked)="onResearchButtonClicked()"></app-ship-overview>-->
-    </div>
+        <app-ship-overview fxFlex="40" (researchButtonClicked)="onResearchButtonClicked()"></app-ship-overview>
+    </div> -->
   </div>
 </div>
 

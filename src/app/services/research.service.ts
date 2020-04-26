@@ -114,6 +114,7 @@ export class ResearchService {
     let def = UPGRADE_LIBRARY.find(x => x.name === upgrade);
     if (def == null) {
       def = new UpgradeDefinition(upgrade, 'MISSING');
+      UPGRADE_LIBRARY.push(def);
     }
     return def;
   }
