@@ -289,6 +289,7 @@ export class PlanetService {
     const regions = this.getPlanetInteractionModel(feature.planetId).regions;
     if (regions.getRegionAssignedDrones(regionId) >= regions.getRegionDroneSlots(regionId)) {return;}
     if (regions.getFeatureAssignedDrones(regionId, featureId) >= this.getFeatureDroneSlots(feature)) {return;}
+    if (regions.getTotalAssignedDrones() >= this._resourceService.get('drones')) {return;}
     regions.assignDrone(regionId, featureId);
     this.regionChanged.next(this.getRegion(regionId));
   }
