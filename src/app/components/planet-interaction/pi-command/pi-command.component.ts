@@ -36,7 +36,6 @@ export class PiCommandComponent implements OnInit {
 
   constructor(private planetService: PlanetService, private resourceService: ResourceService, private flagsService: FlagsService) {
 
-    this.planetService.selectedPlanetChanged.subscribe(x => this.updateOutpost());
 
     this.initShip();
   }
@@ -70,34 +69,6 @@ export class PiCommandComponent implements OnInit {
 
   canAffordOutpostUpgrade(): boolean {
     return this.resourceService.canAfford(this.outpostUpgradeCosts);
-  }
-
-  updateOutpost(): void {
-    const outpostDef = this.planetService.getOutpostTypeForPlanet();
-    this.outpostLevel = this.getSelectedPlanetInteractionModel().outpostLevel;
-    if (this.outpostLevel === 0) {
-      this.outpostName = '';
-      this.outpostUpgradeText = 'Build Outpost';
-      this.outpostUpgradeVisible = true;
-      this.outpostUpgradeEnabled = true;
-      this.outpostUpgradeCosts = outpostDef.levels.find(x => x.level === 1).cost;
-      return;
-    }
-
-    const outpostLevelDef = outpostDef.getLevel(this.outpostLevel);
-    const outpostNextLevelDef = outpostDef.getLevel(this.outpostLevel + 1);
-    this.outpostName = outpostLevelDef.name;
-    if (isNullOrUndefined(outpostNextLevelDef)) {
-      this.outpostUpgradeVisible = false;
-      this.outpostUpgradeEnabled = false;
-      this.outpostUpgradeCosts = new ResourceCollection();
-      return;
-    }
-
-    this.outpostUpgradeText = 'Upgrade Outpost';
-    this.outpostUpgradeVisible = true;
-    this.outpostUpgradeEnabled = true;
-    this.outpostUpgradeCosts = outpostNextLevelDef.cost;
   }
 
 

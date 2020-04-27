@@ -10,6 +10,7 @@ export class FeatureDefinition {
   public effects: Effect[] = [];
   public description = '';
   public exploitName = '';
+  public droneSlots = 1;
   public hasGather: boolean = false;
   public gatherRates: ResourceCollection = new ResourceCollection();
 

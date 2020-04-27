@@ -4,7 +4,6 @@ import { Task, FeatureTask } from './task';
 
 export class PlanetInteractionModel {
     planetInstanceId: number;
-    outpostLevel: 0;
     structures: Structure[];
     regions: RegionInteractionCollection = new RegionInteractionCollection();
     localResources: ResourceCollection;
@@ -20,6 +19,7 @@ export class Structure {
 export class FeatureInteraction {
   featureInstanceId: number;
   exploited: boolean;
+  assignedDrones: number = 0;
   tasks: FeatureTask[] = [];
 }
 
@@ -29,6 +29,8 @@ export class RegionInteraction {
   surveyLevel = 0;
   surveyProgress = 0;
   assignedDrones = 0;
+  droneSlots = 0;
+  nextOutpostLevelCost: ResourceCollection = null;
   features: FeatureInteraction[] = [];
 
   isFeatureExploited(feature: number): boolean {
@@ -46,18 +48,8 @@ export class RegionInteraction {
   }
 }
 
-
-
 export class RegionInteractionCollection {
   regions: RegionInteraction[] = [];
-
-  isFeatureExploited(region: number, feature: number): boolean {
-    return this.getRegion(region).isFeatureExploited(feature);
-  }
-
-  advanceOutpost(regionId: number) {
-    this.getRegion(regionId).outpostLevel++;
-  }
 
   getOutpostLevel(regionId: number): number {
     return this.getRegion(regionId).outpostLevel;
@@ -65,10 +57,6 @@ export class RegionInteractionCollection {
 
   getSurveyLevel(regionId: number): number {
     return this.getRegion(regionId).surveyLevel;
-  }
-
-  exploit(region: number, feature: number): void {
-    this.getFeature(region, feature).exploited = true;
   }
 
   getRegion(regionId: number): RegionInteraction {
@@ -85,51 +73,26 @@ export class RegionInteractionCollection {
     const region = this.getRegion(regionId);
     return region.getFeature(featureId);
   }
-}
 
-export class DroneCollection {
-  public droneCapacity = 0;
-  private idleDrones = 0;
-  private regionAssignments: Map<number, number> = new Map();
-
-  get(regionId: number): number {
-    if (this.regionAssignments.has(regionId)) {
-      return this.regionAssignments.get(regionId);
-    }
-    return 0;
+  getRegionDroneSlots(regionId: number): number {
+    return this.getRegion(regionId).droneSlots;
   }
 
-  getIdle(): number {
-    return this.idleDrones;
+  getRegionAssignedDrones(regionId: number): number {
+    return this.getRegion(regionId).assignedDrones;
   }
 
-  getTotal(): number {
-    let total = this.idleDrones;
-    for (const value of Array.from(this.regionAssignments.values())) {
-      total += value;
-    }
-    return total;
+  getFeatureAssignedDrones(regionId: number, featureId: number): number {
+    return this.getFeature(regionId, featureId).assignedDrones;
   }
 
-  createDrone(): void {
-    this.idleDrones += 1;
+  assignDrone(regionId: number, featureId: number) {
+    this.getRegion(regionId).assignedDrones++;
+    this.getFeature(regionId, featureId).assignedDrones++;
   }
 
-  assign(regionId: number): void {
-    if (this.idleDrones <= 0) {
-      return;
-    }
-    if (!this.regionAssignments.has(regionId)) {
-      this.regionAssignments.set(regionId, 0);
-    }
-    this.regionAssignments.set(regionId, this.get(regionId) + 1);
-    this.idleDrones -= 1;
-  }
-
-  unassign(regionId: number): void {
-    if (this.get(regionId) > 0) {
-      this.regionAssignments.set(regionId, this.get(regionId) - 1);
-      this.idleDrones += 1;
-    }
+  unassignDrone(regionId: number, featureId: number) {
+    this.getRegion(regionId).assignedDrones--;
+    this.getFeature(regionId, featureId).assignedDrones--;
   }
 }

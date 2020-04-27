@@ -11,6 +11,7 @@ export class GameButtonComponent implements OnInit, CanDisable {
   @Input() name: string;
   @Input() disabled: boolean = false;
   @Input() running: boolean = false;
+  @Input() small: boolean = false;
   @Output() click = new EventEmitter<void>();
 
   smoothCooldown: boolean = false;

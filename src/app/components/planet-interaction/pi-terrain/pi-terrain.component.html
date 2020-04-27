@@ -2,45 +2,42 @@
   <div fxFlex="100" class="layout-column-left">
     <div class="region-list">
       <div class="region" *ngFor="let region of regionList">
-        <mat-divider></mat-divider>
         <div fxLayout="row" class="region-header">
-          <div fxFlex="5">
-            <fa-icon icon="cog"></fa-icon>
-          </div>
-          <div class="region-title" fxFlex="15">
-            <div>{{region.name}}</div>
-            <div><game-button name="Gather" *ngIf="region.canGather" (click)="gatherRegion(region.id)"></game-button></div>
-          </div>
-
-          <div class="region-outpost" fxFlex="20" *ngIf="showOutpostPanel(region.id)">
-            <div *ngIf="region.outpostLevel == 0">
-              <button (click)="buyOutpost(region.id)">Build Outpost</button>
-            </div>
-            <div *ngIf="region.outpostLevel > 0">
-              Outpost: {{region.outpostLevel}}
-              <button (click)="buyOutpost(region.id)">Upgrade</button>
-            </div>
-            <div *ngIf="region.droneSlots > 0">
-              <span>Drones: {{region.dronesAssigned}}/{{region.droneSlots}}</span>
-              <button>-</button>
-              <button>+</button>
+          <div class="region-left-col" fxFlex="nogrow">
+            <div class="region-title">{{region.name}}</div>
+            <div class="region-drone-count" *ngIf="showDroneCounts(region)">Drones: {{region.dronesAssigned}}/{{region.droneSlots}}</div>
+            <div [ngStyle]="{'width': '80%'}">
+              <game-button [appGameTooltip]="droneHubTooltip(region)"
+              *ngIf="showDroneHubButton(region)"
+              [disabled]="!canAffordDroneHub(region)"
+              name="Drone Hub" small="true" (click)="buyDroneHub(region)"></game-button>
             </div>
           </div>
-          <div class="region-survey" fxFlex="50">
-            <div fxLayout="row">
+          <div class="region-survey-btn" fxFlex="nogrow">
+            <game-button [appGameTooltip]="surveyTooltip(region)"
+            [disabled]="!canAffordSurvey(region)"
+            name="Survey" (click)="survey(region.id)"></game-button>
+          </div>
+          <div class="region-survey-progress" fxFlex="40">
+            <div fxLayout="column">
               <span *ngIf="region.surveyLevel == 0">Unsurveyed</span>
               <span *ngIf="region.surveyLevel > 0">Survey Lv {{region.surveyLevel}}</span>
               <app-progress-bar fxFlex="50" [value]="getSurveyProgress(region.id)" [max]="getSurveyProgressNeeded(region.id)"></app-progress-bar>
             </div>
-            <div><game-button name="Survey" (click)="survey(region.id)"></game-button></div>
           </div>
         </div>
-        <mat-divider></mat-divider>
         <div class="region-content" fxLayout="row">
           <div class="feature-list">
             <div class="feature" fxLayout="row" *ngFor="let feature of region.features">
               <div class="feature-active" fxLayout="row" *ngIf="feature.active">
-                <div class="feature-name" fxFlex="nogrow">{{feature.name}}</div>
+                <div class="feature-left-col" fxFlex="nogrow">
+                  <div class="feature-name">{{feature.name}}</div>
+                  <div class="feature-drone-control" *ngIf="showDroneControl(feature)">
+                    <span class="feature-drone-decrement" (click)="unassignDrone(feature)">&lt;</span>
+                    <span class="feature-drone-count">Drones: {{feature.dronesAssigned}}/{{feature.droneSlots}}</span>
+                    <span class="feature-drone-increment" (click)="assignDrone(feature)">&gt;</span>
+                  </div>
+                </div>
                 <div class="feature-buttons" fxLayout="row" fxFlex="70">
                   <div *ngFor="let ability of feature.abilities">
                     <ability-button class="ability" [ability]="ability.def" [feature]="feature.featureInstance"></ability-button>
@@ -56,7 +53,6 @@
             </div>
           </div>
         </div>
-        <mat-divider></mat-divider>
       </div>
     </div>
   </div>

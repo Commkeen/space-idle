@@ -25,6 +25,11 @@
   background-color: darkgray;
 }
 
+.small {
+  min-height: 1.2em;
+  font-size: 9pt;
+}
+
 .disabled, .disabled:hover, .disabled:active {
   background-color: lightgray;
   border: 2px solid darkslategray;
@@ -92,6 +97,10 @@
   text-align: center;
   overflow: hidden;
   pointer-events: none;
+}
+
+.text-small {
+  margin-top: 0.1em;
 }
 
 @keyframes Run {

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PlanetService } from '../../../services/planet.service';
 import { Planet, Region, Feature } from '../../../models/planet';
-import { isNullOrUndefined } from 'util';
 import { Resource, ResourceCollection } from '../../../models/resource';
 import { ResearchService } from 'src/app/services/research.service';
 import { ResourceService } from 'src/app/services/resource.service';
@@ -13,6 +12,7 @@ import { TaskService } from 'src/app/services/task.service';
 import { TaskDefinition } from 'src/app/staticData/taskDefinitions';
 import { FeatureTask } from 'src/app/models/task';
 import { AbilityDefinition } from 'src/app/staticData/abilityDefinitions';
+import { TooltipViewModel } from 'src/app/models/tooltipViewModel';
 
 @Component({
   selector: 'app-pi-terrain',
@@ -46,38 +46,6 @@ export class PiTerrainComponent implements OnInit {
     return this.planetService.getSurveyProgressNeeded(regionId);
   }
 
-  showOutpostPanel(regionId: number): boolean {
-    return this.flagService.check('droneRelayRepaired');
-  }
-
-  gatherRegion(regionId: number) {
-    this.planetService.gatherRegion(regionId);
-  }
-
-  gatherFeature(regionId: number, featureId: number) {
-    this.planetService.gatherFeature(regionId, featureId);
-  }
-
-  activateAbility(regionId: number, featureId: number, abilityIndex: number) {
-    const feature = this.planetService.getFeature(regionId, featureId);
-    const featureDef = this.planetService.getFeatureDefinition(feature.name);
-    const abilityDef = featureDef.abilities[abilityIndex];
-    abilityDef.actions.forEach (a => {
-      if (a instanceof FeatureAction) {
-        (a as FeatureAction).doFeatureAction(this.actionService, feature);
-      }
-      else {
-        a.doAction(this.actionService);
-      }
-    });
-    this.updateRegionList();
-  }
-
-  activateTask(taskItem: TaskItem) {
-    this.taskService.beginFeatureTask(this.planetService.getFeature(taskItem.regionId, taskItem.featureId), taskItem.def.name);
-    this.updateRegionList();
-  }
-
   taskIsVisible(taskItem: TaskItem): boolean {
     if (!taskItem.def.repeatable && taskItem.instance != null && taskItem.instance.progress >= taskItem.instance.needed) {return false;}
     return true;
@@ -95,18 +63,61 @@ export class PiTerrainComponent implements OnInit {
     this.updateRegionList();
   }
 
-  canAffordSurvey(regionId: number): boolean {
+  canAffordSurvey(region: RegionListItem): boolean {
     return true; // TODO
   }
 
-  buyOutpost(regionId: number) {
-    // TODO
-    this.planetService.upgradeOutpost(regionId);
+  surveyTooltip(region: RegionListItem): TooltipViewModel {
+    const tooltip = new TooltipViewModel();
+    tooltip.name = "Survey";
+    //tooltip.desc = upg.description;
+    //tooltip.costs = upg.cost;
+    return tooltip;
+  }
+
+  buyDroneHub(region: RegionListItem) {
+    this.planetService.buildDroneHub(region.id);
     this.updateRegionList();
   }
 
-  canAffordOutpost(regionId: number): boolean {
-    return true; // TODO
+  canAffordDroneHub(region: RegionListItem): boolean {
+    return this.resourceService.canAfford(region.droneHubCost); // TODO
+  }
+
+  droneHubTooltip(region: RegionListItem): TooltipViewModel {
+    const tooltip = new TooltipViewModel();
+    tooltip.name = "Drone Hub";
+    //tooltip.desc = upg.description;
+    tooltip.costs = region.droneHubCost;
+    return tooltip;
+  }
+
+  showDroneHubButton(region: RegionListItem): boolean {
+    return this.flagService.check('droneRelayRepaired');
+  }
+
+  showDroneCounts(region: RegionListItem): boolean {
+    return region.droneSlots > 0;
+  }
+
+  showDroneControl(feature: FeatureListItem): boolean {
+    return feature.region.droneSlots > 0 && feature.droneSlots > 0;
+  }
+
+  assignDrone(feature: FeatureListItem) {
+    this.planetService.assignDrone(feature.featureInstance);
+  }
+
+  unassignDrone(feature: FeatureListItem) {
+    this.planetService.unassignDrone(feature.featureInstance);
+  }
+
+  canAssignDrone(region: RegionListItem, feature: FeatureListItem) {
+    return feature.dronesAssigned < feature.droneSlots && region.dronesAssigned < region.droneSlots;
+  }
+
+  canUnassignDrone(region: RegionListItem, feature: FeatureListItem) {
+    return feature.dronesAssigned > 0;
   }
 
   updateRegionList() {
@@ -128,9 +139,10 @@ export class PiTerrainComponent implements OnInit {
     item.outpostLevel = regionInteraction.outpostLevel;
     item.surveyLevel = regionInteraction.surveyLevel;
     item.surveyProgress = regionInteraction.surveyProgress;
-    item.droneSlots = regionInteraction.outpostLevel;
+    item.droneSlots = regionInteraction.droneSlots;
     item.dronesAssigned = regionInteraction.assignedDrones;
     item.canGather = item.outpostLevel > 0;
+    item.droneHubCost = this.planetService.getDroneHubCost(region.instanceId);
 
     // Get all hidden features, and find the lowest survey required one,
     // So we know which level to cut off hints at
@@ -142,20 +154,23 @@ export class PiTerrainComponent implements OnInit {
 
     region.features.forEach(f => {
       const featureInteraction = regionInteraction.getFeature(f.instanceId);
-      item.features.push(this.createFeatureListItem(region.instanceId, f, featureInteraction, item.outpostLevel, item.surveyLevel, hintLevel));
+      item.features.push(this.createFeatureListItem(item, f, featureInteraction, item.outpostLevel, item.surveyLevel, hintLevel));
     });
     return item;
   }
 
-  private createFeatureListItem(regionId: number, feature: Feature, featureInteraction: FeatureInteraction, outpostLevel: number, surveyLevel: number, hintLevel: number): FeatureListItem {
+  private createFeatureListItem(regionItem: RegionListItem, feature: Feature, featureInteraction: FeatureInteraction, outpostLevel: number, surveyLevel: number, hintLevel: number): FeatureListItem {
     const featureDef = this.planetService.getFeatureDefinition(feature.name);
     const item = new FeatureListItem();
+    item.region = regionItem;
     item.featureInstance = feature;
     item.name = feature.name;
     item.id = feature.instanceId;
     item.surveyNeeded = feature.hiddenBehindSurvey;
     item.canGather = outpostLevel === 0;
     item.active = item.surveyNeeded <= surveyLevel;
+    item.droneSlots = featureDef.droneSlots;
+    item.dronesAssigned = featureInteraction.assignedDrones;
     item.hintActive = item.surveyNeeded > surveyLevel && item.surveyNeeded <= hintLevel;
     featureDef.abilities.forEach((a, i) => {
       const ability = new AbilityItem();
@@ -165,7 +180,7 @@ export class PiTerrainComponent implements OnInit {
       ability.canActivate = true;
       item.abilities.push(ability);
     });
-    this.populateFeatureTasks(regionId, item);
+    this.populateFeatureTasks(regionItem.id, item);
 
     return item;
   }
@@ -209,17 +224,21 @@ export class RegionListItem {
   public surveyProgress: number;
   public dronesAssigned: number;
   public droneSlots: number;
+  public droneHubCost: ResourceCollection;
   public features: FeatureListItem[] = [];
   public canGather = false;
 }
 
 export class FeatureListItem {
+  public region: RegionListItem;
   public featureInstance: Feature;
   public name: string;
   public id: number;
   public surveyNeeded: number;
   public active: boolean;
   public hintActive: boolean;
+  public dronesAssigned: number;
+  public droneSlots: number;
   public canGather: boolean;
   public abilities: AbilityItem[] = [];
   public tasks: TaskItem[] = [];

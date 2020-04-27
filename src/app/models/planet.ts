@@ -62,7 +62,12 @@ export const MOCK_SYSTEM: Planet[] = [
           .addFeature('methane vent', 2),
         new Region(1, 3, 'Mountain')
           .hideBehindInfrastructure(2, 1)
+          .addFeature('silver vein'),
+        new Region(1, 4, 'Coast')
+          .hideBehindInfrastructure(2, 1)
           .addFeature('silver vein')
+          .addFeature('lignite deposit')
+          .addFeature('methane vent')
     ]},
     {instanceId: 2, name: 'ice planet', temperature: 'frozen', atmosphere: 'oxygen', regions: [
       new Region(1, 1, 'Plains')

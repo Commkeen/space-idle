@@ -52,5 +52,8 @@ export const REGION_LIBRARY: RegionDefinition[] = [
     .addCost(1, 'metal', 25),
   new RegionDefinition('Mountain').setDescription('Difficult to traverse, but can contain many valuable materials.')
     .addInfrastructure(1, 'Seismic Attenuators').setInfrastructureDescription(1, 'Control for seismic disturbances.')
-    .addCost(1, 'nanochips', 5)
+    .addCost(1, 'nanochips', 5),
+  new RegionDefinition('Coast').setDescription('Coast description.')
+    .addInfrastructure(1, 'Seismic Attenuators').setInfrastructureDescription(1, 'Control for seismic disturbances.')
+    .addCost(1, 'nanochips', 5),
 ];

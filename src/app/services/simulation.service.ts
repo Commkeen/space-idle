@@ -3,7 +3,7 @@ import { ResourceService } from './resource.service';
 import { TimeService } from './time.service';
 import { PlanetService } from './planet.service';
 import { STRUCTURE_LIBRARY } from '../staticData/structureDefinitions';
-import { Structure, PlanetInteractionModel, DroneCollection, RegionInteraction } from '../models/planetInteractionModel';
+import { Structure, RegionInteraction } from '../models/planetInteractionModel';
 import { ResourceCollection } from '../models/resource';
 import { Feature, Region } from '../models/planet';
 import { EXPLOIT_LIBRARY } from '../staticData/exploitDefinitions';

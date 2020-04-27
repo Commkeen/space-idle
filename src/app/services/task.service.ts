@@ -54,8 +54,9 @@ export class TaskService {
   }
 
   public beginSurvey(planetId: number, regionId: number) {
+    const region = this._planetService.getRegion(regionId, planetId);
     const surveyTask = new SurveyTask();
-    surveyTask.name = "Surveying"; //TODO: Region name
+    surveyTask.name = "Surveying " + region.name;
     surveyTask.planetId = planetId;
     surveyTask.regionId = regionId;
     surveyTask.progress = 0;

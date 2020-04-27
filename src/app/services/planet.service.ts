@@ -37,7 +37,6 @@ export class PlanetService {
     this._currentSystem.forEach(element => {
       const interactionModel = new PlanetInteractionModel();
       interactionModel.planetInstanceId = element.instanceId;
-      interactionModel.outpostLevel = 0;
       interactionModel.structures = [];
       interactionModel.localResources = new ResourceCollection();
       STRUCTURE_LIBRARY.forEach(structureDef => {
@@ -176,14 +175,6 @@ export class PlanetService {
     this.updateInteractionModel(interactionModel);
   }
 
-  upgradeOutpost(regionId: number, planetInstanceId?: number) {
-    if (!planetInstanceId) {
-      planetInstanceId = this.getSelectedPlanet().instanceId;
-    }
-    const regionInteraction = this.getPlanetInteractionModel(planetInstanceId).regions;
-    regionInteraction.advanceOutpost(regionId);
-  }
-
   surveyRegion(amount: number, regionId: number, planetInstanceId?: number) {
     if (!planetInstanceId) {
       planetInstanceId = this.getSelectedPlanet().instanceId;
@@ -196,6 +187,7 @@ export class PlanetService {
       regionInteraction.surveyProgress -= surveyProgressNeeded;
       regionInteraction.surveyLevel++;
       this._researchService.addTheory('Planetary Survey', 10);
+      this.regionChanged.next(this.getRegion(regionId, planetInstanceId));
     }
   }
 
@@ -254,6 +246,61 @@ export class PlanetService {
     const featureDefinition = this.getFeatureDefinition(feature.name);
 
     this._resourceService.globalResources.addCollection(featureDefinition.gatherRates);
+  }
+
+  buildDroneHub(regionId: number, planetInstanceId?: number) {
+    if (!planetInstanceId) {
+      planetInstanceId = this.getSelectedPlanet().instanceId;
+    }
+    const regionInteraction = this.getPlanetInteractionModel(planetInstanceId).regions.getRegion(regionId);
+    const cost = this.getDroneHubCost(regionId, planetInstanceId);
+    if (!this._resourceService.canAfford(cost)) {return;}
+    if (!this._resourceService.spend(cost)) {return;}
+
+    regionInteraction.outpostLevel++;
+    regionInteraction.droneSlots++;
+  }
+
+  getDroneHubCost(regionId: number, planetInstanceId?: number): ResourceCollection {
+    if (!planetInstanceId) {
+      planetInstanceId = this.getSelectedPlanet().instanceId;
+    }
+
+    const region = this.getRegion(regionId, planetInstanceId);
+    const regionDef = this.getRegionDefinition(region.name);
+    const regionInteraction = this.getPlanetInteractionModel(planetInstanceId).regions.getRegion(regionId);
+    let cost = regionInteraction.nextOutpostLevelCost;
+    if (cost == null) {
+      cost = regionDef.infrastructure[1].cost;
+      regionInteraction.nextOutpostLevelCost = cost;
+    }
+
+    return cost;
+  }
+
+  getFeatureDroneSlots(feature: Feature) {
+    const featureDef = this.getFeatureDefinition(feature.name);
+    return featureDef.droneSlots;
+  }
+
+  assignDrone(feature: Feature) {
+    const regionId = feature.regionId;
+    const featureId = feature.instanceId;
+    const regions = this.getPlanetInteractionModel(feature.planetId).regions;
+    if (regions.getRegionAssignedDrones(regionId) >= regions.getRegionDroneSlots(regionId)) {return;}
+    if (regions.getFeatureAssignedDrones(regionId, featureId) >= this.getFeatureDroneSlots(feature)) {return;}
+    regions.assignDrone(regionId, featureId);
+    this.regionChanged.next(this.getRegion(regionId));
+  }
+
+  unassignDrone(feature: Feature) {
+    const regionId = feature.regionId;
+    const featureId = feature.instanceId;
+    const regions = this.getPlanetInteractionModel(feature.planetId).regions;
+    if (regions.getRegionAssignedDrones(regionId) <= 0) {return;}
+    if (regions.getFeatureAssignedDrones(regionId, featureId) <= 0) {return;}
+    regions.unassignDrone(regionId, featureId);
+    this.regionChanged.next(this.getRegion(regionId));
   }
 
   updateInteractionModel(interactionModel: PlanetInteractionModel): void {

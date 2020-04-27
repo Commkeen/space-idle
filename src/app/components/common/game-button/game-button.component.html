@@ -1,5 +1,6 @@
-<div [ngClass]="disabled || cooldown > 0 ? 'game-btn disabled' : 'game-btn'" (click)="onClick($event)">
+<div class="game-btn" [ngClass]="{ 'disabled': disabled || cooldown > 0, 'small': small }"
+      (click)="onClick($event)">
   <div class="cooldown" [ngStyle]="{'width': cooldown + '%', 'transition': smoothCooldown ? '' : 'none'}"></div>
   <div class="running" *ngIf="running"><div class="running-top"></div><div class="running-bottom"></div></div>
-  <span class="text">{{name}}</span>
+  <span class="text" [ngClass]="{ 'text-small': small }">{{name}}</span>
 </div>
