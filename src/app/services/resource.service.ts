@@ -25,6 +25,22 @@ export class ResourceService {
     });
   }
 
+  get(resource: string): number {
+    return this.globalResources.getAmount(resource);
+  }
+
+  getMax(resource: string): number {
+    return this.globalResources.getMax(resource);
+  }
+
+  getProduction(resource: string): number {
+    return this.globalResources.getProduction(resource);
+  }
+
+  getConsumption(resource: string): number {
+    return this.globalResources.getConsumption(resource);
+  }
+
   canAfford(resources: Resource | ResourceCollection): boolean {
     let result = true;
     if (resources instanceof Resource) {

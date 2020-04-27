@@ -8,8 +8,6 @@
     <mat-button-toggle value="globalRates">Global Rates</mat-button-toggle>
   </mat-button-toggle-group>
   <ul>
-    <li>Power: {{ getPower().consumption }}/{{ getPower().production }}</li>
-    <br />
     <li *ngFor="let resource of getResourceList(localRateToggleGroup.value)">
       {{ resource.name }} {{ resource.amount | displayNumber }}
       <span *ngIf="resource.maxAmount > 0">/{{ resource.maxAmount | displayNumber }}</span> ({{

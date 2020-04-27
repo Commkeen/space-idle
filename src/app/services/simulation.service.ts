@@ -20,6 +20,7 @@ export class SimulationService {
   init() {
     this._timeService.tick.subscribe(x => this.update(x));
 
+    this._resourceService.globalResources.setMax('drones', 50);
     this._resourceService.globalResources.setMax('metal', 10000000);
     this._resourceService.globalResources.setMax('rareMetal', 10000000);
     this._resourceService.globalResources.setMax('silicate', 10000000);

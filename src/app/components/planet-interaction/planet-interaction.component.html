@@ -1,6 +1,15 @@
 <div fxLayout="column" class="spaceidle-section">
-  <div fxFlex="5" class="planet-header">
-    Forest Planet
+  <div fxFlex="5" class="planet-header" fxLayout="row">
+    <div class="planet-name" fxFlex="20">
+      Forest Planet
+    </div>
+    <div class="planet-drones" fxFlex="20">
+      Drones: {{droneCount()}}/{{droneCap()}}
+      <span *ngIf="dronesIdle() > 0">({{dronesIdle()}} idle)</span>
+    </div>
+    <div class="planet-power" fxFlex="20">
+      Power: {{powerUsed()}}/{{powerAvailable()}}
+    </div>
   </div>
   <mat-tab-group fxFlex="95">
     <mat-tab label="Explore">

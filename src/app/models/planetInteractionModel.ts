@@ -82,6 +82,10 @@ export class RegionInteractionCollection {
     return this.getRegion(regionId).assignedDrones;
   }
 
+  getTotalAssignedDrones(): number {
+    return this.regions.map(x => x.assignedDrones).reduce((a, b) => {return a+b;});
+  }
+
   getFeatureAssignedDrones(regionId: number, featureId: number): number {
     return this.getFeature(regionId, featureId).assignedDrones;
   }
