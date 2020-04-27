@@ -7,6 +7,7 @@ import { isNullOrUndefined } from 'util';
 import { Resource, ResourceCollection } from '../../../models/resource';
 import { ResearchService } from 'src/app/services/research.service';
 import { ResourceService } from 'src/app/services/resource.service';
+import { TooltipViewModel } from 'src/app/models/tooltipViewModel';
 
 @Component({
   selector: 'app-pi-structures',
@@ -90,6 +91,27 @@ export class PiStructuresComponent implements OnInit {
       this.buildingList = newBuildingList;
     }
 
+  }
+
+  getButtonName(building: BuildingListItem): string {
+    let buttonName = building.name;
+    if (building.activeNumber > 0) {
+      buttonName = building.name + ' (' + building.activeNumber + ')';
+    }
+    if (building.builtNumber > building.activeNumber) {
+      buttonName = building.name + ' (' + building.activeNumber + '/' + building.builtNumber + ')';
+    }
+    return buttonName;
+  }
+
+  getTooltip(building: BuildingListItem): TooltipViewModel {
+    const tooltip = new TooltipViewModel();
+    tooltip.name = building.name;
+    tooltip.desc = '';
+    tooltip.costs = building.costs;
+    tooltip.consumption = building.consumption;
+    tooltip.production = building.production;
+    return tooltip;
   }
 
   onBuildItemClicked(buildItemName: string) {

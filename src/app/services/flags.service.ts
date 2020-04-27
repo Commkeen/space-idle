@@ -23,6 +23,7 @@ export class FlagsService {
 
   init(): void {
     this.onFlagsUpdated.next();
+    this.set('showStructureTab');
   }
 
   check(flag: string): boolean {

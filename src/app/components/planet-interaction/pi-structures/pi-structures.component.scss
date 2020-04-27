@@ -1,28 +1,26 @@
-.gridContainer{
-  overflow-y: auto;
-  height: 100%;
-}
 
-.costItem{
-  line-height: 20px;
+.structure-list{
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .structure-item{
-  width: 90%;
-  border: 1px solid black;
+  display: flex;
+  min-width: 275px;
+  flex-wrap: nowrap;
+  margin: 0.3em;
 }
 
 .item-build-btn{
-  min-width: 50px;
+  display: inline-block;
+  width: 80%;
   line-height: 30px;
 }
 
-.item-deactivate-btn{
-  min-width: 20px;
-  line-height: 30px;
+.item-deactivate-btn, .item-activate-btn {
+  display: inline-block;
+  min-width: 40px;
+  width: 5%;
 }
 
-.item-activate-btn{
-  min-width: 20px;
-  line-height: 30px;
-}
+

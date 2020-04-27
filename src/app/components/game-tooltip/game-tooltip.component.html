@@ -3,10 +3,24 @@
     <div class="name">{{tooltipModel.name}}</div>
     <div class="description">{{tooltipModel.desc}}</div>
   </div>
-  <div class="cost-section">
+  <div class="cost-section" *ngIf="tooltipModel.costs != null">
     <div class="cost" *ngFor="let costItem of tooltipModel.costs.resources">
-      <span class="cost-name">{{costItem.resource}}</span>
-      <span class="cost-amount">{{costItem.amount}}</span>
+      <span class="resource-name">{{costItem.resource}}</span>
+      <span class="resource-amount">{{costItem.amount}}</span>
+    </div>
+  </div>
+  <div class="consumption-section" *ngIf="tooltipModel.consumption != null">
+    Consumes
+    <div class="consumption" *ngFor="let costItem of tooltipModel.consumption.resources">
+      <span class="resource-name">{{costItem.resource}}</span>
+      <span class="resource-amount">{{costItem.amount}}</span>
+    </div>
+  </div>
+  <div class="production-section" *ngIf="tooltipModel.production != null">
+    Produces
+    <div class="production" *ngFor="let costItem of tooltipModel.production.resources">
+      <span class="resource-name">{{costItem.resource}}</span>
+      <span class="resource-amount">{{costItem.amount}}</span>
     </div>
   </div>
 </div>

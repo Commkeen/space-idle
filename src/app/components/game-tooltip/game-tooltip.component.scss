@@ -15,21 +15,14 @@
   margin-bottom: 5px;
 }
 
-.cost-section {
+.cost-section, .consumption-section, .production-section {
   border-top: 1px solid black;
   padding-top: 5px;
 }
 
-.cost {
+.cost, .consumption, .production {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
 
-.cost-name {
-
-}
-
-.cost-amount {
-  text-align: right;
-}
