@@ -14,7 +14,7 @@ export class InfrastructureDefinition {
 export class RegionDefinition {
 
   public description = '';
-  public surveyBaseCost: number = 100;
+  public surveyBaseCost: number = 10;
   public outpostBaseCost: number = 5;
   public infrastructure: InfrastructureDefinition[] = [];
 

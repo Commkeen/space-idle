@@ -208,7 +208,12 @@ export class PlanetService {
   }
 
   getSurveyProgressNeeded(regionId: number, planetInstanceId?: number) {
-    return 100;
+    if (!planetInstanceId) {
+      planetInstanceId = this.getSelectedPlanet().instanceId;
+    }
+
+    const region = this.getRegion(regionId, planetInstanceId);
+    return this.getRegionDefinition(region.name).surveyBaseCost;
   }
 
   replaceFeature(regionId: number, featureId: number, newFeatureName: string, planetInstanceId?: number): void {

@@ -5,15 +5,7 @@ import { Subject } from 'rxjs';
   providedIn: 'root'
 })
 export class FlagsService {
-  public showDroneBuild = false;
-  public showDroneMine = false;
-  public showDroneHarvest = false;
-  public showDroneSift = false;
   public showOutpostPanel = false;
-  public showTerrain = true;
-  public showStructures = false;
-  public showUpgrades = false;
-  public showPower = false;
 
   public flags: Set<string> = new Set<string>();
 
@@ -24,6 +16,7 @@ export class FlagsService {
   init(): void {
     this.onFlagsUpdated.next();
     this.set('showStructureTab');
+    this.set('shuttleFound');
   }
 
   check(flag: string): boolean {

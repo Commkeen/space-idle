@@ -189,6 +189,7 @@ export class PiTerrainComponent implements OnInit {
                                 .regions.getFeature(regionId, featureItem.id);
     featureDef.tasks.forEach(tDef => {
       const instance = featureInteraction.tasks.find(x => x.definition === tDef);
+      if (instance != null && instance.progress >= instance.needed && !tDef.repeatable) {return;}
       const taskItem = new TaskItem();
       taskItem.regionId = regionId;
       taskItem.featureId = featureItem.id;

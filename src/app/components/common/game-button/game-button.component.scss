@@ -1,8 +1,12 @@
+:host {
+  display: block;
+}
+
 .game-btn {
   display: flex;
   position: relative;
   flex: 1;
-  height: 2em;
+  min-height: 2em;
   background-color: white;
   border: 2px solid darkslategray;
   border-radius: 6px;
