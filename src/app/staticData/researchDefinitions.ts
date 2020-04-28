@@ -5,6 +5,7 @@ export class ResearchDiscipline {
 
     name: string;
     desc: string = '';
+    revealAtStart: boolean = false;
     baseCostMultiplier: number = 1;
     compoundingCostMultiplier: number = 1;
     theoryCostMultiplier: number = 1;
@@ -31,10 +32,16 @@ export class ResearchDiscipline {
       return this;
     }
 
+    setRevealAtStart(): ResearchDiscipline {
+      this.revealAtStart = true;
+      return this;
+    }
+
 }
 
 export const RESEARCH_LIBRARY: ResearchDiscipline[] = [
   new ResearchDiscipline('Material Science')
+    .setRevealAtStart()
     .addUpgrade(1, 'Construction')
     .addUpgrade(3, 'Tensile Polymers')
     .addUpgrade(5, 'Unbreakable Materials'),
@@ -59,6 +66,7 @@ export const RESEARCH_LIBRARY: ResearchDiscipline[] = [
     .addUpgrade(2, 'Adaptive Tooling')
     .addUpgrade(3, 'Heuristic Processors'),
   new ResearchDiscipline('Resource Exploitation')
+    .setRevealAtStart()
     .addUpgrade(1, 'Mineral Extraction')
     .addUpgrade(2, 'Liquid Extraction')
     .addUpgrade(3, 'Clathrate Extraction')

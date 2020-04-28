@@ -26,6 +26,7 @@ export class PiTerrainComponent implements OnInit {
               private flagService: FlagsService, private taskService: TaskService) {
     this.planetService.selectedPlanetChanged.subscribe(x => this.updateRegionList());
     this.planetService.regionChanged.subscribe(x => this.updateRegionList());
+    this.researchService.onResearchUpdated.subscribe(x => this.updateRegionList());
   }
 
   public regionList: RegionListItem[] = [];
@@ -210,6 +211,7 @@ export class PiTerrainComponent implements OnInit {
     item.dronesAssigned = featureInteraction.assignedDrones;
     item.hintActive = item.surveyNeeded > surveyLevel && item.surveyNeeded <= hintLevel;
     featureDef.abilities.forEach((a, i) => {
+      if (a.visibleUpgrade != '' && !this.researchService.isUpgradeCompleted(a.visibleUpgrade)) {return;}
       const ability = new AbilityItem();
       ability.def = a;
       ability.name = a.name;

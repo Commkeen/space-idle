@@ -67,7 +67,6 @@ export class ResearchService {
     while (progress.theoryProgress >= needed) {
       progress.theoryProgress -= needed;
       progress.theoryLevel++;
-      this._flagService.set('showResearchTab');
       this.onResearchUpdated.next();
     }
   }

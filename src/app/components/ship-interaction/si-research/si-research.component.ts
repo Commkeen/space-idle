@@ -27,9 +27,9 @@ export class SiResearchComponent implements OnInit {
     while (this.researchList.length > 0) { this.researchList.pop(); }
 
     this._researchService.getDisciplines().forEach(discipline => {
-      if (!this._researchService.hasProgress(discipline.name)) {return;}
+      if (!discipline.revealAtStart && !this._researchService.hasProgress(discipline.name)) {return;}
       const progress = this._researchService.getProgress(discipline.name);
-      if (progress.theoryLevel < 1) {return;}
+      if (!discipline.revealAtStart && progress.theoryLevel < 1) {return;}
       const item: ResearchListItem = {
         name: discipline.name,
         progress: progress

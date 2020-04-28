@@ -53,4 +53,5 @@ export const UPGRADE_LIBRARY: UpgradeDefinition[] = [
   new UpgradeDefinition('Synthetic Thought', 'desc', 'Photon Processing')
                         .addCost('ultraconductors', 10).addCost('optronics', 10), // Cogitex
   new UpgradeDefinition('Artificial Gravity', 'desc', 'Electrodynamics').addCost('dyene', 10).addCost('ultraconductors', 10), // Gravalloy
+  new UpgradeDefinition('Mineral Extraction', 'desc').addCost('metal', 5),
 ];

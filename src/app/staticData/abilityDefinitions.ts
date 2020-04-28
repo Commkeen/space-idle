@@ -11,6 +11,7 @@ export class AbilityDefinition {
   public actions: Action[] = [];
   public visibleFlags: string[] = [];
   public hiddenFlag: string = '';
+  public visibleUpgrade: string = '';
   public visibleNeededResearchName: string = '';
   public visibleNeededResearchLevel: number = 0;
 
@@ -26,6 +27,11 @@ export class AbilityDefinition {
 
   setHiddenFlag(flag: string): AbilityDefinition {
     this.hiddenFlag = flag;
+    return this;
+  }
+
+  setVisibleUpgrade(upgrade: string): AbilityDefinition {
+    this.visibleUpgrade = upgrade;
     return this;
   }
 
@@ -100,6 +106,7 @@ export const SHIP_ABILITY_LIBRARY: ShipAbilityDefinition[] = [
   new ShipAbilityDefinition('Repair Research Computer')
   .addVisibleFlag('shuttleFound')
   .setsFlag('researchUnlocked')
+  .setsFlag('showResearchTab')
   .setHiddenFlag('researchUnlocked'),
   new ShipAbilityDefinition('Launch Ship')
   .setsFlag('shuttleLaunched')

@@ -61,6 +61,12 @@ export class FeatureDefinition {
     return this;
   }
 
+  public abilityVisibleUpgrade(abilityName: string, upgrade: string): FeatureDefinition {
+    const ability = this.abilities.find(x => x.name === abilityName);
+    ability.setVisibleUpgrade(upgrade);
+    return this;
+  }
+
   public addTransformAction(triggerAbilityName: string, newFeatureName: string): FeatureDefinition {
     const action = new TransformFeatureAction(newFeatureName);
     const ability = this.abilities.find(x => x.name === triggerAbilityName);
@@ -111,8 +117,7 @@ export const FEATURE_LIBRARY: FeatureDefinition[] = [
   .addGather('metal', 2)
   .addAbility('Build Mine', 'metal', 50)
   .addTransformAction('Build Mine', 'copper mineshaft')
-  .addTask('Geologic Study', 20)
-  .addTaskResearchResult('Geologic Study', 'Material Science', 20),
+  .abilityVisibleUpgrade('Build Mine', 'Mineral Extraction'),
   new FeatureDefinition('copper mineshaft', 'A mineshaft built on a copper deposit.')
   .addGather('metal', 4)
   .setDroneSlots(4),
