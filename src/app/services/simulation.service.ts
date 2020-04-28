@@ -3,12 +3,12 @@ import { ResourceService } from './resource.service';
 import { TimeService } from './time.service';
 import { PlanetService } from './planet.service';
 import { STRUCTURE_LIBRARY } from '../staticData/structureDefinitions';
-import { Structure, RegionInteraction } from '../models/planetInteractionModel';
+import { Structure, RegionInteraction, FeatureInteraction } from '../models/planetInteractionModel';
 import { ResourceCollection } from '../models/resource';
 import { Feature, Region } from '../models/planet';
 import { EXPLOIT_LIBRARY } from '../staticData/exploitDefinitions';
 import { FEATURE_LIBRARY } from '../staticData/featureDefinitions';
-import { BaseProductionEffect, BaseConsumptionEffect, Effect, BaseRegionalPerDroneProductionEffect, StackingRegionalPerDroneProductionEffect } from '../staticData/effectDefinitions';
+import { BaseProductionEffect, BaseConsumptionEffect, Effect } from '../staticData/effectDefinitions';
 
 @Injectable({
   providedIn: 'root'
@@ -61,8 +61,11 @@ export class SimulationService {
     const regionInteractions = interactionModel.regions;
     regionInteractions.regions.forEach(regionInteraction => {
       const region = regions.find(x => x.instanceId === regionInteraction.regionInstanceId);
-      const assignedDrones = regionInteraction.assignedDrones;
-      this.updateRegionProductionRate(region, regionInteraction, assignedDrones, interactionModel.localResources);
+      regionInteraction.features.forEach(featureInteraction => {
+        const feature = region.features.find(x => x.instanceId === featureInteraction.featureInstanceId);
+        const assignedDrones = featureInteraction.assignedDrones;
+        this.updateFeatureProductionRate(feature, featureInteraction, assignedDrones, interactionModel.localResources);
+      });
     });
 
     interactionModel.structures.forEach(structure => {
@@ -73,33 +76,13 @@ export class SimulationService {
     });
   }
 
-  private updateRegionProductionRate(region: Region, regionInteraction: RegionInteraction,
+  private updateFeatureProductionRate(feature: Feature, featureInteraction: FeatureInteraction,
                                       assignedDrones: number, resources: ResourceCollection) {
-    const effects = this.getActiveEffectsForRegion(region, regionInteraction);
-    const productionTotals = this.getProductionTotalsForEffects(effects, assignedDrones);
-    productionTotals.resources.forEach(x => {
-      resources.addProductionRate(x.resource, x.productionRate);
+    const def = FEATURE_LIBRARY.find(x => feature.name === x.name);
+    if (!def.hasGather || assignedDrones <= 0) {return;}
+    def.gatherRates.resources.forEach(x => {
+      resources.addProductionRate(x.resource, x.amount * 0.05);
     });
-  }
-
-  private getProductionTotalsForEffects(effects: Effect[], assignedDrones: number): ResourceCollection {
-    const results = new ResourceCollection();
-    const baseProductionEffects = effects.filter(
-      x => x instanceof BaseRegionalPerDroneProductionEffect) as BaseRegionalPerDroneProductionEffect[];
-    const addedProductionEffects = effects.filter(
-      x => x instanceof StackingRegionalPerDroneProductionEffect) as StackingRegionalPerDroneProductionEffect[];
-    baseProductionEffects.forEach(x => {
-      if (results.getProduction(x.resource) < x.amount) {
-        results.setProductionRate(x.resource, x.amount);
-      }
-    });
-    addedProductionEffects.forEach(x => {
-      results.addProductionRate(x.resource, x.amount);
-    });
-    results.resources.forEach(x => {
-      x.productionRate = x.productionRate * assignedDrones;
-    });
-    return results;
   }
 
   private getActiveEffectsForRegion(region: Region, regionInteraction: RegionInteraction): Effect[] {
@@ -167,7 +150,7 @@ export class SimulationService {
     });
   }
 
-  private addNetLocalProductionRatesToGlobalProductionRates(instanceId) {
+  private addNetLocalProductionRatesToGlobalProductionRates(instanceId: number) {
     const interactionModel = this._planetService.getPlanetInteractionModel(instanceId);
     interactionModel.localResources.resources.forEach(resource => {
       this._resourceService.globalResources.addProductionRate(resource.resource, resource.productionRate);

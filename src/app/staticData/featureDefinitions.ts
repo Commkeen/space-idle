@@ -1,4 +1,4 @@
-import { Effect, BaseRegionalPerDroneProductionEffect } from "./effectDefinitions";
+import { Effect } from "./effectDefinitions";
 import { ResourceCollection } from "../models/resource";
 import { FeatureAction, TransformFeatureAction, FlagAction, AddTheoryAction, GatherFeatureAction } from "./actionDefinitions";
 import { FeatureAbilityDefinition } from "./abilityDefinitions";
@@ -38,12 +38,6 @@ export class FeatureDefinition {
       this.hasGather = true;
     }
     this.gatherRates.add(resource, amount);
-    return this;
-  }
-
-  public addProduction(resource: string, amount: number): FeatureDefinition {
-    const effect = new BaseRegionalPerDroneProductionEffect(resource, amount);
-    this.effects.push(effect);
     return this;
   }
 
