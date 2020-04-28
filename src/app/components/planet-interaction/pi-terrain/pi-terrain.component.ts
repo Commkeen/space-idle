@@ -51,27 +51,64 @@ export class PiTerrainComponent implements OnInit {
     return true;
   }
 
-  survey(regionId: number) {
+  getSurveyLevelText(region: RegionListItem): string {
+    if (region.surveyLevel > 0) {return 'Survey Lv ' + region.surveyLevel};
+    if (this.upgradeRequiredForSurvey(region)) {return 'Upgrade Required';}
+    return 'Unsurveyed';
+  }
+
+  getSurveyButtonName(region: RegionListItem): string {
+    if (!this.flagService.check('surveyRepaired')) {return 'Drone Survey';}
+    if (this.isSurveyRunning(region)) {return 'Surveying';}
+    return 'Survey Scan';
+  }
+
+  survey(region: RegionListItem) {
+    if (this.isSurveyRunning(region)) {return;}
+    if (!this.canAffordSurvey(region)) {return;}
     const useSurveyTask = this.flagService.check('surveyRepaired');
     if (useSurveyTask) {
-      this.taskService.beginSurvey(this.getSelectedPlanet().instanceId, regionId);
+      this.taskService.beginSurvey(this.getSelectedPlanet().instanceId, region.id);
     }
     else {
-      this.planetService.surveyRegion(10, regionId);
+      this.resourceService.spend(new Resource('drones', 1));
+      this.planetService.surveyRegion(10, region.id);
     }
 
     this.updateRegionList();
   }
 
+  isSurveyRunning(region: RegionListItem): boolean {
+    return this.taskService.isSurveyRunning(this.getSelectedPlanet().instanceId, region.id);
+  }
+
   canAffordSurvey(region: RegionListItem): boolean {
-    return true; // TODO
+    if (this.flagService.check('surveyRepaired')) {return true;}
+    const drones = this.resourceService.get('drones');
+    const assigned = this.planetService.getPlanetInteractionModel().regions.getTotalAssignedDrones();
+    return assigned < drones;
+  }
+
+  upgradeRequiredForSurvey(region: RegionListItem): boolean {
+    const def = this.planetService.getRegionDefinition(region.name);
+    if (def.surveyUpgradeNeeded === '') {return false;}
+    if (this.researchService.isUpgradeCompleted(def.surveyUpgradeNeeded)) {return false;}
+    return true;
   }
 
   surveyTooltip(region: RegionListItem): TooltipViewModel {
     const tooltip = new TooltipViewModel();
-    tooltip.name = "Survey";
-    //tooltip.desc = upg.description;
-    //tooltip.costs = upg.cost;
+    if (!this.flagService.check('surveyRepaired'))
+    {
+      tooltip.name = "Drone Survey";
+      tooltip.desc = "Send a drone to survey the region. The drone will not survive.";
+      tooltip.costs = new ResourceCollection();
+      tooltip.costs.add('drones', 1);
+    }
+    else
+    {
+      tooltip.name = "Survey Scan";
+    }
     return tooltip;
   }
 

@@ -64,6 +64,11 @@ export class TaskService {
     this._currentTask = surveyTask;
   }
 
+  public isSurveyRunning(planetId: number, regionId: number) {
+    if (this._currentTask == null || !(this._currentTask instanceof SurveyTask)) {return false;}
+    return this._currentTask.planetId == planetId && this._currentTask.regionId == regionId;
+  }
+
   public beginResearch(discipline: string) {
     const researchTask = new ResearchTask();
     researchTask.name = "Researching " + discipline;

@@ -13,20 +13,23 @@
               name="Drone Hub" small="true" (click)="buyDroneHub(region)"></game-button>
             </div>
           </div>
-          <div class="region-survey-btn" fxFlex="nogrow">
-            <game-button [appGameTooltip]="surveyTooltip(region)"
-            [disabled]="!canAffordSurvey(region)"
-            name="Survey" (click)="survey(region.id)"></game-button>
-          </div>
           <div class="region-survey-progress" fxFlex="40">
             <div fxLayout="column">
-              <span *ngIf="region.surveyLevel == 0">Unsurveyed</span>
-              <span *ngIf="region.surveyLevel > 0">Survey Lv {{region.surveyLevel}}</span>
+              <div fxLayout="row">
+                <span fxFlex="40">{{getSurveyLevelText(region)}}</span>
+                <span fxFlex="40" class="region-survey-btn">
+                  <game-button small="true" [appGameTooltip]="surveyTooltip(region)"
+                  [disabled]="!canAffordSurvey(region) || upgradeRequiredForSurvey(region)"
+                  [name]="getSurveyButtonName(region)"
+                  [running]="isSurveyRunning(region)"
+                  (click)="survey(region)"></game-button>
+                </span>
+              </div>
               <app-progress-bar fxFlex="50" [value]="getSurveyProgress(region.id)" [max]="getSurveyProgressNeeded(region.id)"></app-progress-bar>
             </div>
           </div>
         </div>
-        <div class="region-content" fxLayout="row">
+        <div class="region-content" *ngIf="region.surveyLevel > 0" fxLayout="row">
           <div class="feature-list">
             <div class="feature" fxLayout="row" *ngFor="let feature of region.features">
               <div class="feature-active" fxLayout="row" *ngIf="feature.active">

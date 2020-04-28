@@ -30,6 +30,7 @@ export class RegionInteraction {
   surveyProgress = 0;
   assignedDrones = 0;
   droneSlots = 0;
+  nextSurveyLevelCost: number = 0;
   nextOutpostLevelCost: ResourceCollection = null;
   features: FeatureInteraction[] = [];
 

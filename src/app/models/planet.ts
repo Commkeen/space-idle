@@ -24,7 +24,7 @@ export class Region {
     return this;
   }
 
-  public addFeature(name: string, infrastructureLevel: number = 0): Region {
+  public addFeature(name: string, infrastructureLevel: number = 1): Region {
     const feature = new Feature(this.planetId, this.instanceId, this.features.length, name);
     feature.hiddenBehindSurvey = infrastructureLevel;
     this.features.push(feature);
@@ -51,18 +51,18 @@ export class Feature {
 export const MOCK_SYSTEM: Planet[] = [
     {instanceId: 1, name: 'forest planet', temperature: 'temperate', atmosphere: 'oxygen', regions: [
         new Region(1, 1, 'Plains')
-          .addFeature('copper deposit')
+          .addFeature('copper deposit', 1)
           .addFeature('lignite deposit', 2)
           .addFeature('crater', 2)
           .addFeature('silver vein', 3),
         new Region(1, 2, 'Hills')
           .hideBehindInfrastructure(1, 1)
-          .addFeature('hematite deposit')
-          .addFeature('lignite deposit')
+          .addFeature('hematite deposit', 1)
+          .addFeature('lignite deposit', 1)
           .addFeature('methane vent', 2),
         new Region(1, 3, 'Mountain')
           .hideBehindInfrastructure(2, 1)
-          .addFeature('silver vein'),
+          .addFeature('silver vein', 1),
         new Region(1, 4, 'Coast')
           .hideBehindInfrastructure(2, 1)
           .addFeature('silver vein')

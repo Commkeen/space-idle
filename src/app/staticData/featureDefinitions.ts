@@ -46,8 +46,8 @@ export class FeatureDefinition {
     return this;
   }
 
-  public setExploit(name: string): FeatureDefinition {
-    this.exploitName = name;
+  public setDroneSlots(slots: number): FeatureDefinition {
+    this.droneSlots = slots;
     return this;
   }
 
@@ -91,31 +91,50 @@ export class FeatureDefinition {
 }
 
 export const FEATURE_LIBRARY: FeatureDefinition[] = [
-  new FeatureDefinition('depleted power core',
-    'The power core is mostly spent, but with the right equipment it could still prove useful.', 'energy recombiner'),
   new FeatureDefinition('crater',
     'A crater in the distance appears to have been recently made.')
     .addAbility('Search', 'drones', 1)
     .addTransformAction('Search', 'crashed shuttle')
     .addFlagAction('Search', 'shuttleFound'),
   new FeatureDefinition('crashed shuttle',
-    'The ship\'s reserve power is still functioning, along with basic fabrication systems.  It may be possible to repair the computer.'),
+    'The ship\'s reserve power is still functioning, along with basic fabrication systems.  It may be possible to repair the computer.')
+    .addAbility('Repair Computer', 'nanochips', 15)
+    .addTransformAction('Repair Computer', 'downed shuttle')
+    .addFlagAction('Repair Computer', 'computerRepaired'),
   new FeatureDefinition('downed shuttle',
     'With core systems repaired, the shuttle may be able to reach space with the help of a launch facility.'),
   new FeatureDefinition('hematite deposit', 'A deposit of the iron-rich mineral hematite.', 'hematite mineshaft')
   .addGather('metal', 2),
   new FeatureDefinition('magnetite deposit', 'A deposit of the iron-rich mineral magnetite.', 'magnetite mineshaft'),
-  new FeatureDefinition('corundum deposit', 'A deposit of the semi-precious crystalline mineral corundum.', 'corundum quarry'),
-  new FeatureDefinition('copper deposit', 'A native deposit of metallic copper.', 'copper mineshaft')
+
+  new FeatureDefinition('copper deposit', 'A native deposit of metallic copper.')
   .addGather('metal', 2)
   .addAbility('Build Mine', 'metal', 50)
   .addTransformAction('Build Mine', 'copper mineshaft')
   .addTask('Geologic Study', 20)
   .addTaskResearchResult('Geologic Study', 'Material Science', 20),
   new FeatureDefinition('copper mineshaft', 'A mineshaft built on a copper deposit.')
-  .addGather('metal', 4),
-  new FeatureDefinition('silver vein', 'A native deposit of metallic silver.', 'silver mineshaft')
-  .addGather('rareMetal', 1),
+  .addGather('metal', 4)
+  .setDroneSlots(4),
+
+  new FeatureDefinition('silver vein', 'A native deposit of metallic silver.')
+  .addGather('metal', 2)
+  .addGather('rareMetal', 1)
+  .addAbility('Build Mine', 'metal', 250)
+  .addTransformAction('Build Mine', 'silver mineshaft'),
+  new FeatureDefinition('silver mineshaft', 'A mineshaft built on a silver vein.')
+  .addGather('metal', 8)
+  .addGather('rareMetal', 2)
+  .setDroneSlots(4),
+
+  new FeatureDefinition('corundum deposit', 'A deposit of the semi-precious crystalline mineral corundum.')
+  .addGather('silicates', 6)
+  .addAbility('Build Mine', 'metal', 150)
+  .addTransformAction('Build Mine', 'corundum quarry'),
+  new FeatureDefinition('corundum quarry', 'A quarry for collecting minerals from a corundum deposit.')
+  .addGather('silicates', 30)
+  .setDroneSlots(6),
+
   new FeatureDefinition('gold vein', 'A native deposit of metallic gold.', 'gold mineshaft'),
   new FeatureDefinition('lignite deposit',
                         'A deposit of lignite, a carbon-rich rock formed from long-decayed organic matter.', 'lignite mine')

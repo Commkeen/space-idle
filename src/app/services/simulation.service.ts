@@ -21,13 +21,15 @@ export class SimulationService {
     this._timeService.tick.subscribe(x => this.update(x));
 
     this._resourceService.globalResources.setMax('drones', 50);
-    this._resourceService.globalResources.setMax('metal', 10000000);
-    this._resourceService.globalResources.setMax('rareMetal', 10000000);
-    this._resourceService.globalResources.setMax('silicate', 10000000);
-    this._resourceService.globalResources.setMax('hydrocarbon', 10000000);
-    this._resourceService.globalResources.setMax('duranium', 10000000);
+    this._resourceService.globalResources.setMax('metal', 5000);
+    this._resourceService.globalResources.setMax('rareMetal', 5000);
+    this._resourceService.globalResources.setMax('silicate', 5000);
+    this._resourceService.globalResources.setMax('hydrocarbon', 5000);
+    this._resourceService.globalResources.setMax('duranium', 5000);
 
     this._resourceService.globalResources.setMax('energy', 10);
+
+    this._resourceService.globalResources.add('metal', 5);
   }
 
   reset() {

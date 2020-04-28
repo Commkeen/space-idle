@@ -179,6 +179,8 @@ export class PlanetService {
     if (!planetInstanceId) {
       planetInstanceId = this.getSelectedPlanet().instanceId;
     }
+    const region = this.getRegion(regionId, planetInstanceId);
+    const regionDef = this.getRegionDefinition(region.name);
     const regionInteraction = this.getPlanetInteractionModel(planetInstanceId).regions.getRegion(regionId);
     const surveyProgressNeeded = this.getSurveyProgressNeeded(regionId, planetInstanceId);
     const surveyResearch = this._researchService.getProgress('Planetary Survey');
@@ -186,6 +188,7 @@ export class PlanetService {
     if (regionInteraction.surveyProgress >= surveyProgressNeeded) {
       regionInteraction.surveyProgress -= surveyProgressNeeded;
       regionInteraction.surveyLevel++;
+      regionInteraction.nextSurveyLevelCost = regionInteraction.nextSurveyLevelCost * regionDef.surveyCostMultiplier;
       this._researchService.addTheory('Planetary Survey', 10);
       this.regionChanged.next(this.getRegion(regionId, planetInstanceId));
     }
@@ -205,7 +208,13 @@ export class PlanetService {
     }
 
     const region = this.getRegion(regionId, planetInstanceId);
-    return this.getRegionDefinition(region.name).surveyBaseCost;
+    const regionInteraction = this.getPlanetInteractionModel(planetInstanceId).regions.getRegion(regionId);
+    const regionDef = this.getRegionDefinition(region.name);
+    if (regionInteraction.nextSurveyLevelCost == 0) {
+      regionInteraction.nextSurveyLevelCost = regionDef.surveyBaseCost;
+    }
+
+    return regionInteraction.nextSurveyLevelCost;
   }
 
   replaceFeature(regionId: number, featureId: number, newFeatureName: string, planetInstanceId?: number): void {
@@ -252,6 +261,8 @@ export class PlanetService {
     if (!planetInstanceId) {
       planetInstanceId = this.getSelectedPlanet().instanceId;
     }
+    const region = this.getRegion(regionId, planetInstanceId);
+    const regionDef = this.getRegionDefinition(region.name);
     const regionInteraction = this.getPlanetInteractionModel(planetInstanceId).regions.getRegion(regionId);
     const cost = this.getDroneHubCost(regionId, planetInstanceId);
     if (!this._resourceService.canAfford(cost)) {return;}
@@ -259,6 +270,7 @@ export class PlanetService {
 
     regionInteraction.outpostLevel++;
     regionInteraction.droneSlots++;
+    regionInteraction.nextOutpostLevelCost = regionInteraction.nextOutpostLevelCost.withMultiplier(regionDef.droneHubCostMultiplier);
   }
 
   getDroneHubCost(regionId: number, planetInstanceId?: number): ResourceCollection {
@@ -271,7 +283,7 @@ export class PlanetService {
     const regionInteraction = this.getPlanetInteractionModel(planetInstanceId).regions.getRegion(regionId);
     let cost = regionInteraction.nextOutpostLevelCost;
     if (cost == null) {
-      cost = regionDef.infrastructure[1].cost;
+      cost = regionDef.droneHubBaseCost;
       regionInteraction.nextOutpostLevelCost = cost;
     }
 
