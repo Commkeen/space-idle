@@ -157,6 +157,15 @@ export class ResourceCollection {
         return resourceItem.max;
     }
 
+    withMultiplier(multiplier: number): ResourceCollection {
+      const newCollection = new ResourceCollection();
+      newCollection.addCollection(this);
+      newCollection.resources.forEach(x => {
+        x.amount = x.amount * multiplier;
+      });
+      return newCollection;
+    }
+
     clear() {
       while (this.resources.length > 0) {
         this.resources.pop();
