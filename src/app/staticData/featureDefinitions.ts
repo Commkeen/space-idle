@@ -10,7 +10,7 @@ export class FeatureDefinition {
   public effects: Effect[] = [];
   public description = '';
   public exploitName = '';
-  public droneSlots = 1;
+  public droneSlots = 0;
   public hasGather: boolean = false;
   public gatherRates: ResourceCollection = new ResourceCollection();
 
@@ -27,14 +27,15 @@ export class FeatureDefinition {
     }
   }
 
-  public addGather(resource: string, amount: number): FeatureDefinition {
+  public addGather(resource: string, amount: number, cooldown: number = 1.5): FeatureDefinition {
     if (!this.hasGather) {
       const gatherAbility = new FeatureAbilityDefinition();
       gatherAbility.name = 'Gather';
       gatherAbility.addAction(new GatherFeatureAction());
       gatherAbility.addCost('energy', 1);
-      gatherAbility.addCooldown(1.5);
+      gatherAbility.addCooldown(cooldown);
       this.abilities.push(gatherAbility);
+      this.droneSlots = 1;
       this.hasGather = true;
     }
     this.gatherRates.add(resource, amount);
@@ -58,6 +59,12 @@ export class FeatureDefinition {
       ability.addCost(costResource, costAmount);
     }
     this.abilities.push(ability);
+    return this;
+  }
+
+  public addAbilityCost(abilityName: string, costResource: string, costAmount: number): FeatureDefinition {
+    const ability = this.abilities.find(x => x.name === abilityName);
+    ability.addCost(costResource, costAmount);
     return this;
   }
 
@@ -116,7 +123,8 @@ export const FEATURE_LIBRARY: FeatureDefinition[] = [
     .addFlagAction('Search', 'shuttleFound'),
   new FeatureDefinition('crashed shuttle',
     'The ship\'s reserve power is still functioning, along with basic fabrication systems.  It may be possible to repair the computer.')
-    .addAbility('Repair Computer', 'nanochips', 15)
+    .addAbility('Repair Computer', 'nanochips', 5)
+    .addAbilityCost('Repair Computer', 'metal', 100)
     .addTransformAction('Repair Computer', 'downed shuttle')
     .addFlagAction('Repair Computer', 'computerRepaired')
     .addFlagAction('Repair Computer', 'showResearchTab'),
@@ -139,10 +147,11 @@ export const FEATURE_LIBRARY: FeatureDefinition[] = [
   .setDroneSlots(4),
 
   new FeatureDefinition('silver vein', 'A native deposit of metallic silver.')
-  .addGather('metal', 2)
+  .addGather('metal', 5, 5)
   .addGather('rareMetal', 1)
   .addAbility('Build Mine', 'metal', 250)
-  .addTransformAction('Build Mine', 'silver mineshaft'),
+  .addTransformAction('Build Mine', 'silver mineshaft')
+  .abilityVisibleUpgrade('Build Mine', 'Mineral Extraction'),
   new FeatureDefinition('silver mineshaft', 'A mineshaft built on a silver vein.')
   .addGather('metal', 8)
   .addGather('rareMetal', 2)

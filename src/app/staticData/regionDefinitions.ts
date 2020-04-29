@@ -60,18 +60,18 @@ export const REGION_LIBRARY: RegionDefinition[] = [
   new RegionDefinition('Plains').setDescription('Rolling plains.')
     .setSurveyBaseCost(10)
     .setSurveyCostMultiplier(2.3)
-    .addDroneHubCost('metal', 2)
+    .addDroneHubCost('nanochips', 5)
     .setDroneHubCostMultiplier(2.2),
   new RegionDefinition('Hills').setDescription('Geographically complex region rich in minerals.')
   .setSurveyBaseCost(25)
   .setSurveyCostMultiplier(2.4)
-  .addDroneHubCost('metal', 2)
+  .addDroneHubCost('nanochips', 15)
   .setDroneHubCostMultiplier(2.2),
   new RegionDefinition('Mountain').setDescription('Difficult to traverse, but can contain many valuable materials.')
   .setSurveyUpgradeNeeded('Mountain Survey')
   .setSurveyBaseCost(25)
   .setSurveyCostMultiplier(2.4)
-  .addDroneHubCost('metal', 2)
+  .addDroneHubCost('duranium', 25)
   .setDroneHubCostMultiplier(2.2),
   new RegionDefinition('Coast').setDescription('Coast description.')
   .setSurveyBaseCost(25)

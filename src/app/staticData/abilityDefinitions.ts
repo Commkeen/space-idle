@@ -125,24 +125,29 @@ export const SHIP_ABILITY_LIBRARY: ShipAbilityDefinition[] = [
   .scalesWithResourceCount('drones', 1.2),
   new ShipAbilityDefinition('Fabricate Nanochip')
   .addVisibleFlag('fabricatorRepaired')
-  .addCost('metal', 20)
-  .addCost('silicates', 15)
+  .addCost('energy', 5)
+  .addCost('metal', 10)
+  .addCost('silicate', 15)
+  .addCooldown(8)
   .grantsResource('nanochips', 1),
   new ShipAbilityDefinition('Electronics Research')
-  .addVisibleFlag('fabricatorRepaired')
+  .addVisibleFlag('computerRepaired')
   .addCost('nanochips', 20)
   .addCooldown(5)
   .grantsTheory('Electronics', 5)
   .scalesWithTheory('Electronics', 2.4),
   new ShipAbilityDefinition('Repair Fabricator')
+  .addCost('metal', 20)
   .addVisibleFlag('shuttleFound')
   .setsFlag('fabricatorRepaired')
   .setHiddenFlag('fabricatorRepaired'),
   new ShipAbilityDefinition('Repair Survey Scanner')
+  .addCost('nanochips', 55)
   .addVisibleFlag('computerRepaired')
   .setsFlag('surveyRepaired')
   .setHiddenFlag('surveyRepaired'),
   new ShipAbilityDefinition('Repair Drone Relay')
+  .addCost('nanochips', 5)
   .addVisibleFlag('shuttleFound')
   .setsFlag('droneRelayRepaired')
   .setHiddenFlag('droneRelayRepaired'),

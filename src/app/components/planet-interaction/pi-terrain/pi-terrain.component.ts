@@ -131,6 +131,7 @@ export class PiTerrainComponent implements OnInit {
   }
 
   showDroneHubButton(region: RegionListItem): boolean {
+    if (region.surveyLevel <= 0) {return false;}
     return this.flagService.check('droneRelayRepaired');
   }
 

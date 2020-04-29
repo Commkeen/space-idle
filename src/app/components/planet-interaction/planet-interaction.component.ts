@@ -34,6 +34,7 @@ export class PlanetInteractionComponent implements OnInit {
   }
 
   dronesIdle(): number {
+    if (!this.flagsService.check('droneRelayRepaired')) {return 0;}
     const interaction = this.planetService.getPlanetInteractionModel();
     return this.droneCount() - interaction.regions.getTotalAssignedDrones();
   }
