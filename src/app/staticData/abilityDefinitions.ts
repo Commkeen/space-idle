@@ -14,6 +14,9 @@ export class AbilityDefinition {
   public visibleUpgrade: string = '';
   public visibleNeededResearchName: string = '';
   public visibleNeededResearchLevel: number = 0;
+  public researchNeeded: string = '';
+  public researchLevelNeeded: number = 0;
+  public upgradeNeeded: string = '';
   public costScalesWithResource: string = '';
   public costScalesWithTheory: string = '';
   public costMultiplier: number = 2.0;
@@ -103,7 +106,7 @@ export class AbilityDefinition {
 }
 
 export class FeatureAbilityDefinition extends AbilityDefinition {
-
+  public droneHubLevelNeeded: number = 0;
 }
 
 export class ShipAbilityDefinition extends AbilityDefinition {
@@ -116,7 +119,7 @@ export class ShipAbilityDefinition extends AbilityDefinition {
 export const SHIP_ABILITY_LIBRARY: ShipAbilityDefinition[] = [
   new ShipAbilityDefinition('Build Drone')
   .addCost('metal', 5)
-  .addCost('energy', 4)
+  .addCost('energy', 3)
   .addCooldown(1)
   .grantsResource('drones', 1)
   .scalesWithResourceCount('drones', 1.2),
@@ -136,7 +139,7 @@ export const SHIP_ABILITY_LIBRARY: ShipAbilityDefinition[] = [
   .setsFlag('fabricatorRepaired')
   .setHiddenFlag('fabricatorRepaired'),
   new ShipAbilityDefinition('Repair Survey Scanner')
-  .addVisibleFlag('shuttleFound')
+  .addVisibleFlag('computerRepaired')
   .setsFlag('surveyRepaired')
   .setHiddenFlag('surveyRepaired'),
   new ShipAbilityDefinition('Repair Drone Relay')

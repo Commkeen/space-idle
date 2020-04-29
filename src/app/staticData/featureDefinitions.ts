@@ -67,6 +67,12 @@ export class FeatureDefinition {
     return this;
   }
 
+  public abilityNeedsDroneHub(abilityName: string, level: number = 1): FeatureDefinition {
+    const ability = this.abilities.find(x => x.name === abilityName);
+    ability.droneHubLevelNeeded = level;
+    return this;
+  }
+
   public addTransformAction(triggerAbilityName: string, newFeatureName: string): FeatureDefinition {
     const action = new TransformFeatureAction(newFeatureName);
     const ability = this.abilities.find(x => x.name === triggerAbilityName);
@@ -94,6 +100,12 @@ export class FeatureDefinition {
     return this;
   }
 
+  public addTaskTransformResult(taskName: string, newFeatureName: string): FeatureDefinition {
+    const task = this.tasks.find(x => x.name === taskName);
+    const action = new TransformFeatureAction(newFeatureName);
+    task.resultsOnComplete.push(action);
+    return this;
+  }
 }
 
 export const FEATURE_LIBRARY: FeatureDefinition[] = [
@@ -106,12 +118,16 @@ export const FEATURE_LIBRARY: FeatureDefinition[] = [
     'The ship\'s reserve power is still functioning, along with basic fabrication systems.  It may be possible to repair the computer.')
     .addAbility('Repair Computer', 'nanochips', 15)
     .addTransformAction('Repair Computer', 'downed shuttle')
-    .addFlagAction('Repair Computer', 'computerRepaired'),
+    .addFlagAction('Repair Computer', 'computerRepaired')
+    .addFlagAction('Repair Computer', 'showResearchTab'),
   new FeatureDefinition('downed shuttle',
     'With core systems repaired, the shuttle may be able to reach space with the help of a launch facility.'),
-  new FeatureDefinition('hematite deposit', 'A deposit of the iron-rich mineral hematite.', 'hematite mineshaft')
-  .addGather('metal', 2),
-  new FeatureDefinition('magnetite deposit', 'A deposit of the iron-rich mineral magnetite.', 'magnetite mineshaft'),
+
+  new FeatureDefinition('hematite deposit', 'A deposit of the iron-rich mineral hematite.')
+    .addGather('metal', 6),
+
+  new FeatureDefinition('magnetite deposit', 'A deposit of the iron-rich mineral magnetite.')
+    .addGather('metal', 12),
 
   new FeatureDefinition('copper deposit', 'A native deposit of metallic copper.')
   .addGather('metal', 2)
@@ -164,7 +180,17 @@ export const FEATURE_LIBRARY: FeatureDefinition[] = [
                         'Tiny sparks of current run across the surface of this luminous mineral', 'synaptite scoop'),
   new FeatureDefinition('dyene cluster',
                         'This brittle material gives off a weak field which interferes with elementary particles.', 'dyene collector'),
+
   new FeatureDefinition('oil field',
-                        'An underground deposit of crude oil - a liquid mixture of complex hydrocarbons with a variety of industrial uses.',
-                        'oil drill')
+                        'An underground deposit of crude oil - a liquid mixture of complex hydrocarbons with a variety of industrial uses.')
+  .addAbility('Drill Well', 'duranium', 50)
+  .addTransformAction('Drill Well', 'oil well'),
+  new FeatureDefinition('undersea oil field',
+                        'A rich deposit of oil, deep under the ocean.')
+  .addAbility('Drill Well', 'nanofiber', 50)
+  .addTransformAction('Drill Well', 'oil well'),
+  new FeatureDefinition('oil well',
+                        'Extracts oil.')
+  .addGather('hydrocarbon', 7)
+  .setDroneSlots(8)
 ];

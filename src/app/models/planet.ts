@@ -18,7 +18,7 @@ export class Region {
     public name: string
   ) {}
 
-  public hideBehindInfrastructure(regionId: number, level: number): Region {
+  public hideBehindSurvey(regionId: number, level: number): Region {
     this.hiddenBehindRegion = regionId;
     this.hiddenBehindSurvey = level;
     return this;
@@ -52,22 +52,45 @@ export const MOCK_SYSTEM: Planet[] = [
     {instanceId: 1, name: 'forest planet', temperature: 'temperate', atmosphere: 'oxygen', regions: [
         new Region(1, 1, 'Plains')
           .addFeature('copper deposit', 1)
-          .addFeature('lignite deposit', 2)
-          .addFeature('crater', 2)
-          .addFeature('silver vein', 3),
+          .addFeature('silver vein', 2)
+          .addFeature('crater', 3)
+          .addFeature('copper deposit', 4)
+          .addFeature('lignite deposit', 5),
         new Region(1, 2, 'Hills')
-          .hideBehindInfrastructure(1, 1)
-          .addFeature('hematite deposit', 1)
-          .addFeature('lignite deposit', 1)
-          .addFeature('methane vent', 2),
-        new Region(1, 3, 'Mountain')
-          .hideBehindInfrastructure(2, 1)
-          .addFeature('silver vein', 1),
+          .hideBehindSurvey(1, 2)
+          .addFeature('corundum deposit', 1)
+          .addFeature('copper deposit', 2)
+          .addFeature('lignite deposit', 3)
+          .addFeature('gold vein', 4),
+        new Region(1, 3, 'Forest')
+          .hideBehindSurvey(1, 3)
+          .addFeature('lignite deposit', 1),
         new Region(1, 4, 'Coast')
-          .hideBehindInfrastructure(2, 1)
+          .hideBehindSurvey(2, 1)
           .addFeature('silver vein')
           .addFeature('lignite deposit')
-          .addFeature('methane vent')
+          .addFeature('methane vent'),
+        new Region(1, 5, 'Ocean')
+          .hideBehindSurvey(4, 2)
+          .addFeature('methane vent', 2)
+          .addFeature('undersea oil field', 4),
+        new Region(1, 6, 'Ocean Floor')
+          .hideBehindSurvey(5, 7)
+          .addFeature('charybdin crystals', 4),
+        new Region(1, 7, 'Mountain')
+          .hideBehindSurvey(2, 3)
+          .addFeature('hematite deposit', 2),
+        new Region(1, 8, 'Desert')
+          .hideBehindSurvey(7, 5)
+          .addFeature('corundum deposit', 1)
+          .addFeature('glittersand spout', 5),
+        new Region(1, 9, 'Arctic')
+          .hideBehindSurvey(5, 5)
+          .addFeature('helium clathrates', 1)
+          .addFeature('argon clathrates', 2)
+          .addFeature('helium clathrates', 3)
+          .addFeature('oil field', 4)
+          .addFeature('dyene cluster', 5)
     ]},
     {instanceId: 2, name: 'ice planet', temperature: 'frozen', atmosphere: 'oxygen', regions: [
       new Region(1, 1, 'Plains')
