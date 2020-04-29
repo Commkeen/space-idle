@@ -29,7 +29,10 @@ export class SimulationService {
 
     this._resourceService.globalResources.setMax('energy', 10);
 
-    this._resourceService.globalResources.add('metal', 5);
+    this._resourceService.globalResources.add('metal', 500);
+    this._resourceService.globalResources.add('silicate', 500);
+    this._resourceService.globalResources.add('rareMetal', 500);
+    this._resourceService.globalResources.add('hydrocarbon', 500);
   }
 
   reset() {
