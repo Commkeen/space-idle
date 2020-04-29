@@ -1,5 +1,5 @@
 import { ResourceCollection } from "../models/resource";
-import { Action, AddResourceAction, FlagAction } from './actionDefinitions';
+import { Action, AddResourceAction, FlagAction, AddTheoryAction, AddMaxResourceAction, AddEnergyRateAction } from './actionDefinitions';
 
 
 // Defines ship abilities and feature abilities
@@ -14,6 +14,9 @@ export class AbilityDefinition {
   public visibleUpgrade: string = '';
   public visibleNeededResearchName: string = '';
   public visibleNeededResearchLevel: number = 0;
+  public costScalesWithResource: string = '';
+  public costScalesWithTheory: string = '';
+  public costMultiplier: number = 2.0;
 
   setDescription(desc: string): AbilityDefinition {
     this.desc = desc;
@@ -56,8 +59,26 @@ export class AbilityDefinition {
     return this;
   }
 
+  addsMaxResource(resource: string, amount: number): AbilityDefinition {
+    const action = new AddMaxResourceAction(resource, amount);
+    this.addAction(action);
+    return this;
+  }
+
+  addsEnergyRate(amount: number): AbilityDefinition {
+    const action = new AddEnergyRateAction(amount);
+    this.addAction(action);
+    return this;
+  }
+
   grantsResource(resource: string, amount: number): AbilityDefinition {
     const action = new AddResourceAction(resource, amount);
+    this.addAction(action);
+    return this;
+  }
+
+  grantsTheory(discipline: string, amount: number): AbilityDefinition {
+    const action = new AddTheoryAction(discipline, amount);
     this.addAction(action);
     return this;
   }
@@ -65,6 +86,18 @@ export class AbilityDefinition {
   setsFlag(flag: string): AbilityDefinition {
     const action = new FlagAction(flag);
     this.addAction(action);
+    return this;
+  }
+
+  scalesWithTheory(discipline: string, multiplier: number): AbilityDefinition {
+    this.costScalesWithTheory = discipline;
+    this.costMultiplier = multiplier;
+    return this;
+  }
+
+  scalesWithResourceCount(resource: string, multiplier: number): AbilityDefinition {
+    this.costScalesWithResource = resource;
+    this.costMultiplier = multiplier;
     return this;
   }
 }
@@ -85,12 +118,19 @@ export const SHIP_ABILITY_LIBRARY: ShipAbilityDefinition[] = [
   .addCost('metal', 5)
   .addCost('energy', 4)
   .addCooldown(1)
-  .grantsResource('drones', 1),
+  .grantsResource('drones', 1)
+  .scalesWithResourceCount('drones', 1.2),
   new ShipAbilityDefinition('Fabricate Nanochip')
   .addVisibleFlag('fabricatorRepaired')
   .addCost('metal', 20)
   .addCost('silicates', 15)
   .grantsResource('nanochips', 1),
+  new ShipAbilityDefinition('Electronics Research')
+  .addVisibleFlag('fabricatorRepaired')
+  .addCost('nanochips', 20)
+  .addCooldown(5)
+  .grantsTheory('Electronics', 5)
+  .scalesWithTheory('Electronics', 2.4),
   new ShipAbilityDefinition('Repair Fabricator')
   .addVisibleFlag('shuttleFound')
   .setsFlag('fabricatorRepaired')
@@ -103,11 +143,6 @@ export const SHIP_ABILITY_LIBRARY: ShipAbilityDefinition[] = [
   .addVisibleFlag('shuttleFound')
   .setsFlag('droneRelayRepaired')
   .setHiddenFlag('droneRelayRepaired'),
-  new ShipAbilityDefinition('Repair Research Computer')
-  .addVisibleFlag('shuttleFound')
-  .setsFlag('researchUnlocked')
-  .setsFlag('showResearchTab')
-  .setHiddenFlag('researchUnlocked'),
   new ShipAbilityDefinition('Launch Ship')
   .setsFlag('shuttleLaunched')
   .setVisibleNeededResearch('Gravitics', 1)

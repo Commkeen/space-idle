@@ -6,6 +6,8 @@ import { ActionService } from 'src/app/services/action.service';
 import { TooltipViewModel } from 'src/app/models/tooltipViewModel';
 import { ResourceService } from 'src/app/services/resource.service';
 import { TimeService } from 'src/app/services/time.service';
+import { ResourceCollection } from 'src/app/models/resource';
+import { ResearchService } from 'src/app/services/research.service';
 
 @Component({
   selector: 'ability-button',
@@ -18,11 +20,29 @@ export class AbilityButtonComponent implements OnInit {
   @Input() feature: Feature;
 
   cooldown: number = 0;
+  costs: ResourceCollection = new ResourceCollection();
+  tooltip: TooltipViewModel = new TooltipViewModel();
 
-  constructor(private _actionService: ActionService, private _resourceService: ResourceService, private _timeService: TimeService) { }
+  constructor(private _actionService: ActionService,
+    private _researchService: ResearchService,
+    private _resourceService: ResourceService,
+    private _timeService: TimeService) { }
 
   ngOnInit(): void {
-    this._timeService.tick.subscribe(x => this.tickCooldown(x));
+    this._timeService.tick.subscribe(x => this.update(x));
+    this.initTooltip();
+    this.updateCosts();
+  }
+
+  initTooltip() {
+    this.tooltip.name = this.ability.name;
+    this.tooltip.desc = this.ability.desc;
+    this.tooltip.costs = this.costs;
+  }
+
+  update(dT: number) {
+    this.tickCooldown(dT);
+    this.updateCosts();
   }
 
   tickCooldown(dT: number) {
@@ -32,27 +52,34 @@ export class AbilityButtonComponent implements OnInit {
     }
   }
 
+  updateCosts() {
+    this.costs.clear();
+    this.costs.addCollection(this.ability.costs);
+    let scalar = 0;
+    if (this.ability.costScalesWithTheory != '') {
+      scalar = this._researchService.getProgress(this.ability.costScalesWithTheory).theoryLevel;
+    }
+    else if (this.ability.costScalesWithResource != '') {
+      scalar = this._resourceService.get(this.ability.costScalesWithResource);
+    }
+    for (let i = 0; i < scalar; i++) {
+      this.costs.applyMultiplier(this.ability.costMultiplier);
+    }
+  }
+
   getCooldownPercent() {
     if (this.ability.cooldown == 0) {return 0;}
     return this.cooldown * 100 / this.ability.cooldown;
   }
 
-  getTooltip(): TooltipViewModel {
-    const tooltip = new TooltipViewModel();
-    tooltip.name = this.ability.name;
-    tooltip.desc = this.ability.desc;
-    tooltip.costs = this.ability.costs;
-    return tooltip;
-  }
-
   canAfford() {
-    return this._resourceService.canAfford(this.ability.costs);
+    return this._resourceService.canAfford(this.costs);
   }
 
   onClick() {
     if (this.ability == null) {return;}
     if (!this.canAfford()) {return;}
-    this._resourceService.spend(this.ability.costs);
+    this._resourceService.spend(this.costs);
     this.cooldown = this.ability.cooldown;
     this.ability.actions.forEach(a => {
       if (a instanceof FeatureAction) {

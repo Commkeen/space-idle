@@ -157,12 +157,17 @@ export class ResourceCollection {
         return resourceItem.max;
     }
 
-    withMultiplier(multiplier: number): ResourceCollection {
-      const newCollection = new ResourceCollection();
-      newCollection.addCollection(this);
-      newCollection.resources.forEach(x => {
+    applyMultiplier(multiplier: number, includeEnergy: boolean = false) {
+      this.resources.forEach(x => {
+        if (x.resource === 'energy' && !includeEnergy) {return;}
         x.amount = x.amount * multiplier;
       });
+    }
+
+    withMultiplier(multiplier: number, includeEnergy: boolean = false): ResourceCollection {
+      const newCollection = new ResourceCollection();
+      newCollection.addCollection(this);
+      newCollection.applyMultiplier(multiplier, includeEnergy);
       return newCollection;
     }
 

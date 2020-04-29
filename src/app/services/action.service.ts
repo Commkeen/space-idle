@@ -26,6 +26,14 @@ export class ActionService {
     this._resourceService.globalResources.add(resource.resource, resource.amount);
   }
 
+  addMaxResource(resource: Resource) {
+    this._resourceService.addMax(resource.resource, resource.amount);
+  }
+
+  addEnergyRate(amount: number) {
+    this._resourceService.addEnergyRate(amount);
+  }
+
   gatherFeature(feature: Feature) {
     this._planetService.gatherFeature(feature.regionId, feature.instanceId);
   }

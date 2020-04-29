@@ -64,6 +64,15 @@ export class ResourceService {
     return couldAfford;
   }
 
+  addMax(resource: string, amount: number) {
+    const currentMax = this.globalResources.getMax(resource);
+    this.globalResources.setMax(resource, currentMax + amount);
+  }
+
+  addEnergyRate(amount: number) {
+    this.energyRate += amount;
+  }
+
   isDiscovered(resource: string): boolean {
     return this.discoveredResources.includes(resource);
   }

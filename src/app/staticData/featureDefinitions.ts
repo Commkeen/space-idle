@@ -133,11 +133,11 @@ export const FEATURE_LIBRARY: FeatureDefinition[] = [
   .setDroneSlots(4),
 
   new FeatureDefinition('corundum deposit', 'A deposit of the semi-precious crystalline mineral corundum.')
-  .addGather('silicates', 6)
+  .addGather('silicate', 6)
   .addAbility('Build Mine', 'metal', 150)
   .addTransformAction('Build Mine', 'corundum quarry'),
   new FeatureDefinition('corundum quarry', 'A quarry for collecting minerals from a corundum deposit.')
-  .addGather('silicates', 30)
+  .addGather('silicate', 30)
   .setDroneSlots(6),
 
   new FeatureDefinition('gold vein', 'A native deposit of metallic gold.', 'gold mineshaft'),

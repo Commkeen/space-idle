@@ -18,6 +18,28 @@ export class AddResourceAction extends Action {
   }
 }
 
+export class AddMaxResourceAction extends Action {
+  public resource: Resource;
+  constructor (resource: string, amount: number) {
+    super();
+    this.resource = new Resource(resource, amount);
+  }
+
+  doAction(actionService: ActionService) {
+    actionService.addMaxResource(this.resource);
+  }
+}
+
+export class AddEnergyRateAction extends Action {
+  constructor (public amount: number) {
+    super();
+  }
+
+  doAction(actionService: ActionService) {
+    actionService.addEnergyRate(this.amount);
+  }
+}
+
 export class AddTheoryAction extends Action {
 
   constructor (public discipline: string, public amount: number) {
