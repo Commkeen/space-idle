@@ -47,6 +47,10 @@ export class RegionInteraction {
     }
     return feature;
   }
+
+  removeFeature(featureId: number) {
+    this.features.splice(this.features.findIndex(x => x.featureInstanceId === featureId), 1);
+  }
 }
 
 export class RegionInteractionCollection {
@@ -73,6 +77,11 @@ export class RegionInteractionCollection {
   getFeature(regionId: number, featureId: number): FeatureInteraction {
     const region = this.getRegion(regionId);
     return region.getFeature(featureId);
+  }
+
+  removeFeature(regionId: number, featureId: number) {
+    const region = this.getRegion(regionId);
+    return region.removeFeature(featureId);
   }
 
   getRegionDroneSlots(regionId: number): number {

@@ -28,6 +28,7 @@ export class SimulationService {
     this._resourceService.globalResources.setMax('duranium', 5000);
 
     this._resourceService.globalResources.setMax('energy', 10);
+    this._resourceService.globalResources.add('energy', 10);
 
     this._resourceService.globalResources.add('metal', 5);
     //this._resourceService.globalResources.add('silicate', 500);
@@ -66,8 +67,10 @@ export class SimulationService {
     const regionInteractions = interactionModel.regions;
     regionInteractions.regions.forEach(regionInteraction => {
       const region = regions.find(x => x.instanceId === regionInteraction.regionInstanceId);
+      if (regionInteraction.surveyLevel == 0) {return;}
       regionInteraction.features.forEach(featureInteraction => {
         const feature = region.features.find(x => x.instanceId === featureInteraction.featureInstanceId);
+        if (feature.hiddenBehindSurvey > regionInteraction.surveyLevel) {return;}
         const assignedDrones = featureInteraction.assignedDrones;
         this.updateFeatureProductionRate(feature, featureInteraction, assignedDrones, interactionModel.localResources);
       });

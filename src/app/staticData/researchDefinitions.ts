@@ -43,6 +43,7 @@ export const RESEARCH_LIBRARY: ResearchDiscipline[] = [
   new ResearchDiscipline('Material Science')
     .setRevealAtStart()
     .addUpgrade(1, 'Construction')
+    .addUpgrade(2, 'Hydrophobic Alloys')
     .addUpgrade(3, 'Tensile Polymers')
     .addUpgrade(5, 'Unbreakable Materials'),
   new ResearchDiscipline('Electronics')

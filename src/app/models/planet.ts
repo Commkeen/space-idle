@@ -31,8 +31,13 @@ export class Region {
     return this;
   }
 
+  public removeFeature(feature: Feature): Region {
+    this.features.splice(this.features.indexOf(feature), 1);
+    return this;
+  }
+
   public replaceFeature(oldFeatureId: number, newFeatureName: string): Region {
-    this.features[oldFeatureId].name = newFeatureName;
+    this.features.find(x => x.instanceId === oldFeatureId).name = newFeatureName;
     return this;
   }
 }
@@ -53,26 +58,36 @@ export const MOCK_SYSTEM: Planet[] = [
         new Region(1, 1, 'Plains')
           .addFeature('copper deposit', 1)
           .addFeature('silver vein', 2)
+          .addFeature('wrecked hull plating', 2)
           .addFeature('crater', 3)
           .addFeature('copper deposit', 4)
-          .addFeature('lignite deposit', 5),
+          .addFeature('wrecked hull plating', 4)
+          .addFeature('lignite deposit', 5)
+          .addFeature('corrupted databank', 5)
+          .addFeature('energy cell', 6),
         new Region(1, 2, 'Hills')
-          .hideBehindSurvey(1, 2)
-          .addFeature('corundum deposit', 1)
-          .addFeature('copper deposit', 2)
-          .addFeature('lignite deposit', 3)
-          .addFeature('gold vein', 4),
-        new Region(1, 3, 'Forest')
           .hideBehindSurvey(1, 3)
-          .addFeature('lignite deposit', 1),
+          .addFeature('corundum deposit', 1)
+          .addFeature('corrupted databank', 1)
+          .addFeature('copper deposit', 2)
+          .addFeature('energy cell', 2)
+          .addFeature('lignite deposit', 3)
+          .addFeature('corrupted databank', 3)
+          .addFeature('gold vein', 4)
+          .addFeature('wrecked hull plating', 5),
+        new Region(1, 3, 'Forest')
+          .hideBehindSurvey(1, 4)
+          .addFeature('lignite deposit', 1)
+          .addFeature('corrupted databank', 2),
         new Region(1, 4, 'Coast')
-          .hideBehindSurvey(2, 1)
-          .addFeature('silver vein')
-          .addFeature('lignite deposit')
-          .addFeature('methane vent'),
+          .hideBehindSurvey(2, 2)
+          .addFeature('waterlogged processing unit', 1)
+          .addFeature('lignite deposit', 2)
+          .addFeature('methane vent', 3),
         new Region(1, 5, 'Ocean')
           .hideBehindSurvey(4, 2)
           .addFeature('methane vent', 2)
+          .addFeature('waterlogged processing unit', 3)
           .addFeature('undersea oil field', 4),
         new Region(1, 6, 'Ocean Floor')
           .hideBehindSurvey(5, 7)

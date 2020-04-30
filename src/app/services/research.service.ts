@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { ResourceService } from './resource.service';
 import { ResearchProgress } from '../models/research';
 import { FlagsService } from './flags.service';
+import { ActionService } from './action.service';
 
 @Injectable({
   providedIn: 'root'
@@ -118,16 +119,20 @@ export class ResearchService {
     return def;
   }
 
-  buyUpgrade(upgrade: string) {
-    const upgradeCost = this.getUpgradeDefinition(upgrade).cost;
+  buyUpgrade(upgrade: string): boolean {
+    const def = this.getUpgradeDefinition(upgrade);
+    const upgradeCost = def.cost;
+    let result = false;
     if (!this.completedUpgrades.some(x => x === upgrade)) {
       const spentResourcesSuccessfully = this._resourceService.spend(upgradeCost);
       if (spentResourcesSuccessfully) {
+        result = true;
         const unlockIndex = this.unlockedUpgrades.indexOf(upgrade);
         if (unlockIndex > -1) {this.unlockedUpgrades.splice(unlockIndex, 1);}
         this.completedUpgrades.push(upgrade);
       }
     }
     this.onResearchUpdated.next();
+    return result;
   }
 }

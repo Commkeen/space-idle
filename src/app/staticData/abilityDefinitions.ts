@@ -47,6 +47,11 @@ export class AbilityDefinition {
     return this;
   }
 
+  setUpgradeNeeded(upgrade: string): AbilityDefinition {
+    this.upgradeNeeded = upgrade;
+    return this;
+  }
+
   addCost(resource: string, amount: number): AbilityDefinition {
     this.costs.add(resource, amount);
     return this;
@@ -119,15 +124,15 @@ export class ShipAbilityDefinition extends AbilityDefinition {
 export const SHIP_ABILITY_LIBRARY: ShipAbilityDefinition[] = [
   new ShipAbilityDefinition('Build Drone')
   .addCost('metal', 5)
-  .addCost('energy', 3)
+  .addCost('energy', 1)
   .addCooldown(1)
   .grantsResource('drones', 1)
   .scalesWithResourceCount('drones', 1.2),
   new ShipAbilityDefinition('Fabricate Nanochip')
   .addVisibleFlag('fabricatorRepaired')
-  .addCost('energy', 5)
-  .addCost('metal', 10)
-  .addCost('silicate', 15)
+  .addCost('energy', 3)
+  .addCost('rareMetal', 0.1)
+  .addCost('silicate', 8)
   .addCooldown(8)
   .grantsResource('nanochips', 1),
   new ShipAbilityDefinition('Electronics Research')
@@ -147,7 +152,7 @@ export const SHIP_ABILITY_LIBRARY: ShipAbilityDefinition[] = [
   .setsFlag('surveyRepaired')
   .setHiddenFlag('surveyRepaired'),
   new ShipAbilityDefinition('Repair Drone Relay')
-  .addCost('nanochips', 5)
+  .addCost('nanochips', 2)
   .addVisibleFlag('shuttleFound')
   .setsFlag('droneRelayRepaired')
   .setHiddenFlag('droneRelayRepaired'),

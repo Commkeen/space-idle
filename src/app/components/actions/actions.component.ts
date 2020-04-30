@@ -72,7 +72,12 @@ export class ActionsComponent implements OnInit {
 
   onClickUpgrade(upg: UpgradeDefinition): boolean {
     if (!this.canAffordUpgrade(upg)) {return;}
-    this.researchService.buyUpgrade(upg.name);
+    const result = this.researchService.buyUpgrade(upg.name);
+    if (result) {
+      upg.actions.forEach(act => {
+        act.doAction(this.actionService);
+      });
+    }
   }
 
   showWin() {

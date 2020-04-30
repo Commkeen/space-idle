@@ -227,6 +227,15 @@ export class PlanetService {
     this.regionChanged.next(region);
   }
 
+  removeFeature(feature: Feature) {
+    const planet = this.getPlanet(feature.planetId);
+    const region = planet.regions.find(x => x.instanceId === feature.regionId);
+    const planetInteraction = this.getPlanetInteractionModel(feature.planetId);
+    region.removeFeature(feature);
+    planetInteraction.regions.removeFeature(region.instanceId, feature.instanceId);
+    this.regionChanged.next(region);
+  }
+
   gatherRegion(regionId: number, planetInstanceId?: number) {
     if (!planetInstanceId) {
       planetInstanceId = this.getSelectedPlanet().instanceId;

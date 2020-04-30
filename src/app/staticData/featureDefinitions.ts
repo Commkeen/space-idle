@@ -1,6 +1,6 @@
 import { Effect } from "./effectDefinitions";
 import { ResourceCollection } from "../models/resource";
-import { FeatureAction, TransformFeatureAction, FlagAction, AddTheoryAction, GatherFeatureAction } from "./actionDefinitions";
+import { FeatureAction, TransformFeatureAction, FlagAction, AddTheoryAction, GatherFeatureAction, AddResourceAction, RemoveFeatureAction, AddMaxResourceAction } from "./actionDefinitions";
 import { FeatureAbilityDefinition } from "./abilityDefinitions";
 import { TaskDefinition } from './taskDefinitions';
 
@@ -32,7 +32,7 @@ export class FeatureDefinition {
       const gatherAbility = new FeatureAbilityDefinition();
       gatherAbility.name = 'Gather';
       gatherAbility.addAction(new GatherFeatureAction());
-      gatherAbility.addCost('energy', 1);
+      gatherAbility.addCost('energy', 2);
       gatherAbility.addCooldown(cooldown);
       this.abilities.push(gatherAbility);
       this.droneSlots = 1;
@@ -74,9 +74,29 @@ export class FeatureDefinition {
     return this;
   }
 
+  public abilityNeedsUpgrade(abilityName: string, upgrade: string): FeatureDefinition {
+    const ability = this.abilities.find(x => x.name === abilityName);
+    ability.setUpgradeNeeded(upgrade);
+    return this;
+  }
+
   public abilityNeedsDroneHub(abilityName: string, level: number = 1): FeatureDefinition {
     const ability = this.abilities.find(x => x.name === abilityName);
     ability.droneHubLevelNeeded = level;
+    return this;
+  }
+
+  public addResourceAction(triggerAbilityName: string, resource: string, amount: number): FeatureDefinition {
+    const action = new AddResourceAction(resource, amount);
+    const ability = this.abilities.find(x => x.name === triggerAbilityName);
+    ability.addAction(action);
+    return this;
+  }
+
+  public addMaxResourceAction(triggerAbilityName: string, resource: string, amount: number): FeatureDefinition {
+    const action = new AddMaxResourceAction(resource, amount);
+    const ability = this.abilities.find(x => x.name === triggerAbilityName);
+    ability.addAction(action);
     return this;
   }
 
@@ -89,6 +109,13 @@ export class FeatureDefinition {
 
   public addFlagAction(triggerAbilityName: string, flagName: string): FeatureDefinition {
     const action = new FlagAction(flagName);
+    const ability = this.abilities.find(x => x.name === triggerAbilityName);
+    ability.addAction(action);
+    return this;
+  }
+
+  public addRemoveFeatureAction(triggerAbilityName: string): FeatureDefinition {
+    const action = new RemoveFeatureAction();
     const ability = this.abilities.find(x => x.name === triggerAbilityName);
     ability.addAction(action);
     return this;
@@ -131,6 +158,31 @@ export const FEATURE_LIBRARY: FeatureDefinition[] = [
   new FeatureDefinition('downed shuttle',
     'With core systems repaired, the shuttle may be able to reach space with the help of a launch facility.'),
 
+  new FeatureDefinition('wrecked hull plating',
+    'This shredded plating is mostly useless, but some metals can be extracted from the remains.')
+    .addAbility('Salvage', 'drones', 2)
+    .addResourceAction('Salvage', 'metal', 50)
+    .addRemoveFeatureAction('Salvage'),
+  new FeatureDefinition('corrupted databank',
+    'Any data this may have contained is irretrievable, but the components could be salvaged.')
+    .addAbility('Salvage', 'drones', 2)
+    .addAbilityCost('Salvage', 'nanochips', 1)
+    .addResourceAction('Salvage', 'nanochips', 8)
+    .addRemoveFeatureAction('Salvage'),
+  new FeatureDefinition('waterlogged processing unit',
+    'Seawater has destroyed most of the more delicate circuits, but some could be recovered.')
+    .addAbility('Salvage', 'drones', 4)
+    .abilityNeedsUpgrade('Salvage', 'Hydrophobic Alloys')
+    .addResourceAction('Salvage', 'nanochips', 47)
+    .addRemoveFeatureAction('Salvage'),
+
+  new FeatureDefinition('energy cell',
+    'A mostly intact energy storage cell.  This could be refurbished and put to use.')
+    .addAbility('Repair', 'drones', 5)
+    .addAbilityCost('Repair', 'nanochips', 15)
+    .addMaxResourceAction('Repair', 'energy', 5)
+    .addRemoveFeatureAction('Repair'),
+
   new FeatureDefinition('hematite deposit', 'A deposit of the iron-rich mineral hematite.')
     .addGather('metal', 6),
 
@@ -147,14 +199,14 @@ export const FEATURE_LIBRARY: FeatureDefinition[] = [
   .setDroneSlots(4),
 
   new FeatureDefinition('silver vein', 'A native deposit of metallic silver.')
-  .addGather('metal', 5, 5)
-  .addGather('rareMetal', 1)
+  .addGather('metal', 18, 12)
+  .addGather('rareMetal', 0.12)
   .addAbility('Build Mine', 'metal', 250)
   .addTransformAction('Build Mine', 'silver mineshaft')
   .abilityVisibleUpgrade('Build Mine', 'Mineral Extraction'),
   new FeatureDefinition('silver mineshaft', 'A mineshaft built on a silver vein.')
-  .addGather('metal', 8)
-  .addGather('rareMetal', 2)
+  .addGather('metal', 20)
+  .addGather('rareMetal', 1)
   .setDroneSlots(4),
 
   new FeatureDefinition('corundum deposit', 'A deposit of the semi-precious crystalline mineral corundum.')

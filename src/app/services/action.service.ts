@@ -41,4 +41,8 @@ export class ActionService {
   replaceFeature(regionId: number, featureInstanceId: number, newFeatureName: string) {
     this._planetService.replaceFeature(regionId, featureInstanceId, newFeatureName);
   }
+
+  removeFeature(feature: Feature) {
+    this._planetService.removeFeature(feature);
+  }
 }

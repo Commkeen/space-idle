@@ -83,3 +83,9 @@ export class TransformFeatureAction extends FeatureAction {
     actionService.replaceFeature(targetFeature.regionId, targetFeature.instanceId, this.newFeatureName);
   }
 }
+
+export class RemoveFeatureAction extends FeatureAction {
+  doFeatureAction(actionService: ActionService, targetFeature: Feature) {
+    actionService.removeFeature(targetFeature);
+  }
+}
