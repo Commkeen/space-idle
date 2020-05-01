@@ -156,9 +156,32 @@ export const SHIP_ABILITY_LIBRARY: ShipAbilityDefinition[] = [
   .addVisibleFlag('shuttleFound')
   .setsFlag('droneRelayRepaired')
   .setHiddenFlag('droneRelayRepaired'),
+  new ShipAbilityDefinition('Repair Hull')
+  .addCost('silksteel', 50)
+  .setVisibleNeededResearch('Material Science', 6)
+  .setsFlag('hullRepaired')
+  .setHiddenFlag('hullRepaired'),
+  new ShipAbilityDefinition('Repair Navigation Systems')
+  .addCost('cogitex', 50)
+  .setVisibleNeededResearch('Electronics', 6)
+  .setsFlag('navRepaired')
+  .setHiddenFlag('navRepaired'),
+  new ShipAbilityDefinition('Refit Drive Core')
+  .addCost('hyperlattice', 50)
+  .setVisibleNeededResearch('Hypertopology', 2)
+  .setsFlag('driveRepaired')
+  .setHiddenFlag('driveRepaired'),
+  new ShipAbilityDefinition('Refit Inertial Dampeners')
+  .addCost('gravalloy', 50)
+  .setVisibleNeededResearch('Gravitics', 2)
+  .setsFlag('gravRepaired')
+  .setHiddenFlag('gravRepaired'),
   new ShipAbilityDefinition('Launch Ship')
+  .addVisibleFlag('hullRepaired')
+  .addVisibleFlag('navRepaired')
+  .addVisibleFlag('driveRepaired')
+  .addVisibleFlag('gravRepaired')
   .setsFlag('shuttleLaunched')
-  .setVisibleNeededResearch('Gravitics', 1)
   .setHiddenFlag('shuttleLaunched')
 
 ];
