@@ -73,7 +73,11 @@ export class AbilityButtonComponent implements OnInit {
   }
 
   canAfford() {
-    return this._resourceService.canAfford(this.costs);
+    if (!this._resourceService.canAfford(this.costs)) {return false;}
+    if (this.costs.has('drones')) {
+      return (this._actionService.canAffordDroneCost(this.costs.get('drones').amount));
+    }
+    return true;
   }
 
   onClick() {

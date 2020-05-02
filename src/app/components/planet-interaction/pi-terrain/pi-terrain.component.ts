@@ -136,7 +136,9 @@ export class PiTerrainComponent implements OnInit {
   }
 
   showDroneCounts(region: RegionListItem): boolean {
-    return region.droneSlots > 0;
+    if (region.dronesAssigned > 0) {return true;}
+    if (region.droneSlots > 1) {return true;}
+    return false;
   }
 
   showDroneControl(feature: FeatureListItem): boolean {

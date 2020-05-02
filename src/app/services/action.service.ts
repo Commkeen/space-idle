@@ -14,6 +14,10 @@ export class ActionService {
   constructor(private _flagService: FlagsService, private _planetService: PlanetService,
               private _resourceService: ResourceService, private _researchService: ResearchService) { }
 
+  canAffordDroneCost(drones: number, planetInstanceId?: number): boolean {
+    return this._planetService.canAffordDroneCost(drones, planetInstanceId);
+  }
+
   setFlag(flag: string) {
     this._flagService.set(flag);
   }

@@ -217,6 +217,16 @@ export class PlanetService {
     return regionInteraction.nextSurveyLevelCost;
   }
 
+  canAffordDroneCost(drones: number, planetInstanceId?: number): boolean {
+    if (!planetInstanceId) {
+      planetInstanceId = this.getSelectedPlanet().instanceId;
+    }
+
+    const droneCount = this._resourceService.get('drones');
+    const assigned = this.getPlanetInteractionModel(planetInstanceId).regions.getTotalAssignedDrones();
+    return (droneCount - assigned) < drones;
+  }
+
   replaceFeature(regionId: number, featureId: number, newFeatureName: string, planetInstanceId?: number): void {
     if (!planetInstanceId) {
       planetInstanceId = this.getSelectedPlanet().instanceId;
