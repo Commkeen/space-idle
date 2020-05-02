@@ -154,7 +154,9 @@ export class PiTerrainComponent implements OnInit {
   }
 
   canAssignDrone(region: RegionListItem, feature: FeatureListItem) {
-    return feature.dronesAssigned < feature.droneSlots && region.dronesAssigned < region.droneSlots;
+    return feature.dronesAssigned < feature.droneSlots &&
+    region.dronesAssigned < region.droneSlots &&
+    this.planetService.getIdleDrones() > 0;
   }
 
   canUnassignDrone(region: RegionListItem, feature: FeatureListItem) {

@@ -36,9 +36,13 @@
                 <div class="feature-left-col" fxFlex="nogrow">
                   <div class="feature-name">{{feature.name}}</div>
                   <div class="feature-drone-control" *ngIf="showDroneControl(feature)">
-                    <span class="feature-drone-decrement" (click)="unassignDrone(feature)">&lt;</span>
+                    <span class="feature-drone-decrement"
+                          [ngClass]="{'hidden' : !canUnassignDrone(region, feature)}"
+                          (click)="unassignDrone(feature)">&lt;</span>
                     <span class="feature-drone-count">Drones: {{feature.dronesAssigned}}/{{feature.droneSlots}}</span>
-                    <span class="feature-drone-increment" (click)="assignDrone(feature)">&gt;</span>
+                    <span class="feature-drone-increment"
+                          [ngClass]="{'hidden' : !canAssignDrone(region, feature)}"
+                          (click)="assignDrone(feature)">&gt;</span>
                   </div>
                 </div>
                 <div class="feature-buttons" fxLayout="row" fxFlex="70">
