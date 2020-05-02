@@ -232,7 +232,7 @@ export class PlanetService {
       planetInstanceId = this.getSelectedPlanet().instanceId;
     }
 
-    return this.getIdleDrones(planetInstanceId) < drones;
+    return this.getIdleDrones(planetInstanceId) >= drones;
   }
 
   replaceFeature(regionId: number, featureId: number, newFeatureName: string, planetInstanceId?: number): void {
