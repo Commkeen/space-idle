@@ -1,18 +1,28 @@
-<div class="spaceidle-section">
+<div class="spaceidle-section" fxLayout="column">
   <div class="current-task" *ngIf="getCurrentTask() != null">
-    <div class="current-task-name">{{getCurrentTask().name}}</div>
-    <app-progress-bar [value]="getCurrentTask().progress" [max]="getCurrentTask().needed"></app-progress-bar>
+    <div class="current-task-name">{{ getCurrentTask().name }}</div>
+    <app-progress-bar
+      [value]="getCurrentTask().progress"
+      [max]="getCurrentTask().needed"
+    ></app-progress-bar>
   </div>
-  <app-resource-bar [resource]="resourceService.globalResources.get('energy')"></app-resource-bar>
-  <div *ngIf="showWin()">Congratulations, you have completed the space idle prototype!</div>
-  <div class="action-list" *ngFor="let ability of getAbilities()">
-    <ability-button [ability]="ability"></ability-button>
+  <app-resource-bar
+    [resource]="resourceService.globalResources.get('energy')"
+  ></app-resource-bar>
+  <div class="list-panel" fxFlex="grow">
+    <div *ngIf="showWin()">
+      Congratulations, you have completed the space idle prototype!
+    </div>
+    <div class="action-list" *ngFor="let ability of getAbilities()">
+      <ability-button [ability]="ability"></ability-button>
+    </div>
+    <div class="upgrade-list" *ngFor="let upgrade of getUpgrades()">
+      <game-button
+        [name]="upgrade.name"
+        [appGameTooltip]="getUpgradeTooltip(upgrade)"
+        [disabled]="!canAffordUpgrade(upgrade)"
+        (click)="onClickUpgrade(upgrade)"
+      ></game-button>
+    </div>
   </div>
-  <div class="upgrade-list" *ngFor="let upgrade of getUpgrades()">
-    <game-button [name]="upgrade.name"
-                 [appGameTooltip]="getUpgradeTooltip(upgrade)"
-                 [disabled]="!canAffordUpgrade(upgrade)"
-                 (click)="onClickUpgrade(upgrade)"></game-button>
-  </div>
-
 </div>
