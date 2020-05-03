@@ -43,6 +43,7 @@ export class AbilityButtonComponent implements OnInit {
   update(dT: number) {
     this.tickCooldown(dT);
     this.updateCosts();
+    this.updateRequirementTip();
   }
 
   tickCooldown(dT: number) {
@@ -67,12 +68,27 @@ export class AbilityButtonComponent implements OnInit {
     }
   }
 
+  updateRequirementTip() {
+    if (this.upgradeRequired()) {
+      this.tooltip.desc = 'You do not have the technology to do this yet.';
+    }
+    else {
+      this.tooltip.desc = this.ability.desc;
+    }
+  }
+
   getCooldownPercent() {
     if (this.ability.cooldown == 0) {return 0;}
     return this.cooldown * 100 / this.ability.cooldown;
   }
 
-  canAfford() {
+  canDo(): boolean {
+    if (!this.canAfford()) {return false;}
+    if (this.upgradeRequired()) {return false;}
+    return true;
+  }
+
+  canAfford(): boolean {
     if (!this._resourceService.canAfford(this.costs)) {return false;}
     if (this.costs.has('drones')) {
       return (this._actionService.canAffordDroneCost(this.costs.get('drones').amount));
@@ -80,9 +96,15 @@ export class AbilityButtonComponent implements OnInit {
     return true;
   }
 
+  upgradeRequired(): boolean {
+    if (this.ability.upgradeNeeded == '') {return false;}
+    if (this._researchService.isUpgradeCompleted(this.ability.upgradeNeeded)) {return false;}
+    return true;
+  }
+
   onClick() {
     if (this.ability == null) {return;}
-    if (!this.canAfford()) {return;}
+    if (!this.canDo()) {return;}
     this._resourceService.spend(this.costs);
     this.cooldown = this.ability.cooldown;
     this.ability.actions.forEach(a => {
