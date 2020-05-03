@@ -1,6 +1,7 @@
 export class ResearchDiscipline {
     static baseKnowledgeCost: number = 35;
     static baseTheoryCost: number = 20;
+    static baseResearchPerSec: number = 1.12;
     static knowledgeExpCost: number = Math.sqrt(18);
 
     name: string;

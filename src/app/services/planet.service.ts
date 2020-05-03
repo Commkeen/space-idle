@@ -194,7 +194,7 @@ export class PlanetService {
       regionInteraction.surveyProgress -= surveyProgressNeeded;
       regionInteraction.surveyLevel++;
       regionInteraction.nextSurveyLevelCost = regionInteraction.nextSurveyLevelCost * regionDef.surveyCostMultiplier;
-      this._researchService.addTheory('Planetary Survey', 10);
+      this._researchService.addTheory('Planetary Survey', regionInteraction.surveyLevel * 2);
       this.regionChanged.next(this.getRegion(regionId, planetInstanceId));
     }
   }

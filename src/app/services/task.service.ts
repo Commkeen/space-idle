@@ -6,6 +6,7 @@ import { PlanetService } from './planet.service';
 import { FeatureAction } from '../staticData/actionDefinitions';
 import { ActionService } from './action.service';
 import { Feature } from '../models/planet';
+import { ResearchDiscipline } from '../staticData/researchDefinitions';
 
 @Injectable({
   providedIn: 'root'
@@ -101,7 +102,7 @@ export class TaskService {
     const planetId = task.planetId;
     const regionId = task.regionId;
 
-    this._planetService.surveyRegion(0.001*dT, regionId, planetId);
+    this._planetService.surveyRegion(0.001*dT*1.12, regionId, planetId);
     task.needed = this._planetService.getSurveyProgressNeeded(regionId, planetId);
     task.progress = this._planetService.getPlanetInteractionModel(planetId).regions.getRegion(regionId).surveyProgress;
   }
@@ -109,7 +110,7 @@ export class TaskService {
   tickResearchTask(task: ResearchTask, dT: number) {
     const discipline = task.discipline;
     const theoryBonus = this._researchService.theoryBonus(discipline);
-    this._researchService.addKnowledge(discipline, 0.001*theoryBonus*dT);
+    this._researchService.addKnowledge(discipline, ResearchDiscipline.baseResearchPerSec*theoryBonus*dT*0.001);
     task.needed = this._researchService.knowledgeNeeded(discipline);
     task.progress = this._researchService.getProgress(discipline).knowledgeProgress;
   }
