@@ -4,7 +4,7 @@
       <div class="region" *ngFor="let region of regionList">
         <div fxLayout="row" class="region-header">
           <div class="region-left-col" fxFlex="nogrow">
-            <div class="region-title">{{region.name}}</div>
+            <div class="region-title" [appGameTooltip]="region.tooltip">{{region.name}}</div>
             <div class="region-drone-count" *ngIf="showDroneCounts(region)">Drones: {{region.dronesAssigned}}/{{region.droneSlots}}</div>
             <div [ngStyle]="{'width': '80%'}">
               <game-button [appGameTooltip]="droneHubTooltip(region)"
@@ -34,7 +34,7 @@
             <div class="feature" fxLayout="row" *ngFor="let feature of region.features">
               <div class="feature-active" fxLayout="row" *ngIf="feature.active">
                 <div class="feature-left-col" fxFlex="nogrow">
-                  <div class="feature-name">{{feature.name}}</div>
+                  <div class="feature-name" [appGameTooltip]="feature.tooltip">{{feature.name}}</div>
                   <div class="feature-drone-control" *ngIf="showDroneControl(feature)">
                     <span class="feature-drone-decrement"
                           [ngClass]="{'hidden' : !canUnassignDrone(region, feature)}"
@@ -54,7 +54,7 @@
                   </div>
                 </div>
               </div>
-              <div class="feature-hidden" *ngIf="feature.hintActive">
+              <div class="feature-hidden" *ngIf="feature.hintActive" [appGameTooltip]="feature.tooltip">
                 ---{{feature.surveyNeeded}}---
               </div>
             </div>

@@ -176,6 +176,7 @@ export class PiTerrainComponent implements OnInit {
   }
 
   private createRegionListItem(region: Region, regionInteraction: RegionInteraction): RegionListItem {
+    const def = this.planetService.getRegionDefinition(region.name);
     const item = new RegionListItem();
     item.name = region.name;
     item.id = region.instanceId;
@@ -186,6 +187,9 @@ export class PiTerrainComponent implements OnInit {
     item.dronesAssigned = regionInteraction.assignedDrones;
     item.canGather = item.outpostLevel > 0;
     item.droneHubCost = this.planetService.getDroneHubCost(region.instanceId);
+    item.tooltip = new TooltipViewModel();
+    item.tooltip.name = region.name;
+    item.tooltip.desc = def.description;
 
     // Get all hidden features, and find the lowest survey required one,
     // So we know which level to cut off hints at
@@ -215,6 +219,14 @@ export class PiTerrainComponent implements OnInit {
     item.droneSlots = featureDef.droneSlots;
     item.dronesAssigned = featureInteraction.assignedDrones;
     item.hintActive = item.surveyNeeded > surveyLevel && item.surveyNeeded <= hintLevel;
+    item.tooltip = new TooltipViewModel();
+    if (item.active) {
+      item.tooltip.name = item.name;
+      item.tooltip.desc = featureDef.description;
+    }
+    else {
+      item.tooltip.desc = 'Survey the region to discover this feature.';
+    }
     featureDef.abilities.forEach((a, i) => {
       if (a.visibleUpgrade != '' && !this.researchService.isUpgradeCompleted(a.visibleUpgrade)) {return;}
       const ability = new AbilityItem();
@@ -271,6 +283,7 @@ export class RegionListItem {
   public droneHubCost: ResourceCollection;
   public features: FeatureListItem[] = [];
   public canGather = false;
+  public tooltip: TooltipViewModel;
 }
 
 export class FeatureListItem {
@@ -286,6 +299,7 @@ export class FeatureListItem {
   public canGather: boolean;
   public abilities: AbilityItem[] = [];
   public tasks: TaskItem[] = [];
+  public tooltip: TooltipViewModel;
 }
 
 export class AbilityItem {
