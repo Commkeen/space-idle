@@ -152,22 +152,22 @@ export const SHIP_ABILITY_LIBRARY: ShipAbilityDefinition[] = [
   .setHiddenFlag('droneRelayRepaired'),
   new ShipAbilityDefinition('Repair Hull')
   .addCost('silksteel', 50)
-  .setVisibleNeededResearch('Material Science', 6)
+  .setVisibleNeededResearch('Material Science', 5)
   .setsFlag('hullRepaired')
   .setHiddenFlag('hullRepaired'),
   new ShipAbilityDefinition('Repair Navigation Systems')
   .addCost('cogitex', 50)
-  .setVisibleNeededResearch('Electronics', 6)
+  .setVisibleNeededResearch('Electronics', 5)
   .setsFlag('navRepaired')
   .setHiddenFlag('navRepaired'),
   new ShipAbilityDefinition('Refit Drive Core')
   .addCost('hyperlattice', 50)
-  .setVisibleNeededResearch('Hypertopology', 2)
+  .setVisibleNeededResearch('Hypertopology', 1)
   .setsFlag('driveRepaired')
   .setHiddenFlag('driveRepaired'),
   new ShipAbilityDefinition('Refit Inertial Dampeners')
   .addCost('gravalloy', 50)
-  .setVisibleNeededResearch('Gravitics', 2)
+  .setVisibleNeededResearch('Gravitics', 1)
   .setsFlag('gravRepaired')
   .setHiddenFlag('gravRepaired'),
   new ShipAbilityDefinition('Launch Ship')
