@@ -153,6 +153,13 @@ export class FeatureDefinition {
     task.resultsOnComplete.push(action);
     return this;
   }
+
+  public addTaskRemoveResult(taskName: string): FeatureDefinition {
+    const task = this.tasks.find(x => x.name === taskName);
+    const action = new RemoveFeatureAction();
+    task.resultsOnComplete.push(action);
+    return this;
+  }
 }
 
 export const FEATURE_LIBRARY: FeatureDefinition[] = [
@@ -194,6 +201,37 @@ export const FEATURE_LIBRARY: FeatureDefinition[] = [
     .addResourceAction('Salvage', 'nanochips', 47)
     .addResearchAction('Salvage', 'Electronics', 20)
     .addRemoveFeatureAction('Salvage'),
+
+  new FeatureDefinition('tectonic activity',
+    'The geologic activity in this area could provide insight into new survey techniques.')
+    .addTask('Study', 100)
+    .addTaskResearchResult('Study', 'Planetary Survey', 20)
+    .addTaskRemoveResult('Study'),
+  new FeatureDefinition('resonance field',
+    'Electromagnetic signals in this area are distorted and re-broadcast.  This effect could enhance drone control signals.')
+    .addTask('Study', 100)
+    .addTaskResearchResult('Study', 'Drone Control', 20)
+    .addTaskRemoveResult('Study'),
+  new FeatureDefinition('energy signature',
+    'Energy readings in this area are inconsistent with the rest of the region.')
+    .addTask('Study', 100)
+    .addTaskResearchResult('Study', 'Power Systems', 20)
+    .addTaskRemoveResult('Study'),
+  new FeatureDefinition('electric storm',
+    'A powerful storm is creating electromagnetic interference in a wide area.')
+    .addTask('Study', 120)
+    .addTaskResearchResult('Study', 'Power Systems', 20)
+    .addTaskRemoveResult('Study'),
+  new FeatureDefinition('graviton emissions',
+    'Scanners are picking up faint graviton emissions inconsistent with the planet\'s mass.')
+    .addTask('Study', 150)
+    .addTaskResearchResult('Study', 'Gravitics', 20)
+    .addTaskRemoveResult('Study'),
+  new FeatureDefinition('spatial distortion',
+    'An anomalous force is causing disruptions in local spacetime.')
+    .addTask('Study', 150)
+    .addTaskResearchResult('Study', 'Gravitics', 20)
+    .addTaskRemoveResult('Study'),
 
   new FeatureDefinition('energy cell',
     'A mostly intact energy storage cell.  This could be refurbished and put to use.')
@@ -301,8 +339,14 @@ export const FEATURE_LIBRARY: FeatureDefinition[] = [
   .setDroneSlots(15),
 
   new FeatureDefinition('glittersand spout',
-                        'An unknown process, either geologic or organic, causes glittersand to erupt from the desert\'s depths at semi-regular intervals',
-                        'crawler'),
+                        'An unknown process, either geologic or organic, causes glittersand to erupt from the desert\'s depths at semi-regular intervals')
+  .addAbility('Build Crawler', 'duranium', 250)
+  .addTransformAction('Build Crawler', 'glittersand crawler')
+  .addResearchAction('Build Crawler', 'Resource Extraction', 10)
+  .abilityVisibleUpgrade('Build Crawler', 'Particulate Enrichment'),
+  new FeatureDefinition('glittersand crawler', 'Harvests glittersand from desert spouts.')
+  .addGather('glittersand', 5, 50)
+  .setDroneSlots(12),
 
   new FeatureDefinition('helium clathrates',
                         'The ice here has formed tight crystals which trap molecules of helium within their structure.')
@@ -313,6 +357,16 @@ export const FEATURE_LIBRARY: FeatureDefinition[] = [
   new FeatureDefinition('helium extractor', 'Extracts helium from ice fields.')
   .addGather('gas', 6, 50)
   .setDroneSlots(15),
+
+  new FeatureDefinition('argon clathrates',
+                        'The ice here has formed tight crystals which trap molecules of argon within their structure.')
+  .addAbility('Build Extractor', 'duranium', 250)
+  .addTransformAction('Build Extractor', 'argon extractor')
+  .addResearchAction('Build Extractor', 'Resource Exploitation', 5)
+  .abilityVisibleUpgrade('Build Extractor', 'Clathrate Extraction'),
+  new FeatureDefinition('argon extractor', 'Extracts argon from ice fields.')
+  .addGather('gas', 15, 50)
+  .setDroneSlots(18),
 
   new FeatureDefinition('charybdin crystals',
                         'Scans of this deep-sea mineral indicate its structure extends beyond three-dimensional space.')
