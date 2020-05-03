@@ -33,10 +33,12 @@ export class SiResearchComponent implements OnInit {
       if (!discipline.revealAtStart && progress.theoryLevel < 1) {return;}
       const item: ResearchListItem = {
         name: discipline.name,
+        knowledgeTooltip: new TooltipViewModel(),
         theoryTooltip: new TooltipViewModel(),
         progress: progress,
         nextAdvanceLevel: this._researchService.getNextLevelWithAdvancement(discipline.name)
       };
+      item.knowledgeTooltip.desc = discipline.desc;
       item.theoryTooltip.desc = 'Theory improves your research speed.  ' + discipline.theoryDesc;
       this.researchList.push(item);
     });
@@ -53,6 +55,7 @@ export class SiResearchComponent implements OnInit {
 
 export class ResearchListItem {
   public name: string;
+  public knowledgeTooltip: TooltipViewModel;
   public theoryTooltip: TooltipViewModel;
   public progress: ResearchProgress;
   public nextAdvanceLevel: number;

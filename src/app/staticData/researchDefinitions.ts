@@ -70,7 +70,7 @@ export const RESEARCH_LIBRARY: ResearchDiscipline[] = [
     .addUpgrade(3, 'Electrodynamics')
     .addUpgrade(4, 'Solar Power'),
   new ResearchDiscipline('Gravitics')
-  .setTheoryDesc('Gain theory by studying spatial anomalies.')
+  .setTheoryDesc('Gain theory by studying particle anomalies.')
     .addUpgrade(1, 'Artificial Gravity'),
   new ResearchDiscipline('Planetary Survey')
   .setDesc('Survey scannning is 20% faster per level.')
