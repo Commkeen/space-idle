@@ -59,6 +59,7 @@ export class RegionDefinition {
 export const REGION_LIBRARY: RegionDefinition[] = [
   new RegionDefinition('Plains').setDescription('Rolling plains.')
     .setSurveyBaseCost(10)
+    .setSurveyCostMultiplier(1.6)
     .addDroneHubCost('metal', 24),
   new RegionDefinition('Hills').setDescription('Geographically complex region rich in minerals.')
   .setSurveyBaseCost(25)

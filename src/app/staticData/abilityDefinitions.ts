@@ -135,13 +135,6 @@ export const SHIP_ABILITY_LIBRARY: ShipAbilityDefinition[] = [
   .addCost('silicate', 8)
   .addCooldown(8)
   .grantsResource('nanochips', 1),
-  new ShipAbilityDefinition('Electronics Research')
-  .addVisibleFlag('computerRepaired')
-  .addCost('nanochips', 20)
-  .addCooldown(5)
-  .grantsTheory('Electronics', 5)
-  .scalesWithTheory('Electronics', 2.4)
-  .setVisibleNeededResearch('Electronics', 2),
   new ShipAbilityDefinition('Repair Fabricator')
   .addCost('metal', 20)
   .addVisibleFlag('shuttleFound')

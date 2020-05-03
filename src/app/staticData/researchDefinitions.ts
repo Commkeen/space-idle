@@ -2,7 +2,7 @@ export class ResearchDiscipline {
     static baseKnowledgeCost: number = 24;
     static baseTheoryCost: number = 20;
     static baseResearchPerSec: number = 1.43;
-    static knowledgeExpCost: number = Math.sqrt(18);
+    static knowledgeExpCost: number = Math.sqrt(14);
 
     name: string;
     desc: string = '';
@@ -92,9 +92,9 @@ export const RESEARCH_LIBRARY: ResearchDiscipline[] = [
     .setRevealAtStart()
     .addUpgrade(1, 'Mineral Extraction')
     .addUpgrade(2, 'Liquid Extraction')
-    .addUpgrade(2, 'Gas Extraction')
-    .addUpgrade(3, 'Clathrate Extraction')
-    .addUpgrade(4, 'Particulate Enrichment')
-    .addUpgrade(5, 'Crystal Extraction'),
+    .addUpgrade(3, 'Gas Extraction')
+    .addUpgrade(4, 'Clathrate Extraction')
+    .addUpgrade(5, 'Particulate Enrichment')
+    .addUpgrade(6, 'Crystal Extraction'),
   new ResearchDiscipline('Anomaly Scanning')
 ];

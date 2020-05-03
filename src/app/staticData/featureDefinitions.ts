@@ -230,7 +230,7 @@ export const FEATURE_LIBRARY: FeatureDefinition[] = [
   new FeatureDefinition('spatial distortion',
     'An anomalous force is causing disruptions in local spacetime.')
     .addTask('Study', 150)
-    .addTaskResearchResult('Study', 'Gravitics', 20)
+    .addTaskResearchResult('Study', 'Hypertopology', 20)
     .addTaskRemoveResult('Study'),
 
   new FeatureDefinition('energy cell',
