@@ -72,6 +72,7 @@ export const RESEARCH_LIBRARY: ResearchDiscipline[] = [
     .setRevealAtStart()
     .addUpgrade(1, 'Mineral Extraction')
     .addUpgrade(2, 'Liquid Extraction')
+    .addUpgrade(2, 'Gas Extraction')
     .addUpgrade(3, 'Clathrate Extraction')
     .addUpgrade(4, 'Particulate Enrichment')
     .addUpgrade(5, 'Crystal Extraction'),
