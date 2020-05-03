@@ -18,7 +18,7 @@ export class RegionDefinition {
   public surveyBaseCost: number = 10;
   public surveyCostMultiplier: number = 2.2;
   public droneHubBaseCost: ResourceCollection = new ResourceCollection();
-  public droneHubCostMultiplier: number = 2.5;
+  public droneHubCostMultiplier: number = 1.5;
   public infrastructure: InfrastructureDefinition[] = [];
 
   constructor(

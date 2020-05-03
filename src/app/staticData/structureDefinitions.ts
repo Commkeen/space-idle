@@ -71,15 +71,15 @@ export class StructureDefinition {
 export const STRUCTURE_LIBRARY: StructureDefinition[] = [
     // Refinement
     new StructureDefinition('Smelter', 'refine').addPrereq('Construction')
-            .addCost('metal', 20)
-            .addConsumption('power', 1).addConsumption('metal', 5)
-            .addConsumption('hydrocarbon', 2)
-            .addProduction('duranium', 0.4),
-    new StructureDefinition('Electronics Lab', 'refine').addPrereq('Construction')
+            .addCost('metal', 100)
+            .addConsumption('power', 1).addConsumption('metal', 3)
+            .addConsumption('hydrocarbon', 1.2)
+            .addProduction('duranium', 0.3),
+    new StructureDefinition('Electronics Lab', 'refine').addPrereq('Automated Fabrication')
             .addCost('duranium', 10)
             .addConsumption('power', 2).addConsumption('silicate', 1)
             .addConsumption('rareMetal', 0.15)
-            .addProduction('nanochips', 0.3),
+            .addProduction('nanochips', 0.2),
     new StructureDefinition('Cryodistillery', 'refine').addPrereq('Clathrate Extraction')
             .addCost('duranium', 30)
             .addConsumption('power', 3).addConsumption('gas', 0.5)

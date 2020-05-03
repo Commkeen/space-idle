@@ -132,7 +132,10 @@ export class PlanetService {
     const structure = interactionModel.structures.find(x => x.name === structureName);
     const def = this.getStructureDefinition(structureName);
     const multiplier = Math.pow(def.costMultiplier, structure.amount);
-    return def.baseBuildCost.withMultiplier(multiplier);
+    const multipliedCost = def.baseBuildCost.withMultiplier(multiplier);
+    const reduction = Math.pow(0.95, this._researchService.getProgress('Material Science').knowledgeLevel);
+    multipliedCost.applyMultiplier(reduction);
+    return multipliedCost;
   }
 
   canBuildStructure(structureName: string, planetInstanceId?: number): boolean {
@@ -303,6 +306,8 @@ export class PlanetService {
     regionInteraction.outpostLevel++;
     regionInteraction.droneSlots++;
     regionInteraction.nextOutpostLevelCost = regionInteraction.nextOutpostLevelCost.withMultiplier(regionDef.droneHubCostMultiplier);
+
+    this._researchService.addTheory('Drone Control', regionInteraction.outpostLevel * 2);
   }
 
   getDroneHubCost(regionId: number, planetInstanceId?: number): ResourceCollection {
@@ -319,7 +324,8 @@ export class PlanetService {
       regionInteraction.nextOutpostLevelCost = cost;
     }
 
-    return cost;
+    const costReduction = Math.pow(0.95, this._researchService.getProgress('Drone Control').knowledgeLevel);
+    return regionInteraction.nextOutpostLevelCost.withMultiplier(costReduction);
   }
 
   getFeatureDroneSlots(feature: Feature) {

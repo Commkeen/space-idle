@@ -1,7 +1,7 @@
 export class ResearchDiscipline {
-    static baseKnowledgeCost: number = 35;
+    static baseKnowledgeCost: number = 24;
     static baseTheoryCost: number = 20;
-    static baseResearchPerSec: number = 1.12;
+    static baseResearchPerSec: number = 1.43;
     static knowledgeExpCost: number = Math.sqrt(18);
 
     name: string;
@@ -48,6 +48,7 @@ export class ResearchDiscipline {
 
 export const RESEARCH_LIBRARY: ResearchDiscipline[] = [
   new ResearchDiscipline('Material Science')
+    .setDesc('Structures cost 5% less (diminishing) per level.')
     .setTheoryDesc('Gain theory by salvaging materials.')
     .setRevealAtStart()
     .addUpgrade(1, 'Construction')
@@ -63,6 +64,7 @@ export const RESEARCH_LIBRARY: ResearchDiscipline[] = [
   .setTheoryDesc('Gain theory by studying spatial anomalies.')
     .addUpgrade(1, 'Extradimensional Synthesis'),
   new ResearchDiscipline('Power Systems')
+  .setDesc('Ship energy recharges 20% faster per level.')
   .setTheoryDesc('Gain theory by salvaging power and energy systems.')
     .addUpgrade(1, 'Fueled Generators')
     .addUpgrade(3, 'Electrodynamics')
@@ -71,6 +73,7 @@ export const RESEARCH_LIBRARY: ResearchDiscipline[] = [
   .setTheoryDesc('Gain theory by studying spatial anomalies.')
     .addUpgrade(1, 'Artificial Gravity'),
   new ResearchDiscipline('Planetary Survey')
+  .setDesc('Survey scannning is 20% faster per level.')
   .setTheoryDesc('Gain theory by surveying regions.')
     .addUpgrade(2, 'Maritime Survey')
     .addUpgrade(3, 'Mountain Survey')
@@ -78,11 +81,13 @@ export const RESEARCH_LIBRARY: ResearchDiscipline[] = [
     .addUpgrade(5, 'Arctic Survey')
     .addUpgrade(6, 'Undersea Survey'),
   new ResearchDiscipline('Drone Control')
+  .setDesc('Drone hubs cost 5% less (diminishing) per level.')
   .setTheoryDesc('Gain theory by building drone hubs.')
     .addUpgrade(1, 'Bandwidth Multiplexing')
     .addUpgrade(2, 'Adaptive Tooling')
     .addUpgrade(3, 'Heuristic Processors'),
   new ResearchDiscipline('Resource Exploitation')
+  .setDesc('Drones collect 10% extra resources/sec per level.')
   .setTheoryDesc('Gain theory by building resource extraction improvements.')
     .setRevealAtStart()
     .addUpgrade(1, 'Mineral Extraction')

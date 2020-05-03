@@ -102,7 +102,7 @@ export class TaskService {
     const planetId = task.planetId;
     const regionId = task.regionId;
 
-    this._planetService.surveyRegion(0.001*dT*1.12, regionId, planetId);
+    this._planetService.surveyRegion(0.001*dT*1.32, regionId, planetId);
     task.needed = this._planetService.getSurveyProgressNeeded(regionId, planetId);
     task.progress = this._planetService.getPlanetInteractionModel(planetId).regions.getRegion(regionId).surveyProgress;
   }

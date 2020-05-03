@@ -9,13 +9,14 @@ import { Feature, Region } from '../models/planet';
 import { EXPLOIT_LIBRARY } from '../staticData/exploitDefinitions';
 import { FEATURE_LIBRARY } from '../staticData/featureDefinitions';
 import { BaseProductionEffect, BaseConsumptionEffect, Effect } from '../staticData/effectDefinitions';
+import { ResearchService } from './research.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SimulationService {
 
-  constructor(private _resourceService: ResourceService, private _timeService: TimeService, private _planetService: PlanetService) { }
+  constructor(private _researchService: ResearchService, private _resourceService: ResourceService, private _timeService: TimeService, private _planetService: PlanetService) { }
 
   init() {
     this._timeService.tick.subscribe(x => this.update(x));
@@ -55,7 +56,9 @@ export class SimulationService {
   }
 
   private updateEnergy(dT: number) {
-    this._resourceService.globalResources.add('energy', this._resourceService.energyRate * (dT/1000));
+    let rate = this._resourceService.energyRate;
+    rate += rate * this._researchService.getProgress('Power Systems').knowledgeLevel * 0.2;
+    this._resourceService.globalResources.add('energy', rate * (dT/1000));
   }
 
   private updatePlanet(dT: number, instanceId: number) {
@@ -91,9 +94,20 @@ export class SimulationService {
   private updateFeatureProductionRate(feature: Feature, featureInteraction: FeatureInteraction,
                                       assignedDrones: number, resources: ResourceCollection) {
     const def = FEATURE_LIBRARY.find(x => feature.name === x.name);
+    let droneRate = 0.05;
+    if (this._researchService.isUpgradeCompleted('Bandwidth Multiplexing')) {
+      droneRate += 0.10;
+    }
+    if (this._researchService.isUpgradeCompleted('Adaptive Tooling')) {
+      droneRate += 0.15;
+    }
+    if (this._researchService.isUpgradeCompleted('Heuristic Processors')) {
+      droneRate += 0.30;
+    }
+    const researchMultiplier = 1 + (this._researchService.getProgress('Resource Exploitation').knowledgeLevel * 0.1);
     if (def.hasGather && assignedDrones > 0) {
       def.gatherRates.resources.forEach(x => {
-        resources.addProductionRate(x.resource, x.amount * assignedDrones * 0.05);
+        resources.addProductionRate(x.resource, x.amount * assignedDrones * droneRate * researchMultiplier);
       });
     }
 
