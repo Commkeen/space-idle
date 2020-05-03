@@ -1,4 +1,4 @@
-import { Effect } from "./effectDefinitions";
+import { Effect, BaseProductionEffect } from "./effectDefinitions";
 import { ResourceCollection } from "../models/resource";
 import { FeatureAction, TransformFeatureAction, FlagAction, AddTheoryAction, GatherFeatureAction, AddResourceAction, RemoveFeatureAction, AddMaxResourceAction } from "./actionDefinitions";
 import { FeatureAbilityDefinition } from "./abilityDefinitions";
@@ -27,18 +27,24 @@ export class FeatureDefinition {
     }
   }
 
-  public addGather(resource: string, amount: number, cooldown: number = 1.5): FeatureDefinition {
+  public addGather(resource: string, amount: number, cooldown: number = 2.5): FeatureDefinition {
     if (!this.hasGather) {
       const gatherAbility = new FeatureAbilityDefinition();
       gatherAbility.name = 'Gather';
       gatherAbility.addAction(new GatherFeatureAction());
-      gatherAbility.addCost('energy', 2);
+      gatherAbility.addCost('energy', 3);
       gatherAbility.addCooldown(cooldown);
       this.abilities.push(gatherAbility);
       this.droneSlots = 1;
       this.hasGather = true;
     }
     this.gatherRates.add(resource, amount);
+    return this;
+  }
+
+  public addPower(amount: number): FeatureDefinition {
+    const powerEffect = new BaseProductionEffect('power', amount);
+    this.effects.push(powerEffect);
     return this;
   }
 
@@ -147,16 +153,19 @@ export const FEATURE_LIBRARY: FeatureDefinition[] = [
     'A crater in the distance appears to have been recently made.')
     .addAbility('Search', 'drones', 1)
     .addTransformAction('Search', 'crashed shuttle')
+    .addMaxResourceAction('Search', 'energy', 5)
     .addFlagAction('Search', 'shuttleFound'),
   new FeatureDefinition('crashed shuttle',
     'The ship\'s reserve power is still functioning, along with basic fabrication systems.  It may be possible to repair the computer.')
+    .addPower(5)
     .addAbility('Repair Computer', 'nanochips', 5)
     .addAbilityCost('Repair Computer', 'metal', 100)
     .addTransformAction('Repair Computer', 'downed shuttle')
     .addFlagAction('Repair Computer', 'computerRepaired')
     .addFlagAction('Repair Computer', 'showResearchTab'),
   new FeatureDefinition('downed shuttle',
-    'With core systems repaired, the shuttle may be able to reach space with the help of a launch facility.'),
+    'With core systems repaired, the shuttle may be able to reach space with the help of a launch facility.')
+    .addPower(5),
 
   new FeatureDefinition('wrecked hull plating',
     'This shredded plating is mostly useless, but some metals can be extracted from the remains.')
@@ -199,7 +208,7 @@ export const FEATURE_LIBRARY: FeatureDefinition[] = [
   .setDroneSlots(4),
 
   new FeatureDefinition('silver vein', 'A native deposit of metallic silver.')
-  .addGather('metal', 18, 12)
+  .addGather('metal', 14, 12)
   .addGather('rareMetal', 0.12)
   .addAbility('Build Mine', 'metal', 250)
   .addTransformAction('Build Mine', 'silver mineshaft')
@@ -212,7 +221,8 @@ export const FEATURE_LIBRARY: FeatureDefinition[] = [
   new FeatureDefinition('corundum deposit', 'A deposit of the semi-precious crystalline mineral corundum.')
   .addGather('silicate', 6)
   .addAbility('Build Mine', 'metal', 150)
-  .addTransformAction('Build Mine', 'corundum quarry'),
+  .addTransformAction('Build Mine', 'corundum quarry')
+  .abilityVisibleUpgrade('Build Mine', 'Mineral Extraction'),
   new FeatureDefinition('corundum quarry', 'A quarry for collecting minerals from a corundum deposit.')
   .addGather('silicate', 30)
   .setDroneSlots(6),

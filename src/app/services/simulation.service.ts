@@ -31,9 +31,13 @@ export class SimulationService {
     this._resourceService.globalResources.add('energy', 10);
 
     this._resourceService.globalResources.add('metal', 5);
-    //this._resourceService.globalResources.add('silicate', 500);
-    //this._resourceService.globalResources.add('rareMetal', 500);
-    //this._resourceService.globalResources.add('hydrocarbon', 500);
+
+    //this._resourceService.globalResources.add('drones', 50);
+    //this._resourceService.globalResources.add('metal', 5000);
+    //this._resourceService.globalResources.add('silicate', 5000);
+    //this._resourceService.globalResources.add('rareMetal', 5000);
+    //this._resourceService.globalResources.add('hydrocarbon', 5000);
+    //this._resourceService.globalResources.add('nanochips', 5000);
   }
 
   reset() {
@@ -87,21 +91,27 @@ export class SimulationService {
   private updateFeatureProductionRate(feature: Feature, featureInteraction: FeatureInteraction,
                                       assignedDrones: number, resources: ResourceCollection) {
     const def = FEATURE_LIBRARY.find(x => feature.name === x.name);
-    if (!def.hasGather || assignedDrones <= 0) {return;}
-    def.gatherRates.resources.forEach(x => {
-      resources.addProductionRate(x.resource, x.amount * 0.05);
-    });
+    if (def.hasGather && assignedDrones <= 0) {
+      def.gatherRates.resources.forEach(x => {
+        resources.addProductionRate(x.resource, x.amount * assignedDrones * 0.05);
+      });
+    }
+
+    def.effects.forEach(e => {
+      if (e instanceof BaseProductionEffect) {
+        resources.addProductionRate(e.resource, e.amount);
+      }
+      if (e instanceof BaseConsumptionEffect) {
+        resources.addConsumptionRate(e.resource, e.amount);
+      }
+    })
   }
 
   private getActiveEffectsForRegion(region: Region, regionInteraction: RegionInteraction): Effect[] {
     let result: Effect[] = [];
     region.features.forEach(feature => {
       const featureDef = FEATURE_LIBRARY.find(x => feature.name === x.name);
-      const exploitDef = EXPLOIT_LIBRARY.find(x => featureDef.exploitName === x.name);
       result = result.concat(featureDef.effects);
-      if (exploitDef && regionInteraction) {
-        result = result.concat(exploitDef.effects);
-      }
     });
     return result;
   }

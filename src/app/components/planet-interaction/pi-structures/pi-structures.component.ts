@@ -28,6 +28,10 @@ export class PiStructuresComponent implements OnInit {
     this.updateBuildingList();
   }
 
+  canBuild(building: BuildingListItem): boolean {
+    return this.resourceService.canAfford(building.costs);
+  }
+
   getSelectedPlanet(): Planet {
     return this.planetService.getSelectedPlanet();
   }
@@ -55,15 +59,16 @@ export class PiStructuresComponent implements OnInit {
       const structureDef = STRUCTURE_LIBRARY.find(x => x.name === element.name);
       const visible = this.researchService.areUpgradesCompleted(structureDef.prereqs);
       let listItem = this.buildingList.find(x => x.name === element.name);
-      const canBuild = this.planetService.canBuildStructure(element.name);
+      const cost = this.planetService.getNextStructureCost(element.name);
       const canActivate = this.planetService.canActivateStructure(element.name);
 
       if (!isNullOrUndefined(listItem)) {
-        listItem.canBuild = canBuild;
         listItem.canActivate = canActivate;
         listItem.builtNumber = element.amount;
         listItem.activeNumber = element.active;
         listItem.visible = visible;
+        listItem.costs = cost;
+        this.updateTooltip(listItem);
       } else if (visible) {
         dirtyList = true;
       }
@@ -71,16 +76,17 @@ export class PiStructuresComponent implements OnInit {
         listItem = {
           name: element.name,
           sortCategory: structureDef.sortCategory,
-          costs: structureDef.baseBuildCost,
+          costs: cost,
           production: structureDef.getProductionRates(),
           consumption: structureDef.getConsumptionRates(),
           builtNumber: element.amount,
           activeNumber: element.active,
           showActivateControls: structureDef.hasConsumption(),
-          canBuild: canBuild,
           canActivate: canActivate,
-          visible: visible
+          visible: visible,
+          tooltip: null
         };
+        this.updateTooltip(listItem);
         if (listItem.visible) {
           newBuildingList.push(listItem);
         }
@@ -104,14 +110,13 @@ export class PiStructuresComponent implements OnInit {
     return buttonName;
   }
 
-  getTooltip(building: BuildingListItem): TooltipViewModel {
-    const tooltip = new TooltipViewModel();
-    tooltip.name = building.name;
-    tooltip.desc = '';
-    tooltip.costs = building.costs;
-    tooltip.consumption = building.consumption;
-    tooltip.production = building.production;
-    return tooltip;
+  updateTooltip(building: BuildingListItem) {
+    if (building.tooltip == null) {building.tooltip = new TooltipViewModel();}
+    building.tooltip.name = building.name;
+    building.tooltip.desc = '';
+    building.tooltip.costs = building.costs;
+    building.tooltip.consumption = building.consumption;
+    building.tooltip.production = building.production;
   }
 
   onBuildItemClicked(buildItemName: string) {
@@ -153,6 +158,6 @@ class BuildingListItem {
   public activeNumber: number;
   public showActivateControls: boolean;
   public canActivate: boolean;
-  public canBuild: boolean;
   public visible: boolean;
+  public tooltip: TooltipViewModel;
 }

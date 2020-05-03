@@ -39,10 +39,12 @@ export class PlanetInteractionComponent implements OnInit {
   }
 
   powerUsed(): number {
-    return this.resourceService.getConsumption('power');
+    const interaction = this.planetService.getPlanetInteractionModel();
+    return interaction.localResources.getConsumption('power');
   }
 
   powerAvailable(): number {
-    return this.resourceService.getProduction('power');
+    const interaction = this.planetService.getPlanetInteractionModel();
+    return interaction.localResources.getProduction('power');
   }
 }

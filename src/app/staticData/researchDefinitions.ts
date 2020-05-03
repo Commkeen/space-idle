@@ -52,8 +52,10 @@ export const RESEARCH_LIBRARY: ResearchDiscipline[] = [
     .addUpgrade(5, 'Synthetic Thought'),
   new ResearchDiscipline('Hypertopology')
     .addUpgrade(1, 'Extradimensional Synthesis'),
-  new ResearchDiscipline('High Energy Physics')
-    .addUpgrade(1, 'Electrodynamics'),
+  new ResearchDiscipline('Power Systems')
+    .addUpgrade(1, 'Fueled Generators')
+    .addUpgrade(3, 'Electrodynamics')
+    .addUpgrade(4, 'Solar Power'),
   new ResearchDiscipline('Gravitics')
     .addUpgrade(1, 'Artificial Gravity'),
   new ResearchDiscipline('Planetary Survey')

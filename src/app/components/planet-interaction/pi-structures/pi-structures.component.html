@@ -8,9 +8,9 @@
     </mat-button-toggle-group>
     <div class="structure-list">
       <div class="structure-item" *ngFor="let buildItem of getFilteredBuildingList(group.value)">
-        <game-button class="item-build-btn" [appGameTooltip]="getTooltip(buildItem)"
+        <game-button class="item-build-btn" [appGameTooltip]="buildItem.tooltip"
                       [name]="getButtonName(buildItem)"
-                      [disabled]="!buildItem.canBuild"
+                      [disabled]="!canBuild(buildItem)"
                       (click)="onBuildItemClicked(buildItem.name)"></game-button>
         <game-button class="item-deactivate-btn" [name]="'-'"
                     *ngIf="buildItem.showActivateControls"

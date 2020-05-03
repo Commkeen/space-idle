@@ -3,6 +3,7 @@ import { Effect, BaseProductionEffect, BaseConsumptionEffect } from './effectDef
 
 export class StructureDefinition {
     baseBuildCost: ResourceCollection = new ResourceCollection();
+    costMultiplier: number = 1.15;
     effects: Effect[] = [];
     prereqs: string[] = [];
 
@@ -68,11 +69,6 @@ export class StructureDefinition {
 }
 
 export const STRUCTURE_LIBRARY: StructureDefinition[] = [
-    // Gathering
-    new StructureDefinition('Mining Complex', 'gather').addCost('metal', 10).addConsumption('power', 1)
-            .addProduction('metal', 1).addProduction('rareMetal', 0.05),
-    new StructureDefinition('Scanner Array', 'gather').addCost('nanochips', 40).addConsumption('power', 2).addProduction('survey', 0.6),
-
     // Refinement
     new StructureDefinition('Smelter', 'refine').addPrereq('Construction')
             .addCost('metal', 20)
@@ -84,7 +80,7 @@ export const STRUCTURE_LIBRARY: StructureDefinition[] = [
             .addConsumption('power', 2).addConsumption('silicate', 1)
             .addConsumption('rareMetal', 0.15)
             .addProduction('nanochips', 0.3),
-    new StructureDefinition('Cryodistillery', 'refine').addPrereq('arcticSurveyUpgrade')
+    new StructureDefinition('Cryodistillery', 'refine').addPrereq('Clathrate Extraction')
             .addCost('duranium', 30)
             .addConsumption('power', 3).addConsumption('gas', 0.5)
             .addProduction('cryofluid', 0.6),
@@ -125,11 +121,11 @@ export const STRUCTURE_LIBRARY: StructureDefinition[] = [
             .addProduction('gravalloy', 0.8),
 
     // Power
-    new StructureDefinition('Combustion Reactor', 'power')
+    new StructureDefinition('Combustion Reactor', 'power').addPrereq('Fueled Generators')
             .addCost('metal', 10)
             .addConsumption('hydrocarbon', 1.5)
             .addProduction('power', 10),
-    new StructureDefinition('Solar Plant', 'power').addPrereq('Electrodynamics')
+    new StructureDefinition('Solar Plant', 'power').addPrereq('Solar Power')
             .addCost('duranium', 10).addCost('silicate', 100).addCost('ultraconductors', 5)
             .addProduction('power', 10)
 ];

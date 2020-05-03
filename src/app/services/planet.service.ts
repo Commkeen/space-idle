@@ -124,14 +124,19 @@ export class PlanetService {
     return true;
   }
 
-  canBuildStructure(structureName: string, planetInstanceId?: number): boolean {
+  getNextStructureCost(structureName: string, planetInstanceId?: number): ResourceCollection {
     if (!planetInstanceId) {
       planetInstanceId = this.getSelectedPlanet().instanceId;
     }
     const interactionModel = this.getPlanetInteractionModel(planetInstanceId);
     const structure = interactionModel.structures.find(x => x.name === structureName);
     const def = this.getStructureDefinition(structureName);
-    return this._resourceService.canAfford(def.baseBuildCost);
+    const multiplier = Math.pow(def.costMultiplier, structure.amount);
+    return def.baseBuildCost.withMultiplier(multiplier);
+  }
+
+  canBuildStructure(structureName: string, planetInstanceId?: number): boolean {
+    return this._resourceService.canAfford(this.getNextStructureCost(structureName, planetInstanceId));
   }
 
   canActivateStructure(structureName: string, planetInstanceId?: number): boolean {
@@ -159,8 +164,8 @@ export class PlanetService {
   buildStructure(planetId: number, structureName: string): void {
     const interactionModel = this.getPlanetInteractionModel(planetId);
     const structure = interactionModel.structures.find(x => x.name === structureName);
-    const structureDef = this.getStructureDefinition(structureName);
-    if (!this._resourceService.spend(structureDef.baseBuildCost)) { return; }
+    const cost = this.getNextStructureCost(structureName, planetId);
+    if (!this._resourceService.spend(cost)) { return; }
     structure.amount += 1;
     if (this.canActivateStructure(structureName)) {
       structure.active += 1;
