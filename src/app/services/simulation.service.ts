@@ -91,7 +91,7 @@ export class SimulationService {
   private updateFeatureProductionRate(feature: Feature, featureInteraction: FeatureInteraction,
                                       assignedDrones: number, resources: ResourceCollection) {
     const def = FEATURE_LIBRARY.find(x => feature.name === x.name);
-    if (def.hasGather && assignedDrones <= 0) {
+    if (def.hasGather && assignedDrones > 0) {
       def.gatherRates.resources.forEach(x => {
         resources.addProductionRate(x.resource, x.amount * assignedDrones * 0.05);
       });
