@@ -1,7 +1,7 @@
 <div>
   <div class="research-item" *ngFor="let item of researchList">
     <div class="research-item-top">
-      <span class="title">{{item.name}} {{item.progress.knowledgeLevel}}</span>
+      <span [appGameTooltip]="item.knowledgeTooltip" class="title">{{item.name}} {{item.progress.knowledgeLevel}}</span>
       <game-button small="true" name="Research" class="research-btn" (click)="research(item)"></game-button>
     </div>
     <div class="research-item-middle">
