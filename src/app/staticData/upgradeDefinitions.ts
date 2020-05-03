@@ -35,23 +35,67 @@ export class UpgradeDefinition {
 
 export const UPGRADE_LIBRARY: UpgradeDefinition[] = [
   new UpgradeDefinition('Construction', 'Large scale construction projects.')
-  .addCost('metal', 25)
-  .setsFlag('showStructureTab'), // Smelter, nanochips
-  // new UpgradeDefinition('Improved Furnace', 'desc', 'Construction').addCost('duranium', 10),
-  new UpgradeDefinition('Tensile Polymers', 'desc', 'Construction').addCost('duranium', 10).addCost('silicate', 10), // Nanofiber
-  // new UpgradeDefinition('Clathrate Extraction', 'desc', 'Tensile Polymers').addCost('nanochips', 10).addCost('nanofiber', 10), // Noble gas
-  new UpgradeDefinition('oceanSurveyUpgrade', 'desc', 'Construction').addCost('duranium', 50),
-  new UpgradeDefinition('mountainSurveyUpgrade', 'desc', 'Tensile Polymers').addCost('nanofiber', 10),
-  new UpgradeDefinition('desertSurveyUpgrade', 'desc', 'oceanSurveyUpgrade').addCost('hydrocarbon', 10), // Glittersand
-  new UpgradeDefinition('Photon Processing', 'desc', 'desertSurveyUpgrade').addCost('glittersand', 10), // Optronics
-  new UpgradeDefinition('Unbreakable Materials', 'desc', 'Photon Processing').addCost('optronics', 10), // Silksteel
-  new UpgradeDefinition('arcticSurveyUpgrade', 'desc', 'Photon Processing').addCost('optronics', 20), // Cryofluid
-  new UpgradeDefinition('Electrodynamics', 'desc', 'oceanSurveyUpgrade')
-                        .addCost('cryofluid', 10).addCost('nanochips', 20), // Ultraconductors
-  new UpgradeDefinition('underseaSurveyUpgrade', 'desc', 'oceanSurveyUpgrade').addCost('ultraconductors', 10), // Charybdin
-  new UpgradeDefinition('Extradimensional Synthesis', 'desc', 'underseaSurveyUpgrade').addCost('charybdin', 10), // Hyperlattice
-  new UpgradeDefinition('Synthetic Thought', 'desc', 'Photon Processing')
-                        .addCost('ultraconductors', 10).addCost('optronics', 10), // Cogitex
-  new UpgradeDefinition('Artificial Gravity', 'desc', 'Electrodynamics').addCost('dyene', 10).addCost('ultraconductors', 10), // Gravalloy
-  new UpgradeDefinition('Mineral Extraction', 'desc').addCost('metal', 5),
+  .addCost('metal', 50)
+  .setsFlag('showStructureTab'),
+  new UpgradeDefinition('Hydrophobic Alloys', 'Waterproofed drones for aquatic salvage operations.')
+  .addCost('metal', 75),
+  new UpgradeDefinition('Tensile Polymers', 'High-strength, lightweight polymers for advanced construction.')
+  .addCost('duranium', 15)
+  .addCost('silicate', 50),
+  new UpgradeDefinition('Unbreakable Materials', 'Engineered at the subatomic level to withstand extreme stress.')
+  .addCost('duranium', 15)
+  .addCost('silicate', 50),
+
+  new UpgradeDefinition('Automated Fabrication', 'Scale up the nanochip fabrication process for bulk production.')
+  .addCost('nanochips', 8),
+  new UpgradeDefinition('Photon Processing', 'Using glittersand to manipulate photon waveforms provides a new foundation for electronic engineering.')
+  .addCost('nanochips', 35)
+  .addCost('glittersand', 15),
+  new UpgradeDefinition('Synthetic Thought', 'The neural patterns in synaptite form the basis of self-adaptive, intelligent networks.')
+  .addCost('optronics', 35)
+  .addCost('synaptite', 15),
+
+  new UpgradeDefinition('Extradimensional Synthesis', '4-dimensional crystalloid materials allow construction to extend beyond mundane limits.')
+  .addCost('charybdin', 35),
+
+  new UpgradeDefinition('Fueled Generators', 'On planets rich with oxygen and organic molecules, burning hydrocarbons can be a simple, effective power source.')
+  .addCost('hydrocarbon', 25),
+  new UpgradeDefinition('Electrodynamics', 'As power needs increase, the inefficiencies of typical conductive materials become a problem.')
+  .addCost('cryofluid', 15),
+  new UpgradeDefinition('Solar Power', '')
+  .addCost('ultraconductors', 15),
+
+  new UpgradeDefinition('Artificial Gravity', '')
+  .addCost('dyene', 15),
+
+  new UpgradeDefinition('Maritime Survey', '')
+  .addCost('metal', 15),
+  new UpgradeDefinition('Mountain Survey', '')
+  .addCost('duranium', 15),
+  new UpgradeDefinition('Desert Survey', '')
+  .addCost('duranium', 15),
+  new UpgradeDefinition('Arctic Survey', '')
+  .addCost('duranium', 15),
+  new UpgradeDefinition('Undersea Survey', '')
+  .addCost('duranium', 15),
+
+  new UpgradeDefinition('Bandwidth Multiplexing', '')
+  .addCost('nanochips', 15),
+  new UpgradeDefinition('Adaptive Tooling', '')
+  .addCost('optronics', 15),
+  new UpgradeDefinition('Heuristic Processors', '')
+  .addCost('cogitex', 15),
+
+  new UpgradeDefinition('Mineral Extraction', '')
+  .addCost('metal', 25),
+  new UpgradeDefinition('Liquid Extraction', '')
+  .addCost('duranium', 25),
+  new UpgradeDefinition('Gas Extraction', '')
+  .addCost('duranium', 50),
+  new UpgradeDefinition('Clathrate Extraction', '')
+  .addCost('nanofiber', 15),
+  new UpgradeDefinition('Particulate Enrichment', '')
+  .addCost('nanofiber', 25),
+  new UpgradeDefinition('Crystal Extraction', '')
+  .addCost('nanofiber', 50),
 ];
