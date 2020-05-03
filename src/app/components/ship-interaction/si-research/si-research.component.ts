@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ResearchService } from '../../../services/research.service';
 import { ResearchProgress } from 'src/app/models/research';
 import { TaskService } from 'src/app/services/task.service';
+import { TooltipViewModel } from 'src/app/models/tooltipViewModel';
 
 @Component({
   selector: 'app-si-research',
@@ -32,8 +33,11 @@ export class SiResearchComponent implements OnInit {
       if (!discipline.revealAtStart && progress.theoryLevel < 1) {return;}
       const item: ResearchListItem = {
         name: discipline.name,
-        progress: progress
+        theoryTooltip: new TooltipViewModel(),
+        progress: progress,
+        nextAdvanceLevel: this._researchService.getNextLevelWithAdvancement(discipline.name)
       };
+      item.theoryTooltip.desc = 'Theory improves your research speed.  ' + discipline.theoryDesc;
       this.researchList.push(item);
     });
   }
@@ -49,5 +53,7 @@ export class SiResearchComponent implements OnInit {
 
 export class ResearchListItem {
   public name: string;
+  public theoryTooltip: TooltipViewModel;
   public progress: ResearchProgress;
+  public nextAdvanceLevel: number;
 }

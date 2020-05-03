@@ -6,6 +6,7 @@ export class ResearchDiscipline {
 
     name: string;
     desc: string = '';
+    theoryDesc: string = '';
     revealAtStart: boolean = false;
     baseCostMultiplier: number = 1;
     compoundingCostMultiplier: number = 1;
@@ -20,6 +21,11 @@ export class ResearchDiscipline {
 
     setDesc(desc: string): ResearchDiscipline {
       this.desc = desc;
+      return this;
+    }
+
+    setTheoryDesc(desc: string): ResearchDiscipline {
+      this.theoryDesc = desc;
       return this;
     }
 
@@ -42,34 +48,42 @@ export class ResearchDiscipline {
 
 export const RESEARCH_LIBRARY: ResearchDiscipline[] = [
   new ResearchDiscipline('Material Science')
+    .setTheoryDesc('Gain theory by salvaging materials.')
     .setRevealAtStart()
     .addUpgrade(1, 'Construction')
     .addUpgrade(2, 'Hydrophobic Alloys')
     .addUpgrade(3, 'Tensile Polymers')
     .addUpgrade(5, 'Unbreakable Materials'),
   new ResearchDiscipline('Electronics')
+  .setTheoryDesc('Gain theory by salvaging and fabricating electronics.')
     .addUpgrade(1, 'Automated Fabrication')
     .addUpgrade(3, 'Photon Processing')
     .addUpgrade(5, 'Synthetic Thought'),
   new ResearchDiscipline('Hypertopology')
+  .setTheoryDesc('Gain theory by studying spatial anomalies.')
     .addUpgrade(1, 'Extradimensional Synthesis'),
   new ResearchDiscipline('Power Systems')
+  .setTheoryDesc('Gain theory by salvaging power and energy systems.')
     .addUpgrade(1, 'Fueled Generators')
     .addUpgrade(3, 'Electrodynamics')
     .addUpgrade(4, 'Solar Power'),
   new ResearchDiscipline('Gravitics')
+  .setTheoryDesc('Gain theory by studying spatial anomalies.')
     .addUpgrade(1, 'Artificial Gravity'),
   new ResearchDiscipline('Planetary Survey')
+  .setTheoryDesc('Gain theory by surveying regions.')
     .addUpgrade(2, 'Maritime Survey')
     .addUpgrade(3, 'Mountain Survey')
     .addUpgrade(4, 'Desert Survey')
     .addUpgrade(5, 'Arctic Survey')
     .addUpgrade(6, 'Undersea Survey'),
   new ResearchDiscipline('Drone Control')
+  .setTheoryDesc('Gain theory by building drone hubs.')
     .addUpgrade(1, 'Bandwidth Multiplexing')
     .addUpgrade(2, 'Adaptive Tooling')
     .addUpgrade(3, 'Heuristic Processors'),
   new ResearchDiscipline('Resource Exploitation')
+  .setTheoryDesc('Gain theory by building resource extraction improvements.')
     .setRevealAtStart()
     .addUpgrade(1, 'Mineral Extraction')
     .addUpgrade(2, 'Liquid Extraction')

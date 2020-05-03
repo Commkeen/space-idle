@@ -2,14 +2,18 @@
   <div class="research-item" *ngFor="let item of researchList">
     <div class="research-item-top">
       <span class="title">{{item.name}} {{item.progress.knowledgeLevel}}</span>
-      <button class="research-btn" (click)="research(item)">Research</button>
+      <game-button small="true" name="Research" class="research-btn" (click)="research(item)"></game-button>
     </div>
     <div class="research-item-middle">
       <app-progress-bar [value]="item.progress.knowledgeProgress" [max]="getKnowledgeNeeded(item)"></app-progress-bar>
     </div>
     <div class="research-item-bottom">
-      <span>Theory Lv {{item.progress.theoryLevel}}</span>
+      <span [appGameTooltip]="item.theoryTooltip">Theory Lv {{item.progress.theoryLevel}}</span>
       <app-progress-bar [value]="item.progress.theoryProgress" [max]="getTheoryNeeded(item)"></app-progress-bar>
+    </div>
+    <div class="research-item-footer">
+      <span *ngIf="item.nextAdvanceLevel > 0">Next advance at Level {{item.nextAdvanceLevel}}</span>
+      <span *ngIf="item.nextAdvanceLevel <= 0">No more advances</span>
     </div>
   </div>
 </div>

@@ -6,6 +6,10 @@
   border: 2px solid black;
 }
 
+.research-btn{
+  width: 75px;
+}
+
 .research-item-top{
   display: flex;
   justify-content: space-between;
@@ -19,3 +23,7 @@
   padding: 3px;
 }
 
+.research-item-footer{
+  padding: 3px;
+  font-style: italic;
+}

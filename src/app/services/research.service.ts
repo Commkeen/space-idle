@@ -119,6 +119,25 @@ export class ResearchService {
     return def;
   }
 
+  getNextLevelWithAdvancement(discipline: string): number {
+    const disc = this.getDiscipline(discipline);
+    const currLevel = this.getProgress(discipline).knowledgeLevel;
+    let nextLv = 0;
+    disc.upgradeUnlocks.forEach((name, lv) => {
+      if (lv <= currLevel) {return;}
+      if (nextLv == 0 || lv < nextLv) {
+        nextLv = lv;
+      }
+    });
+    disc.flagUnlocks.forEach((name, lv) => {
+      if (lv <= currLevel) {return;}
+      if (nextLv == 0 || lv < nextLv) {
+        nextLv = lv;
+      }
+    });
+    return nextLv;
+  }
+
   buyUpgrade(upgrade: string): boolean {
     const def = this.getUpgradeDefinition(upgrade);
     const upgradeCost = def.cost;
