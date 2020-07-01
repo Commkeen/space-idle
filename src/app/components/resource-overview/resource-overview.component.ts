@@ -10,6 +10,8 @@ import { isNullOrUndefined } from 'util';
 })
 export class ResourceOverviewComponent implements OnInit {
 
+  resourceList: ResourceListItem[] = [];
+
   constructor(private resourceService: ResourceService, private planetService: PlanetService) { }
 
   ngOnInit() {
@@ -37,7 +39,6 @@ export class ResourceOverviewComponent implements OnInit {
     let localResources = null;
     const localInteractionModel = this.planetService.getSelectedPlanetInteractionModel();
     if (!isNullOrUndefined(localInteractionModel)) {localResources = localInteractionModel.localResources; }
-    const resourceList: ResourceListItem[] = [];
 
     globalResources.resources.forEach(element => {
       if (element.resource === 'power') {return;}
@@ -50,16 +51,18 @@ export class ResourceOverviewComponent implements OnInit {
         const localResource = localResources.resources.find(x => x.resource === element.resource);
         if (!isNullOrUndefined(localResource)) {rate = localResource.getNetProductionRate(); }
       }
-
-      resourceList.push({ name: element.resource,
-                          amount: element.amount,
-                          maxAmount: element.max,
-                          rate: rate,
-                          production: 0,
-                          consumption: 0});
+      let item: ResourceListItem = this.resourceList.find(x => x.name === element.resource);
+      if (isNullOrUndefined(item)) {
+        item = new ResourceListItem();
+        this.resourceList.push(item);
+      }
+      item.name = element.resource;
+      item.amount = element.amount;
+      item.maxAmount = element.max;
+      item.rate = rate;
     });
 
-    return resourceList;
+    return this.resourceList;
   }
 
 }
