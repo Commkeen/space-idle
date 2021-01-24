@@ -13,13 +13,19 @@ export class GameTooltipDirective implements OnInit {
 
   private static currentTooltip: GameTooltipDirective = null;
 
-  private overlayRef: OverlayRef;
+  private static overlayRef: OverlayRef = null;
 
   constructor(private overlayPositionBuilder: OverlayPositionBuilder,
               private elementRef: ElementRef,
               private overlay: Overlay) {}
 
   ngOnInit() {
+
+  }
+
+  @HostListener('mouseenter')
+  show() {
+
     const positionStrategy = this.overlayPositionBuilder
       .flexibleConnectedTo(this.elementRef)
       .withPositions([{
@@ -29,25 +35,25 @@ export class GameTooltipDirective implements OnInit {
         overlayY: 'center'
       }]);
 
-    this.overlayRef = this.overlay.create({ positionStrategy });
-  }
-
-  @HostListener('mouseenter')
-  show() {
-    const tooltipPortal = new ComponentPortal(GameTooltipComponent);
-
-    const tooltipRef = this.overlayRef.attach(tooltipPortal);
-    tooltipRef.instance.tooltipModel = this.model;
-
     if (GameTooltipDirective.currentTooltip != null) {
       GameTooltipDirective.currentTooltip.hide();
     }
     GameTooltipDirective.currentTooltip = this;
+    if (GameTooltipDirective.overlayRef == null) {
+      GameTooltipDirective.overlayRef = this.overlay.create();
+    }
+
+    GameTooltipDirective.overlayRef.updatePositionStrategy(positionStrategy);
+    const tooltipPortal = new ComponentPortal(GameTooltipComponent);
+    const tooltipRef = GameTooltipDirective.overlayRef.attach(tooltipPortal);
+    tooltipRef.instance.tooltipModel = this.model;
+
+
   }
 
   @HostListener('mouseleave')
   hide() {
-    this.overlayRef.detach();
+    GameTooltipDirective.overlayRef.detach();
     GameTooltipDirective.currentTooltip = null;
   }
 
